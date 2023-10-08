@@ -1,4 +1,4 @@
-# MBTI-DB
+# MBTI's-favorite-DB
 ■サービス概要
     ユーザーがジャンル毎に自分の好きなコンテンツを投稿することにより、MBTIタイプ毎の好みを収集するDBツール
         MBTIとは？（https://ja.wikipedia.org/wiki/MBTI）
