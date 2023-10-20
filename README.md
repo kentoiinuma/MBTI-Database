@@ -122,7 +122,7 @@ MBTIは"最終的には自分でタイプを決める必要がある主観的な
     - Heroku  
 
 ## 画面遷移図
-https://www.figma.com/file/6RqB077Xm2APXdPgxQQGdM/%E7%84%A1%E9%A1%8C?type=design&node-id=0%3A1&mode=design&t=BDdLNCRLZbsfnxtt-1
+https://www.figma.com/file/6RqB077Xm2APXdPgxQQGdM/16type-Favorite-Database?type=design&node-id=0%3A1&mode=design&t=BDdLNCRLZbsfnxtt-1
 
 
 
