@@ -100,10 +100,11 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 
 ### 本リリース  
 - レスポンシブデザイン  
+- キューとバックグラウンド処理
 
 ## 機能の実装方針予定  
 - フロントエンド
-    - Hotwire or React
+    - React
     - Tailwind CSS・daisyUI
 - バックエンド  
     -  Ruby: 3.0系
@@ -111,19 +112,26 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 - API 
     - Annict API
     - Spotify API
+    - cloudinary
 - Gem
 	- Googleログイン
-		devise
-		omniauth
-	- 画像加工・合成
-		cloudinary
+		- devise
+		- omniauth
 	- オートコンプリート
-		stimulus-autocomplete
+		- stimulus-autocomplete
 	- 通知
-		WebSocket通信・ActionCable（Rails標準）
-
+		- WebSocket通信・ActionCable
+    - キューとバックグラウンド処理
+	    - ActiveJob
+	    - Sidekiq
+		- Redis
+    - その他
+        - Pundit
+        - RSpec
+        - RuboCop
+        - rails-react
 - インフラ  
-    - Render or Heroku
+    - Heroku
 - データベース
     - PostgreSQL
 
