@@ -108,7 +108,7 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
     - Tailwind CSS・daisyUI
 - バックエンド  
     -  Ruby: 3.0系
-	-  Rails: 7.0系
+	-  Rails: 7.0系(APIモード)
 - API 
     - Annict API
     - Spotify API
@@ -129,7 +129,6 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
         - Pundit
         - RSpec
         - RuboCop
-        - rails-react
 - インフラ  
     - Heroku
 - データベース
