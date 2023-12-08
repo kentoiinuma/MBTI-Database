@@ -1,0 +1,19 @@
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+/Users/kentoiinuma/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= sitearchdir\=./.gem.20231208-9065-vjmice sitelibdir\=./.gem.20231208-9065-vjmice clean
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= sitearchdir\=./.gem.20231208-9065-vjmice sitelibdir\=./.gem.20231208-9065-vjmice
+compiling websocket_mask.c
+linking shared-object websocket_mask.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= sitearchdir\=./.gem.20231208-9065-vjmice sitelibdir\=./.gem.20231208-9065-vjmice install
+/opt/homebrew/bin/ginstall -c -m 0755 websocket_mask.bundle ./.gem.20231208-9065-vjmice
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/websocket-driver-0.7.6/ext/websocket-driver
+make DESTDIR\= sitearchdir\=./.gem.20231208-9065-vjmice sitelibdir\=./.gem.20231208-9065-vjmice clean

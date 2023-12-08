@@ -104,11 +104,12 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 
 ## 機能の実装方針予定  
 - フロントエンド
-    - React
-    - Tailwind CSS・daisyUI
+    - React 18.2.0
+    - Tailwind CSS 3.3.6
+    - daisyUI 3.8.3
 - バックエンド  
-    -  Ruby: 3.0系
-	-  Rails: 7.0系(APIモード)
+    -  Ruby 3.2.2
+	-  Rails(APIモード) 7.0.8
 - API 
     - Annict API
     - Spotify API
