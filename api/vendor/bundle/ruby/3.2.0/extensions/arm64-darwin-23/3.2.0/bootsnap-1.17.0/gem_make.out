@@ -1,0 +1,23 @@
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/bootsnap-1.17.0/ext/bootsnap
+/Users/kentoiinuma/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/bootsnap-1.17.0/ext/bootsnap
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-lc97tq sitelibdir\=./.gem.20231209-43921-lc97tq clean
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/bootsnap-1.17.0/ext/bootsnap
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-lc97tq sitelibdir\=./.gem.20231209-43921-lc97tq
+compiling bootsnap.c
+bootsnap.c:822:10: warning: unused variable 'contents' [-Wunused-variable]
+  char * contents = NULL;
+         ^
+1 warning generated.
+linking shared-object bootsnap/bootsnap.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/bootsnap-1.17.0/ext/bootsnap
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-lc97tq sitelibdir\=./.gem.20231209-43921-lc97tq install
+/opt/homebrew/bin/ginstall -c -m 0755 bootsnap.bundle ./.gem.20231209-43921-lc97tq/bootsnap
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/bootsnap-1.17.0/ext/bootsnap
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-lc97tq sitelibdir\=./.gem.20231209-43921-lc97tq clean
