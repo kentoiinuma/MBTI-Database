@@ -1,0 +1,2 @@
+class MediaWork < ApplicationRecord
+end

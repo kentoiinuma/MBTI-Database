@@ -1,0 +1,2 @@
+class PerceptionGroup < ApplicationRecord
+end
