@@ -10,8 +10,113 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 0) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_09_150220) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "authentications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "provider"
+    t.string "auth_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_authentications_on_user_id"
+  end
+
+  create_table "comment_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "comment_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_comment_likes_on_comment_id"
+    t.index ["user_id"], name: "index_comment_likes_on_user_id"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "perception_group_id", null: false
+    t.integer "parent_comment_id"
+    t.text "text"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["perception_group_id"], name: "index_comments_on_perception_group_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
+
+  create_table "mbti_types", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.integer "mbti_type"
+    t.integer "diagnosis_method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_mbti_types_on_user_id"
+  end
+
+  create_table "media_works", force: :cascade do |t|
+    t.integer "media_type"
+    t.string "title"
+    t.integer "genres"
+    t.string "thumbnail"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.bigint "comment_id", null: false
+    t.integer "related_for_id"
+    t.integer "notification_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["comment_id"], name: "index_notifications_on_comment_id"
+    t.index ["post_id"], name: "index_notifications_on_post_id"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
+  create_table "perception_groups", force: :cascade do |t|
+    t.integer "perception_group"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "post_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_likes_on_post_id"
+    t.index ["user_id"], name: "index_post_likes_on_user_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "media_work_id", null: false
+    t.string "composite_image"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["media_work_id"], name: "index_posts_on_media_work_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "avatar"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "authentications", "users"
+  add_foreign_key "comment_likes", "comments"
+  add_foreign_key "comment_likes", "users"
+  add_foreign_key "comments", "perception_groups"
+  add_foreign_key "comments", "users"
+  add_foreign_key "mbti_types", "users"
+  add_foreign_key "notifications", "comments"
+  add_foreign_key "notifications", "posts"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "post_likes", "posts"
+  add_foreign_key "post_likes", "users"
+  add_foreign_key "posts", "media_works"
+  add_foreign_key "posts", "users"
 end

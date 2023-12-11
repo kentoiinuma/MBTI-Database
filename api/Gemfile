@@ -16,6 +16,10 @@ gem "puma", "~> 5.0"
 gem "devise"
 gem "omniauth"
 
+# Gemfile
+gem 'cloudinary'
+
+
 # 通知
 # WebSocket通信・ActionCable is included in Rails
 

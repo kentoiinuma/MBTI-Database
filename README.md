@@ -113,7 +113,6 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 - API 
     - Annict API
     - Spotify API
-    - cloudinary
 - Gem
 	- Googleログイン
 		- devise
@@ -130,6 +129,8 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
         - Pundit
         - RSpec
         - RuboCop
+    - 画像加工・合成
+        - cloudinary
 - インフラ  
     - Heroku
 - データベース
