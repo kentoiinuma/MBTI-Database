@@ -1,0 +1,19 @@
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/racc-1.7.3/ext/racc/cparse
+/Users/kentoiinuma/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-z3tl7z sitelibdir\=./.gem.20231209-43921-z3tl7z clean
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-z3tl7z sitelibdir\=./.gem.20231209-43921-z3tl7z
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.2'
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-z3tl7z sitelibdir\=./.gem.20231209-43921-z3tl7z install
+/opt/homebrew/bin/ginstall -c -m 0755 cparse.bundle ./.gem.20231209-43921-z3tl7z/racc
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20231209-43921-z3tl7z sitelibdir\=./.gem.20231209-43921-z3tl7z clean

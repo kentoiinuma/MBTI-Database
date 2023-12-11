@@ -1,0 +1,16 @@
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/json-2.7.1/ext/json
+/Users/kentoiinuma/.rbenv/versions/3.2.2/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/json-2.7.1/ext/json
+make DESTDIR\= sitearchdir\=./.gem.20231209-52840-3fcrka sitelibdir\=./.gem.20231209-52840-3fcrka clean
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/json-2.7.1/ext/json
+make DESTDIR\= sitearchdir\=./.gem.20231209-52840-3fcrka sitelibdir\=./.gem.20231209-52840-3fcrka
+make: Nothing to be done for `all'.
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/json-2.7.1/ext/json
+make DESTDIR\= sitearchdir\=./.gem.20231209-52840-3fcrka sitelibdir\=./.gem.20231209-52840-3fcrka install
+
+current directory: /Users/kentoiinuma/workspace/16type_Favorite_Database/api/vendor/bundle/ruby/3.2.0/gems/json-2.7.1/ext/json
+make DESTDIR\= sitearchdir\=./.gem.20231209-52840-3fcrka sitelibdir\=./.gem.20231209-52840-3fcrka clean
