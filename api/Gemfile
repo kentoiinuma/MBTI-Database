@@ -16,7 +16,7 @@ gem "puma", "~> 5.0"
 gem "devise"
 gem "omniauth"
 
-# Gemfile
+# 画像加工
 gem 'cloudinary'
 
 
