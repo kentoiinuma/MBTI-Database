@@ -3,8 +3,8 @@ import React from 'react';
 
 const Header = () => {
   return (
-    <header className="bg-white text-black p-4 flex justify-between items-center border-b border-[#7DB9DE]">
-      <h1>16type Favorite Database</h1>
+    <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#7DB9DE]">
+      <div></div>
       <div>
         <button className="btn btn-primary">?</button>
         <button className="btn btn-primary">⇒</button>
