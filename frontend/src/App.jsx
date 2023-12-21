@@ -1,7 +1,6 @@
 // App.jsx
 import React from 'react';
-import { ClerkProvider, SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react';
-import { Hello } from './components/Hello';
+import { ClerkProvider, SignedIn, SignedOut } from '@clerk/clerk-react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 
@@ -11,15 +10,15 @@ function App() {
   return (
     <ClerkProvider publishableKey={clerk_pub_key}>
       <div className="flex h-screen">
-        <Sidebar /> 
-        <div className="flex flex-col flex-1"> 
-          <Header /> 
-          <main className="flex-1 overflow-auto"> 
+        <Sidebar />
+        <div className="flex flex-col flex-1">
+          <Header />
+          <main className="flex-1 overflow-auto">
             <SignedIn>
-              <Hello />
+              {/* ログイン済みの場合に表示するコンテンツ */}
             </SignedIn>
             <SignedOut>
-              <RedirectToSignIn />
+              
             </SignedOut>
           </main>
         </div>
