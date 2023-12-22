@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUser, SignInButton, SignOutButton } from '@clerk/clerk-react';
+import { useUser, SignInButton, SignUpButton, SignOutButton } from '@clerk/clerk-react';
 
 const Header = () => {
   const { isSignedIn, user } = useUser();
@@ -16,7 +16,8 @@ const Header = () => {
       ) : (
         <div className="ml-auto">
           <button className="btn btn-primary mr-4">?</button>
-          <SignInButton>SignIn</SignInButton>
+          <SignInButton style={{ marginRight: '10px' }}>SignIn</SignInButton>
+          <SignUpButton>SignUp</SignUpButton>
         </div>
       )}
     </header>
@@ -24,8 +25,3 @@ const Header = () => {
 };
 
 export default Header;
-
-
-
-
-
