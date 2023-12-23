@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUser, SignInButton, SignUpButton, SignOutButton } from '@clerk/clerk-react';
 
-const Header = () => {
+const Header = ({ onSignInOrSignUp }) => {
   const { isSignedIn, user } = useUser();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      // ユーザーがサインインまたはサインアップしたら親コンポーネントに通知
+      onSignInOrSignUp();
+    }
+  }, [isSignedIn, onSignInOrSignUp]);
 
   return (
     <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#7DB9DE]">
@@ -25,3 +32,4 @@ const Header = () => {
 };
 
 export default Header;
+

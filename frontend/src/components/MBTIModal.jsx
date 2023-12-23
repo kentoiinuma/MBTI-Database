@@ -1,5 +1,3 @@
-// src/components/MBTIModal.jsx
-// このimport文が重複していた場合、1つにまとめてください。
 import React, { useState } from 'react';
 
 const MBTI_TYPES = [
@@ -39,8 +37,7 @@ const MBTIModal = ({ onClose }) => {
         <button onClick={onClose}>閉じる</button>
       </div>
     </div>
-  );
-};
-
-export default MBTIModal;
-
+   );
+  };
+  
+  export default MBTIModal;
