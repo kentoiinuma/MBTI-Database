@@ -5,3 +5,5 @@ class UpdateUsersTable < ActiveRecord::Migration[7.0]
     add_column :users, :clerk_id, :string
   end
 end
+
+
