@@ -9,19 +9,10 @@
 # migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
-#
-ActiveRecord::Schema[7.0].define(version: 2023_12_11_153739) do
+
+ActiveRecord::Schema[7.0].define(version: 2023_12_24_203325) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "authentications", force: :cascade do |t|
-    t.bigint "user_id", null: false
-    t.integer "provider", null: false
-    t.string "auth_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_authentications_on_user_id"
-  end
 
   create_table "comment_likes", force: :cascade do |t|
     t.bigint "user_id", null: false
@@ -100,13 +91,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_11_153739) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "avatar"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "clerk_id", null: false
   end
 
-  add_foreign_key "authentications", "users"
   add_foreign_key "comment_likes", "comments"
   add_foreign_key "comment_likes", "users"
   add_foreign_key "comments", "perception_groups"
