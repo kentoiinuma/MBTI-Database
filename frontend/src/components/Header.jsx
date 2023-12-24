@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useUser, SignInButton, SignOutButton } from '@clerk/clerk-react';
+import { useUser, SignInButton, UserButton } from '@clerk/clerk-react';
 
 const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
@@ -16,12 +16,13 @@ const Header = ({ onSignIn }) => {
         <>
           <span className="text-xl font-semibold">{user?.firstName}</span>
           <div className="flex items-center">
-            <SignOutButton>SignOut</SignOutButton>
+            {/* ここでClerkのUserButtonコンポーネントを使用 */}
+            <UserButton />
           </div>
         </>
       ) : (
         <div className="ml-auto">
-          <button className="btn btn-primary mr-4">?</button>
+          {/* サインインが必要な場合に表示するSignInButton */}
           <SignInButton>SignIn</SignInButton>
         </div>
       )}
@@ -30,6 +31,4 @@ const Header = ({ onSignIn }) => {
 };
 
 export default Header;
-
-
 
