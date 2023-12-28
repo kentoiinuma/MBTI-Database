@@ -12,12 +12,10 @@ function App() {
   // useCallbackを使用して関数をメモ化します。
   // これにより、これらの関数は入力が変更されない限り再生成されません。
   const handleSignIn = useCallback(() => {
-    console.log('サインイン処理を実行');
     setShowMBTIModal(true);
   }, []);
 
   const handleCloseModal = useCallback(() => {
-    console.log('モーダルを閉じる処理を実行');
     setShowMBTIModal(false);
   }, []);
 
