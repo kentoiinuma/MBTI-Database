@@ -12,15 +12,18 @@ function MainContent() {
   
     const handleSignIn = useCallback(async () => {
       if (user) {
-        setShowMBTIModal(true);
         // バックエンドにユーザーIDを送信
-        await fetch(`${API_URL}/api/v1/registrations`, {
+        const response = await fetch(`${API_URL}/api/v1/registrations`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ clerk_user_id: user.id }),
         })
+        const data = await response.json();
+        if (data.is_new_user) {
+          setShowMBTIModal(true);
+        }
         // その他のレスポンス処理...
       }
     }, [user]);
