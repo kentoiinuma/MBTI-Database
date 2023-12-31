@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useUser } from '@clerk/clerk-react';
 
 const MBTI_TYPES = [
   'ESFP', 'ESTP', 'ISFP', 'ISTP', // Se
@@ -8,12 +9,15 @@ const MBTI_TYPES = [
 ];
 
 const MBTIModal = ({ onClose }) => {
+  const { user } = useUser();
   const [selectedMBTI, setSelectedMBTI] = useState('');
   const [diagnosisMethod, setDiagnosisMethod] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [mbtiError, setMbtiError] = useState(false);
   const [methodError, setMethodError] = useState(false);
+
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
@@ -27,7 +31,7 @@ const MBTIModal = ({ onClose }) => {
     setAgreedToTerms(event.target.checked);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (!selectedMBTI) {
       setMbtiError(true);
@@ -40,7 +44,22 @@ const MBTIModal = ({ onClose }) => {
       setMethodError(false);
     }
     if (agreedToTerms && selectedMBTI && diagnosisMethod) {
-      console.log(selectedMBTI, diagnosisMethod);
+      const response = await fetch(`${API_URL}/api/v1/mbti`, { // バックエンドのエンドポイントを指定
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          mbti_type: selectedMBTI,
+          diagnosis_method: diagnosisMethod,
+          user_id: user.id // ユーザーIDを追加
+        })
+      });
+
+      if (!response.ok) {
+        // エラーハンドリング
+      }
+
       onClose(); // モーダルを閉じます
     } else {
       setShowAlert(true);
@@ -98,7 +117,7 @@ const MBTIModal = ({ onClose }) => {
             
             {/* 自己診断のオプション */}
             <label className="block mb-4"> {/* 下部の余白を追加 */}
-              <input type="radio" value="selfAssessment" name="diagnosisMethod" onChange={handleDiagnosisMethodChange} className="mr-2" />
+              <input type="radio" value="self_assessment" name="diagnosisMethod" onChange={handleDiagnosisMethodChange} className="mr-2" />
               診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
               <div className="ml-4 mt-2"> {/* インデントと上部の余白を追加 */}
                 <a href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>16personalitiesの性格診断テスト</a>
@@ -113,7 +132,7 @@ const MBTIModal = ({ onClose }) => {
             
             {/* 外部評価のオプション */}
             <label className="block">
-              <input type="radio" value="externalAssessment" name="diagnosisMethod" onChange={handleDiagnosisMethodChange} className="mr-2" />
+              <input type="radio" value="official_assessment" name="diagnosisMethod" onChange={handleDiagnosisMethodChange} className="mr-2" />
               <a href="https://www.mbti.or.jp/" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>公式</a>のセッションを通じて決定した
             </label>
           </fieldset>

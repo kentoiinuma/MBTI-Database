@@ -10,21 +10,24 @@ function MainContent() {
   
     const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
   
-    const handleSignIn = useCallback(async (clerkUserId) => {
-      setShowMBTIModal(true);
-      // バックエンドにユーザーIDを送信
-      await fetch(`${API_URL}/registrations`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ clerkUserId }),
-      });
-    }, []);
+    const handleSignIn = useCallback(async () => {
+      if (user) {
+        setShowMBTIModal(true);
+        // バックエンドにユーザーIDを送信
+        await fetch(`${API_URL}/api/v1/registrations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ clerk_user_id: user.id }),
+        })
+        // その他のレスポンス処理...
+      }
+    }, [user]);
   
     useEffect(() => {
-      if (!loading && isSignedIn) {
-        handleSignIn(user.id);
+      if (!loading && isSignedIn && user) {
+        handleSignIn();
       }
     }, [isSignedIn, user, loading, handleSignIn]);
   

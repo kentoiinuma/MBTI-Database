@@ -3,15 +3,15 @@ class MbtiType < ApplicationRecord
 
   # MBTIの16タイプを知覚機能別に分類
   enum mbti_type: {
-    esfp: 0, estp: 1, isfp: 2, istp: 3, # Se
-    esfj: 4, estj: 5, isfj: 6, istj: 7, # Si
-    enfp: 8, entp: 9, infp: 10, intp: 11, # Ne
-    enfj: 12, entj: 13, infj: 14, intj: 15  # Ni
+    ESFP: 0, ESTP: 1, ISFP: 2, ISTP: 3, # Se
+    ESFJ: 4, ESTJ: 5, ISFJ: 6, ISTJ: 7, # Si
+    ENFP: 8, ENTP: 9, INFP: 10, INTP: 11, # Ne
+    ENFJ: 12, ENTJ: 13, INFJ: 14, INTJ: 15  # Ni
   }
 
   # 診断方法を逆の順番に定義
   enum diagnosis_method: {
-    online_test: 0, self_assessment: 1, official: 2
+    self_assessment: 0, official_assessment: 5
   }
 
   # バリデーションの追加
