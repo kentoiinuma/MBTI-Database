@@ -14,9 +14,10 @@ module Api
 
           # usersテーブルに新しいレコードを作成（または既存のレコードを更新）
           user = User.find_or_initialize_by(clerk_id: clerk_user_id)
+          is_new_user = user.new_record?
           if user.save
             # レスポンスを送信
-            render json: { status: 'ok' }
+            render json: { status: 'ok', is_new_user: is_new_user }
           else
             Rails.logger.error "Failed to save user: #{user.errors.full_messages.join(", ")}"
             render json: { status: 'error', errors: user.errors.full_messages }
