@@ -5,8 +5,8 @@ const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
 
   useEffect(() => {
-    if (isSignedIn) {
-      onSignIn(user.id);
+    if (isSignedIn && user) {
+      onSignIn();
     }
   }, [isSignedIn, onSignIn, user]);
 
@@ -29,4 +29,3 @@ const Header = ({ onSignIn }) => {
 };
 
 export default Header;
-
