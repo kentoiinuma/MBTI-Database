@@ -113,9 +113,8 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
     - Annict API
     - Spotify API
 - Gem
-	- Googleログイン
-		- devise
-		- omniauth
+	- 認証
+		- Clerk
 	- オートコンプリート
 		- stimulus-autocomplete
 	- 通知
