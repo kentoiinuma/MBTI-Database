@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { SignOutButton } from '@clerk/clerk-react';
 
 const CustomDropdownMenu = ({ isOpen, setIsOpen }) => {
@@ -28,9 +29,9 @@ const CustomDropdownMenu = ({ isOpen, setIsOpen }) => {
       {/* Contents of the dropdown menu */}
       {isOpen && (
         <div className="absolute right-0 w-48 py-2 mt-2 bg-white rounded-md shadow-xl">
-          <a href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">プロフィール</a>
-          <a href="/how-to" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使い方</a>
-          <a href="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">お問い合わせ</a>
+          <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">プロフィール</Link>
+          <Link to="/how-to" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使い方</Link>
+          <Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">お問い合わせ</Link>
           <SignOutButton className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">サインアウト</SignOutButton>
         </div>
       )}

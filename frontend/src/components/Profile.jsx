@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
 const Profile = ({ mbtiType, userName }) => {
-  // 選択されたセクションの状態を管理
-  const [selectedSection, setSelectedSection] = useState(null);
+  // 初期状態で 'posts' セクションが選択されているように設定
+  const [selectedSection, setSelectedSection] = useState('posts');
 
   // セクションを選択する関数
   const selectSection = (section) => {
@@ -66,6 +66,7 @@ const Profile = ({ mbtiType, userName }) => {
 };
 
 export default Profile;
+
 
 
 

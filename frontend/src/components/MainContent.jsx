@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import { useUser, SignedIn, SignedOut } from '@clerk/clerk-react';
 import Header from './Header';
@@ -46,17 +47,15 @@ function MainContent() {
         <div className="flex flex-col flex-1">
           <Header onSignIn={handleSignIn} />
           <main className="flex-1 overflow-auto pl-64">
-            <SignedIn>
-              <Profile 
+            <Routes>
+              <Route path="/profile" element={<Profile 
                 mbtiType="ENFJ (自己タイプ)" 
                 userName="ユーザーA" 
                 userImage="/path/to/user/image.jpg"
-              />
-              {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
-            </SignedIn>
-            <SignedOut>
-              {/* サインアウト状態で表示するコンテンツ */}
-            </SignedOut>
+              />} />
+              {/* Add more <Route> elements as needed */}
+            </Routes>
+            {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
           </main>
         </div>
       </div>
