@@ -4,6 +4,7 @@ import { useUser, SignedIn, SignedOut } from '@clerk/clerk-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal';
+import Profile from './Profile';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -27,7 +28,7 @@ function MainContent() {
         }
         // その他のレスポンス処理...
       }
-    }, [user]);
+    }, [user, API_URL]);
   
     useEffect(() => {
       if (!loading && isSignedIn && user) {
@@ -44,8 +45,13 @@ function MainContent() {
         <Sidebar />
         <div className="flex flex-col flex-1">
           <Header onSignIn={handleSignIn} />
-          <main className="flex-1 overflow-auto">
+          <main className="flex-1 overflow-auto pl-64">
             <SignedIn>
+              <Profile 
+                mbtiType="ENFJ (自己タイプ)" 
+                userName="ユーザーA" 
+                userImage="/path/to/user/image.jpg"
+              />
               {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
             </SignedIn>
             <SignedOut>
@@ -58,6 +64,3 @@ function MainContent() {
   }
 
 export default MainContent;
-
-
-
