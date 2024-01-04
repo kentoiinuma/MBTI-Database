@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import { useUser, SignedIn, SignedOut } from '@clerk/clerk-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal';
+import Profile from './Profile';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -27,7 +29,7 @@ function MainContent() {
         }
         // その他のレスポンス処理...
       }
-    }, [user]);
+    }, [user, API_URL]);
   
     useEffect(() => {
       if (!loading && isSignedIn && user) {
@@ -44,13 +46,13 @@ function MainContent() {
         <Sidebar />
         <div className="flex flex-col flex-1">
           <Header onSignIn={handleSignIn} />
-          <main className="flex-1 overflow-auto">
-            <SignedIn>
-              {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
-            </SignedIn>
-            <SignedOut>
-              {/* サインアウト状態で表示するコンテンツ */}
-            </SignedOut>
+          <main className="flex-1 overflow-auto pl-64">
+            <Routes>
+              <Route path="/profile" element={<Profile 
+              />} />
+              {/* Add more <Route> elements as needed */}
+            </Routes>
+            {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
           </main>
         </div>
       </div>
@@ -58,6 +60,3 @@ function MainContent() {
   }
 
 export default MainContent;
-
-
-

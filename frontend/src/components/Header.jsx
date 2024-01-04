@@ -20,7 +20,7 @@ const Header = ({ onSignIn }) => {
     <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#7DB9DE]">
       {isSignedIn ? (
         <>
-          <span className="text-xl font-semibold">{user?.firstName}</span>
+          <span ></span>
           <div className="flex items-center gap-4">
             {/* Upload icon button */}
             <button className="p-2 rounded-full hover:bg-gray-100">
