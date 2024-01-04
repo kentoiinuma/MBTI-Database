@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@clerk/clerk-react';
+import { useUser, UserProfile } from '@clerk/clerk-react';
 
 const Profile = () => {
   const { user } = useUser();
   const [mbtiType, setMbtiType] = useState(null);
+  const [showUserProfile, setShowUserProfile] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
@@ -13,7 +14,7 @@ const Profile = () => {
         .then(response => response.json())
         .then(data => setMbtiType(data.mbti_type));
     }
-  }, [user]);
+  }, [user, API_URL]); // API_URL added to the dependency array
 
   const [selectedSection, setSelectedSection] = useState('posts');
 
@@ -41,8 +42,6 @@ const Profile = () => {
         return <div className="text-center mt-8">コメント</div>;
       case 'likes':
         return <div className="text-center mt-8">いいね</div>;
-      default:
-        return null; // 何も選択されていない場合は何も表示しない
     }
   };
 
@@ -51,8 +50,10 @@ const Profile = () => {
       {user && (
         <>
           <div className="flex items-center justify-between w-full px-8">
-            <div className="h-24 w-24 bg-gray-200 rounded-full">
-              <img src={user?.profileImageUrl} alt="User avatar" className="h-24 w-24 rounded-full" />
+            <div className="avatar">
+                <div className="w-24 rounded-full">
+                    <img src={user?.profileImageUrl} />
+                </div>
             </div>
             <div className="ml-8">
               <h1 className="text-xl">{user.username}</h1>
@@ -66,8 +67,8 @@ const Profile = () => {
                   </svg>
                 </div>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><a>アイコン/アバター</a></li>
-                  <li><a>MBTIタイプ/診断方法</a></li>
+                  <li><button onClick={() => setShowUserProfile(true)}>アイコン/アバター</button></li>
+                  <li><a href="/path/to/mbti">MBTIタイプ/診断方法</a></li>
                 </ul>
               </div>
             </div>
@@ -90,9 +91,9 @@ const Profile = () => {
           {renderContent()}
         </>
       )}
+      {showUserProfile && <UserProfile />}
     </div>
   );
 };
 
 export default Profile;
-

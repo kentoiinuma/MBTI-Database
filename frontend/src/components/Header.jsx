@@ -1,20 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { signOut } = useClerk();
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
-  };
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
   };
 
   useEffect(() => {
