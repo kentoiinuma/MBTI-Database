@@ -1,9 +1,16 @@
 import React, { useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { SignOutButton } from '@clerk/clerk-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useClerk } from '@clerk/clerk-react';
 
 const CustomDropdownMenu = ({ isOpen, setIsOpen }) => {
   const ref = useRef(null);
+  const navigate = useNavigate();
+  const { signOut } = useClerk();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
+  };
 
   // Detect clicks outside the menu to close it
   useEffect(() => {
@@ -32,7 +39,7 @@ const CustomDropdownMenu = ({ isOpen, setIsOpen }) => {
           <Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">プロフィール</Link>
           <Link to="/how-to" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使い方</Link>
           <Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">お問い合わせ</Link>
-          <SignOutButton className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">サインアウト</SignOutButton>
+          <button onClick={handleSignOut} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">サインアウト</button>
         </div>
       )}
     </div>

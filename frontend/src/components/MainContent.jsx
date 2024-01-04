@@ -49,9 +49,6 @@ function MainContent() {
           <main className="flex-1 overflow-auto pl-64">
             <Routes>
               <Route path="/profile" element={<Profile 
-                mbtiType="ENFJ (自己タイプ)" 
-                userName="ユーザーA" 
-                userImage="/path/to/user/image.jpg"
               />} />
               {/* Add more <Route> elements as needed */}
             </Routes>

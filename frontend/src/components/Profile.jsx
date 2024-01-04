@@ -1,6 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useUser } from '@clerk/clerk-react';
 
-const Profile = ({ mbtiType, userName }) => {
+const Profile = () => {
+  const { user } = useUser();
+  const [mbtiType, setMbtiType] = useState(null);
+
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+  useEffect(() => {
+    if (user) {
+      fetch(`${API_URL}/api/v1/mbti/${user.id}`)
+        .then(response => response.json())
+        .then(data => setMbtiType(data.mbti_type));
+    }
+  }, [user]);
+
   // 初期状態で 'posts' セクションが選択されているように設定
   const [selectedSection, setSelectedSection] = useState('posts');
 
@@ -39,9 +53,11 @@ const Profile = ({ mbtiType, userName }) => {
   return (
     <div className="flex flex-col items-center mt-8">
       <div className="flex items-center justify-start w-full px-8">
-        <div className="h-24 w-24 bg-gray-200 rounded-full" />
+        <div className="h-24 w-24 bg-gray-200 rounded-full">
+          <img src={user?.profileImageUrl} alt="User avatar" className="h-24 w-24 rounded-full" />
+        </div>
         <div className="ml-8">
-          <h1 className="text-xl">{userName}</h1>
+          <h1 className="text-xl">{user.username}</h1>
           <div className="text-xl">{mbtiType}</div>
         </div>
       </div>
@@ -66,11 +82,3 @@ const Profile = ({ mbtiType, userName }) => {
 };
 
 export default Profile;
-
-
-
-
-
-
-
-
