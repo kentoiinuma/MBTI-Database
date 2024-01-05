@@ -67,12 +67,22 @@ const Profile = () => {
                   </svg>
                 </div>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                  <li><button onClick={() => setShowUserProfile(true)}>アイコン/アバター</button></li>
-                  <li><a href="/path/to/mbti">MBTIタイプ/診断方法</a></li>
+                  <li><button onClick={() => setShowUserProfile(true)}>アイコン/アバターetc.</button></li>
+                  <li><button onClick={() => setShowUserProfile(true)}>MBTIタイプ/診断方法</button></li>
                 </ul>
               </div>
             </div>
           </div>
+          {showUserProfile && (
+            <div style={{ textAlign: 'right' }}>
+              <button className="btn btn-circle btn-outline" style={{ marginRight: '32px' }} onClick={() => setShowUserProfile(false)}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <UserProfile />
+            </div>
+          )}
           <div className="flex justify-between items-center mt-16 w-full">
             <div className="flex-1 text-center cursor-pointer" onClick={() => selectSection('posts')}>
               <span className="text-xl">ポスト</span>
@@ -91,7 +101,6 @@ const Profile = () => {
           {renderContent()}
         </>
       )}
-      {showUserProfile && <UserProfile />}
     </div>
   );
 };
