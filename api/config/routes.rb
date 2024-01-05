@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       post '/registrations', to: 'registrations#create'
       post '/mbti', to: 'mbti#create'
       get '/mbti/:user_id', to: 'mbti#show' # New endpoint
+      put '/mbti/:user_id', to: 'mbti#update' # New endpoint for update
     end
   end
 end

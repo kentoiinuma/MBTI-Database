@@ -11,7 +11,11 @@ const Sidebar = () => {
       </h1>
       <nav className="flex-grow">
         <ul className="space-y-2">
-          <li>ホーム</li>
+          <li>
+            <Link to="/">
+              ホーム
+            </Link>
+          </li>
           <li>Se ESFP/ESTP/ISFP/ISTP</li>
           <li>Si ESFJ/ESTJ/ISFJ/ISTJ</li>
           <li>Ne ENFP/ENTP/INFP/INTP</li>

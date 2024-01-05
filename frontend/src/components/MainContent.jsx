@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 
-import { useUser, SignedIn, SignedOut } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal';

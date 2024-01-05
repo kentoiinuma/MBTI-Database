@@ -1,13 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useUser, SignInButton } from '@clerk/clerk-react';
-import CustomDropdownMenu from './CustomDropdownMenu'; // Your custom dropdown menu
+import React, { useEffect } from 'react';
+import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
-  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+  const { signOut } = useClerk();
 
-  const handleClick = () => {
-    setIsOpen(!isOpen);
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/');
   };
 
   useEffect(() => {
@@ -35,9 +37,14 @@ const Header = ({ onSignIn }) => {
               </svg>
             </button>
             {/* User avatar */}
-            <div onClick={handleClick} className="flex items-center">
-              <img src={user?.profileImageUrl} alt="User avatar" className="h-10 w-10 object-cover rounded-full" />
-              <CustomDropdownMenu isOpen={isOpen} setIsOpen={setIsOpen} />
+            <div className="dropdown dropdown-end">
+              <div tabIndex={0} role="button" ><img src={user?.profileImageUrl} alt="User avatar" className="h-10 w-10 object-cover rounded-full" /></div>
+              <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                <li><Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">プロフィール</Link></li>
+                <li><Link to="/how-to" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使い方</Link></li>
+                <li><Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">お問い合わせ</Link></li>
+                <li><button onClick={handleSignOut} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">サインアウト</button></li>
+              </ul>
             </div>
           </div>
         </>
