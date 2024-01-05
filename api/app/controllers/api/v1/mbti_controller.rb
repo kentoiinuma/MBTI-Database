@@ -25,6 +25,16 @@ module Api
         end
       end
 
+      def update
+        user = User.find_by(clerk_id: params[:user_id])
+        mbti = MbtiType.find_by(user_id: user.id)
+        if mbti.update(mbti_params)
+          render json: { status: 'SUCCESS', data: mbti }
+        else
+          render json: { status: 'ERROR', data: mbti.errors }
+        end
+      end
+
       private
 
       def mbti_params
@@ -33,5 +43,3 @@ module Api
     end
   end
 end
-
-

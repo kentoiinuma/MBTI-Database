@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, UserProfile } from '@clerk/clerk-react';
+import MBTIModal from './MBTIModal2'; 
 
 const Profile = () => {
   const { user } = useUser();
   const [mbtiType, setMbtiType] = useState(null);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [showMBTIModal, setShowMBTIModal] = useState(false); 
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
@@ -14,7 +16,7 @@ const Profile = () => {
         .then(response => response.json())
         .then(data => setMbtiType(data.mbti_type));
     }
-  }, [user, API_URL]); // API_URL added to the dependency array
+  }, [user, API_URL]); 
 
   const [selectedSection, setSelectedSection] = useState('posts');
 
@@ -68,7 +70,7 @@ const Profile = () => {
                 </div>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                   <li><button onClick={() => setShowUserProfile(true)}>アイコン/アバターetc.</button></li>
-                  <li><button onClick={() => setShowUserProfile(true)}>MBTIタイプ/診断方法</button></li>
+                  <li><button onClick={() => setShowMBTIModal(true)}>MBTIタイプ/診断方法</button></li> 
                 </ul>
               </div>
             </div>
@@ -101,6 +103,7 @@ const Profile = () => {
           {renderContent()}
         </>
       )}
+      {showMBTIModal && <MBTIModal onClose={() => setShowMBTIModal(false)} onUpdate={setMbtiType} />} 
     </div>
   );
 };
