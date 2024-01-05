@@ -44,6 +44,8 @@ const Profile = () => {
         return <div className="text-center mt-8">コメント</div>;
       case 'likes':
         return <div className="text-center mt-8">いいね</div>;
+      default:
+        return null;
     }
   };
 
@@ -54,7 +56,7 @@ const Profile = () => {
           <div className="flex items-center justify-between w-full px-8">
             <div className="avatar">
                 <div className="w-24 rounded-full">
-                    <img src={user?.profileImageUrl} />
+                    <img src={user?.profileImageUrl} alt="User profile" />
                 </div>
             </div>
             <div className="ml-8">
