@@ -6,6 +6,7 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal';
 import Profile from './Profile';
+import ImageContentPost from './ImageContentPost';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -48,8 +49,8 @@ function MainContent() {
           <Header onSignIn={handleSignIn} />
           <main className="flex-1 overflow-auto pl-64">
             <Routes>
-              <Route path="/profile" element={<Profile 
-              />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/post" element={<ImageContentPost />} />
               {/* Add more <Route> elements as needed */}
             </Routes>
             {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}

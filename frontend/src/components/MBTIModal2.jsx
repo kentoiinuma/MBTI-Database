@@ -15,7 +15,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const [mbtiError, setMbtiError] = useState(false);
   const [methodError, setMethodError] = useState(false);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+  const API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com/" || 'http://localhost:3000';
 
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
@@ -110,13 +110,13 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                 <input type="radio" value="self_assessment" name="diagnosisMethod" onChange={handleDiagnosisMethodChange} className="mr-2" />
                 診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
                 <div className="ml-4 mt-2">
-                  <a href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>16personalitiesの性格診断テスト</a>
+                  <a href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>16personalities</a>
                   <br />
                   <a href="https://www.idrlabs.com/jp/cognitive-function/test.php" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>心理機能テスト</a>
                   <br />
                   <a href="http://rinnsyou.com/archives/category/0200sinriryouhou/0203yungu" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>心理機能について</a>
                   <br />
-                  <a href="https://www.amazon.co.jp/dp/4905050219" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>書籍</a>
+                  <a href="https://www.amazon.co.jp/dp/4905050219" target="_blank" rel="noopener noreferrer" style={{ color: '#2EA9DF' }}>MBTIの書籍</a>
                 </div>
               </label>
               <label className="block">
