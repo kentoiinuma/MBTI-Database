@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
+import SearchModal from './SearchModal'; // SearchModalコンポーネントをインポート
 import '../App.css';
 
 const ImageContentPost = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter') {
+      // エンターキーが押されたらモーダルを表示
+      setSearchQuery(event.target.value);
+      setModalOpen(true);
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
       <div className="flex items-center space-x-2">
@@ -13,22 +25,22 @@ const ImageContentPost = () => {
             type="text"
             placeholder="好きなアーティスト名を正確に入力してください。"
             className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
+            onKeyPress={handleSearch}
           />
         </div>
       </div>
-      <div
-        className="w-2/3 bg-black rounded" // Add 'rounded' to apply a default border radius
-        style={{
-            paddingTop: '34.9066666667%', // Adjusted paddingTop value for an aspect ratio of 1.91:1 with w-2/3 width
-        }}
-      />
-        <div className="flex justify-center gap-4">
+      <div className="w-2/3 bg-black rounded" style={{ paddingTop: '34.9066666667%' }} />
+      <div className="flex justify-center gap-4">
           <button type="submit" className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50" style={{ backgroundColor: '#2EA9DF', color: 'white', borderRadius: '50px' }}>
             ポストする
           </button>
-        </div>
+      </div>
+      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} onClose={() => setModalOpen(false)} />
     </div>
   );
 };
 
 export default ImageContentPost;
+
+
+
