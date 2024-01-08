@@ -7,8 +7,8 @@ const ImageContentPost = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSearch = (event) => {
-    if (event.key === 'Enter') {
-      // エンターキーが押されたらモーダルを表示
+    if (event.key === 'Enter' && event.target.value.trim() !== '') {
+      // エンターキーが押され、かつ入力値が空でない場合にモーダルを表示
       setSearchQuery(event.target.value);
       setModalOpen(true);
     }
