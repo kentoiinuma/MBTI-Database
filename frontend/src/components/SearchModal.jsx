@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SearchModal = ({ isOpen, searchQuery, onClose }) => {
+const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
   if (!isOpen) return null;
 
   return (
@@ -15,8 +15,8 @@ const SearchModal = ({ isOpen, searchQuery, onClose }) => {
           </button>
         </div>
         <div className="p-4">
-          {/* 検索結果の内容をここに表示 */}
-          <p>ここに検索結果を表示します。</p>
+          {/* Display the artist image */}
+          <img src={artistImage} alt="Artist" />
         </div>
       </div>
     </div>
@@ -24,7 +24,3 @@ const SearchModal = ({ isOpen, searchQuery, onClose }) => {
 };
 
 export default SearchModal;
-
-
-
-

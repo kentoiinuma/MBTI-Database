@@ -14,6 +14,7 @@
 
 # misc
 /frontend/.DS_Store
+/frontend/.env
 /frontend/.env.local
 /frontend/.env.development.local
 /frontend/.env.test.local
@@ -32,6 +33,8 @@
 
 # Ignore bundler config.
 /api/.bundle
+
+/api/.env
 
 # Ignore all logfiles and tempfiles.
 /api/log/*
