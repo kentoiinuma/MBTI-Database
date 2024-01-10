@@ -4,13 +4,24 @@ import '../App.css';
 
 const ImageContentPost = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [artist, setArtist] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(''); // Add this line
 
-  const handleSearch = (event) => {
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+
+  const handleSearch = async (event) => {
     if (event.key === 'Enter' && event.target.value.trim() !== '') {
-      // エンターキーが押され、かつ入力値が空でない場合にモーダルを表示
-      setSearchQuery(event.target.value);
-      setModalOpen(true);
+      setSearchQuery(event.target.value.trim()); // Add this line
+      const response = await fetch(`${API_URL}/api/v1/spotify/search/${event.target.value}`);
+      console.log(response); // Add this line
+      if (response.ok) {
+        const data = await response.json();
+        console.log(data); // Add this line
+        setArtist(data.artist);
+        setModalOpen(true);
+      } else {
+        console.error('API request failed');
+      }
     }
   };
 
@@ -23,7 +34,7 @@ const ImageContentPost = () => {
           </svg>
           <input
             type="text"
-            placeholder="好きなアーティスト名を正確に入力してください。"
+            placeholder="好きなアーティスト名を検索してください。"
             className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
             onKeyPress={handleSearch}
           />
@@ -35,12 +46,9 @@ const ImageContentPost = () => {
             ポストする
           </button>
       </div>
-      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} onClose={() => setModalOpen(false)} />
+      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} artist={artist} onClose={() => setModalOpen(false)} /> 
     </div>
   );
 };
 
 export default ImageContentPost;
-
-
-
