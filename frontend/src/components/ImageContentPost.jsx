@@ -34,7 +34,7 @@ const ImageContentPost = () => {
           </svg>
           <input
             type="text"
-            placeholder="好きなアーティスト名を正確に入力してください。"
+            placeholder="好きなアーティスト名を検索してください。"
             className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
             onKeyPress={handleSearch}
           />

@@ -5,7 +5,7 @@ const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-xl w-3/4 h-3/4 overflow-hidden">
+      <div className="bg-white rounded-lg shadow-xl modal-width modal-height overflow-hidden">
         <div className="flex justify-between items-center p-4">
           <h2 className="text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>
           <button onClick={onClose} className="text-gray-600 hover:text-gray-800">
@@ -14,9 +14,8 @@ const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
             </svg>
           </button>
         </div>
-        <div className="p-4">
-          {/* Display the artist image */}
-          <img src={artistImage} alt="Artist" />
+        <div className="px-8 pb-8 flex justify-center">
+          <img src={artistImage} alt="Artist" className="max-w-full h-auto" />
         </div>
       </div>
     </div>
@@ -24,3 +23,6 @@ const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
 };
 
 export default SearchModal;
+
+
+
