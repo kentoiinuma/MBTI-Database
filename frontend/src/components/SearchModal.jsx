@@ -1,7 +1,7 @@
 import React from 'react';
 
-const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
-  if (!isOpen) return null;
+const SearchModal = ({ isOpen, searchQuery, artist, onClose }) => {
+  if (!isOpen || !artist) return null;
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
@@ -14,8 +14,11 @@ const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
             </svg>
           </button>
         </div>
+        <div className="flex justify-between items-center pl-8">
+        <h2 className="text-xl font-semibold">{`${artist.name}`}</h2>
+        </div>
         <div className="px-8 pb-8 flex justify-center">
-          <img src={artistImage} alt="Artist" className="max-w-full h-auto" />
+          <img src={artist.images[0].url} alt="Artist" className="max-w-full h-auto" />
         </div>
       </div>
     </div>
@@ -23,6 +26,4 @@ const SearchModal = ({ isOpen, searchQuery, onClose, artistImage }) => {
 };
 
 export default SearchModal;
-
-
 

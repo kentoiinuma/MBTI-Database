@@ -4,20 +4,20 @@ import '../App.css';
 
 const ImageContentPost = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [artistImage, setArtistImage] = useState('');
+  const [artist, setArtist] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(''); // Add this line
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
   const handleSearch = async (event) => {
     if (event.key === 'Enter' && event.target.value.trim() !== '') {
-      setSearchQuery(event.target.value);
+      setSearchQuery(event.target.value.trim()); // Add this line
       const response = await fetch(`${API_URL}/api/v1/spotify/search/${event.target.value}`);
       console.log(response); // Add this line
       if (response.ok) {
         const data = await response.json();
         console.log(data); // Add this line
-        setArtistImage(data.artist.images[0].url);
+        setArtist(data.artist);
         setModalOpen(true);
       } else {
         console.error('API request failed');
@@ -46,7 +46,7 @@ const ImageContentPost = () => {
             ポストする
           </button>
       </div>
-      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} artistImage={artistImage} onClose={() => setModalOpen(false)} />
+      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} artist={artist} onClose={() => setModalOpen(false)} /> 
     </div>
   );
 };
