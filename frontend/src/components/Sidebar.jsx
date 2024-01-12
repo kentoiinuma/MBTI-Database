@@ -5,7 +5,7 @@ const Sidebar = () => {
   return (
     <aside className="z-20 fixed bg-white text-black w-64 min-h-screen p-5 flex flex-col border-r border-[#7DB9DE]">
       <h1 className="text-xl font-bold mb-4">
-        <Link to="/">
+        <Link to="/" style={{ color: '#2EA9DF', fontSize: '1.3em' }}>
           16type Favorite Database
         </Link>
       </h1>

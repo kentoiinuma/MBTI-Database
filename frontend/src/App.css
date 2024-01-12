@@ -1,3 +1,32 @@
-.input-info {
-  border-color: #7DB9DE !important;
+/* アーティストの画像1枚のときのスタイル */
+.image-container-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* アーティストの画像が2枚のときのスタイル */
+.image-container-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* アーティストの画像が3枚のときのスタイル */
+.image-container-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+}
+.image-container-3 img:last-child {
+  grid-column: 1 / -1;
+}
+
+/* アーティストの画像が4枚のときのスタイル */
+.image-container-4 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
 }

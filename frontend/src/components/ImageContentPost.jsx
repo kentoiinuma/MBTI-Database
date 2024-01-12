@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
-import SearchModal from './SearchModal'; // SearchModalコンポーネントをインポート
+import SearchModal from './SearchModal';
 import '../App.css';
+
+
 
 const ImageContentPost = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [artist, setArtist] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(''); // Add this line
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
+  // 検索ハンドラー
   const handleSearch = async (event) => {
     if (event.key === 'Enter' && event.target.value.trim() !== '') {
-      setSearchQuery(event.target.value.trim()); // Add this line
+      setSearchQuery(event.target.value.trim());
       const response = await fetch(`${API_URL}/api/v1/spotify/search/${event.target.value}`);
-      console.log(response); // Add this line
       if (response.ok) {
         const data = await response.json();
-        console.log(data); // Add this line
         setArtist(data.artist);
         setModalOpen(true);
       } else {
@@ -24,6 +26,28 @@ const ImageContentPost = () => {
       }
     }
   };
+
+  // モーダル内の画像クリックハンドラー
+  const handleImageSelect = (imageUrl) => {
+    // 既存の画像と同じでない場合のみ追加
+    if (!selectedImages.includes(imageUrl)) {
+      setSelectedImages(prevImages => [...prevImages, imageUrl].slice(0, 4)); // 最大4枚まで画像を追加
+    }
+    setModalOpen(false); // モーダルを閉じる
+  };
+
+// ImageContentPost.jsxのrenderImages関数内
+const renderImages = () => {
+  const containerClass = `image-container-${selectedImages.length}`;
+  return (
+    <div className={containerClass} style={{ paddingTop: '52.5%' }}> {/* アスペクト比を保持するスタイルを追加 */}
+      {selectedImages.map((url, index) => (
+        <img key={index} src={url} alt={`Artist ${index}`} className="image-style" />
+      ))}
+    </div>
+  );
+};
+
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
@@ -40,15 +64,26 @@ const ImageContentPost = () => {
           />
         </div>
       </div>
-      <div className="w-2/3 bg-black rounded" style={{ paddingTop: '34.9066666667%' }} />
+      <div className="w-2/3 bg-black rounded" >
+        {renderImages()} {/* ここで選択された画像をレンダリング */}
+      </div>
       <div className="flex justify-center gap-4">
           <button type="submit" className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50" style={{ backgroundColor: '#2EA9DF', color: 'white', borderRadius: '50px' }}>
             ポストする
           </button>
       </div>
-      <SearchModal isOpen={isModalOpen} searchQuery={searchQuery} artist={artist} onClose={() => setModalOpen(false)} /> 
+      <SearchModal 
+        isOpen={isModalOpen} 
+        searchQuery={searchQuery} 
+        artist={artist} 
+        onImageSelect={handleImageSelect} 
+        onClose={() => setModalOpen(false)} 
+      />
     </div>
   );
 };
 
 export default ImageContentPost;
+
+
+
