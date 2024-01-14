@@ -8,7 +8,7 @@ module Api
         image_url = params[:imageUrl]
 
         # Cloudinaryに画像をアップロードし、中央をクロップ
-        result = Cloudinary::Uploader.upload(image_url, :width => 605, :height => 605, :crop => "fill")
+        result = Cloudinary::Uploader.upload(image_url, :width => 600, :height => 600, :crop => "fill")
 
         # アップロードが成功したら、そのURLをレスポンスとして返す
         if result["url"]

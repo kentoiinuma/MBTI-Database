@@ -9,7 +9,15 @@ const ImageContentPost = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
 
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+  let API_URL;
+  if (window.location.origin === 'http://localhost:3001') {
+    API_URL = 'http://localhost:3000';
+  } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
+    API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com";
+  } else {
+    // デフォルトのURL
+    API_URL = 'http://localhost:3000';
+  }
 
   // 検索ハンドラー
   const handleSearch = async (event) => {
@@ -57,7 +65,7 @@ const ImageContentPost = () => {
   // ImageContentPost.jsxのrenderImages関数内
   const renderImages = () => {
     const containerClass = `image-container-${selectedImages.length}`;
-    const imageSize = selectedImages.length === 1 ? 605 : 300; // 画像の数に応じて適切な画像サイズを設定
+    const imageSize = selectedImages.length === 1 ? 600 : 297.5; // 画像の数に応じて適切な画像サイズを設定
 
     return (
       <div className={containerClass} > 
