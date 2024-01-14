@@ -67,6 +67,12 @@ const ImageContentPost = () => {
     const containerClass = `image-container-${selectedImages.length}`;
     const imageSize = selectedImages.length === 1 ? 600 : 297.5; // 画像の数に応じて適切な画像サイズを設定
 
+    if (selectedImages.length === 0) {
+      return (
+        <div className={containerClass} style={{ width: '600px', height: '600px', backgroundColor: 'black' }} />
+      );
+    }
+
     return (
       <div className={containerClass} > 
         {selectedImages.map((url, index) => (
