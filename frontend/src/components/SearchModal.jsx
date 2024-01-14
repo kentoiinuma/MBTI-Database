@@ -1,14 +1,13 @@
 import React from 'react';
 
 const SearchModal = ({ isOpen, searchQuery, artist, onImageSelect, onClose }) => {
-  if (!isOpen || !artist || artist.images.length === 0) return null;
+  if (!isOpen || !artist) return null;
 
-  // 画像クリックハンドラー
-  const handleImageClick = () => {
-    onImageSelect([artist.images[0].url]); // 最初の画像のURLを親コンポーネントのコールバックでセット
-  };
+    // 画像クリックハンドラー
+    const handleImageClick = () => {
+      onImageSelect([artist.images[0].url]); // 最初の画像のURLを親コンポーネントのコールバックでセット
+    };
 
-  // コンポーネントのレンダリング
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
       <div className="bg-white rounded-lg shadow-xl modal-width modal-height overflow-hidden">
@@ -19,6 +18,9 @@ const SearchModal = ({ isOpen, searchQuery, artist, onImageSelect, onClose }) =>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
+        </div>
+        <div className="flex justify-between items-center pl-8">
+        <h2 className="text-xl font-semibold">{`${artist.name}`}</h2>
         </div>
         <div className="px-8 pb-8 flex justify-center">
           <img 

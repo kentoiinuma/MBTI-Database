@@ -12,7 +12,15 @@ function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
     const { isSignedIn, user, loading } = useUser();
   
-    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
+    let API_URL;
+    if (window.location.origin === 'http://localhost:3001') {
+      API_URL = 'http://localhost:3000';
+    } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
+      API_URL = process.env.REACT_APP_API_URL;
+    } else {
+      // デフォルトのURL
+      API_URL = 'http://localhost:3000';
+    }
   
     const handleSignIn = useCallback(async () => {
       if (user) {

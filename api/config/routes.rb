@@ -9,6 +9,7 @@ Rails.application.routes.draw do
       get '/spotify/auth', to: 'spotify#auth'
       get '/spotify/callback', to: 'spotify#callback'
       get '/spotify/search/:artist_name', to: 'artists#search'
+      post '/upload_image', to: 'images#upload'
     end
   end
 end
