@@ -15,7 +15,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const [mbtiError, setMbtiError] = useState(false);
   const [methodError, setMethodError] = useState(false);
 
-  const API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com/" || 'http://localhost:3000';
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000';
 
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
