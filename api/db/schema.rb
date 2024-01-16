@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_12_24_203325) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_15_045020) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -47,9 +47,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_24_203325) do
     t.integer "media_type", null: false
     t.string "title", null: false
     t.integer "genres"
-    t.string "thumbnail", null: false
+    t.string "image", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "post_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -82,11 +83,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_24_203325) do
 
   create_table "posts", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "media_work_id", null: false
-    t.string "composite_image", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["media_work_id"], name: "index_posts_on_media_work_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -101,11 +99,11 @@ ActiveRecord::Schema[7.0].define(version: 2023_12_24_203325) do
   add_foreign_key "comments", "perception_groups"
   add_foreign_key "comments", "users"
   add_foreign_key "mbti_types", "users"
+  add_foreign_key "media_works", "posts"
   add_foreign_key "notifications", "comments"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
   add_foreign_key "post_likes", "posts"
   add_foreign_key "post_likes", "users"
-  add_foreign_key "posts", "media_works"
   add_foreign_key "posts", "users"
 end

@@ -5,7 +5,7 @@ const SearchModal = ({ isOpen, searchQuery, artist, onImageSelect, onClose }) =>
 
     // 画像クリックハンドラー
     const handleImageClick = () => {
-      onImageSelect([artist.images[0].url]); // 最初の画像のURLを親コンポーネントのコールバックでセット
+      onImageSelect(artist.images[0].url, artist.name); // 画像URLとアーティスト名を親コンポーネントのコールバックでセット
     };
 
   return (
@@ -36,5 +36,3 @@ const SearchModal = ({ isOpen, searchQuery, artist, onImageSelect, onClose }) =>
 };
 
 export default SearchModal;
-
-

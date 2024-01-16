@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useUser } from '@clerk/clerk-react';
 import SearchModal from './SearchModal';
 import '../App.css';
 import { Image, Transformation } from 'cloudinary-react';
 
 const ImageContentPost = () => {
+  const { user } = useUser();
   const [isModalOpen, setModalOpen] = useState(false);
   const [artist, setArtist] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -35,14 +37,14 @@ const ImageContentPost = () => {
   };
 
   // モーダル内の画像クリックハンドラー
-  const handleImageSelect = async (imageUrl) => {
+  const handleImageSelect = async (imageUrl, artistName) => {
     // 画像をアップロードするためのAPIエンドポイントにリクエストを送信します
     const response = await fetch(`${API_URL}/api/v1/upload_image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ imageUrl: imageUrl[0] }) // imageUrlをリクエストボディに含める
+      body: JSON.stringify({ imageUrl: imageUrl }) // imageUrlをリクエストボディに含める
     });
 
     if (response.ok) {
@@ -51,15 +53,60 @@ const ImageContentPost = () => {
       const uploadedImageUrl = data.url;
 
       // 既存の画像と同じでない場合のみ追加
-      if (!selectedImages.some(image => image === uploadedImageUrl)) {
+      if (!selectedImages.some(image => image.url === uploadedImageUrl)) {
         console.log(selectedImages); // selectedImages配列をログに出力
-        setSelectedImages(prevImages => [...prevImages, uploadedImageUrl].slice(0, 4)); // 最大4枚まで画像を追加
+        setSelectedImages(prevImages => [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(0, 4)); // 最大4枚まで画像を追加
       }
     } else {
       console.error('Image upload failed');
     }
 
     setModalOpen(false); // モーダルを閉じる
+  };
+
+  const handlePost = async () => {
+    // ポストを作成
+    console.log(user); // ここに追加
+    const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ clerk_id: user.id }) // clerk_idをリクエストボディに含める
+    });
+
+    if (postResponse.ok) {
+      const postData = await postResponse.json();
+      const postId = postData.id;
+
+      // 選択された画像とアーティスト名をmedia_worksに保存
+      for (let i = 0; i < selectedImages.length; i++) {
+        const imagePair = selectedImages[i];
+        const mediaWorkResponse = await fetch(`${API_URL}/api/v1/media_works`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            post_id: postId,
+            title: imagePair.artist,
+            image: imagePair.url,
+            media_type: 0
+          }) // リクエストボディに含める
+        });
+
+        if (!mediaWorkResponse.ok) {
+          console.error('Media work creation failed');
+          break;
+        }
+      }
+
+      // ここでselectedImagesを空の配列にリセット
+      setSelectedImages([]);
+
+    } else {
+      console.error('Post creation failed');
+    }
   };
 
   // ImageContentPost.jsxのrenderImages関数内
@@ -75,8 +122,8 @@ const ImageContentPost = () => {
 
     return (
       <div className={containerClass} > 
-        {selectedImages.map((url, index) => (
-          <Image key={index} cloudName="dputyeqso" publicId={url} width={imageSize} height={imageSize} />
+        {selectedImages.map((imagePair, index) => (
+          <Image key={index} cloudName="dputyeqso" publicId={imagePair.url} width={imageSize} height={imageSize} />
         ))}
       </div>
     );
@@ -101,7 +148,7 @@ const ImageContentPost = () => {
         {renderImages()} {/* ここで選択された画像をレンダリング */}
       </div>
       <div className="flex justify-center gap-4">
-          <button type="submit" className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50" style={{ backgroundColor: '#2EA9DF', color: 'white', borderRadius: '50px' }}>
+          <button type="submit" onClick={handlePost} className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50" style={{ backgroundColor: '#2EA9DF', color: 'white', borderRadius: '50px' }}>
             ポストする
           </button>
       </div>

@@ -138,4 +138,4 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 https://www.figma.com/file/6RqB077Xm2APXdPgxQQGdM/16type-Favorite-Database?type=design&node-id=0%3A1&mode=design&t=Cljbhco66lUwXcXq-1
 
 ## ER図
-[![Image from Gyazo](https://i.gyazo.com/986a91c5272c6c3b2c3aa4ff34154625.png)](https://gyazo.com/986a91c5272c6c3b2c3aa4ff34154625)
+[![Image from Gyazo](https://i.gyazo.com/27535364e7b594fdc30830f99261d31b.png)](https://gyazo.com/27535364e7b594fdc30830f99261d31b)
