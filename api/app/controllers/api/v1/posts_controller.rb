@@ -15,6 +15,19 @@ module Api
           else
             render json: { error: "User not found" }, status: :not_found
           end
+        end 
+        def index
+          if params[:user_id]
+            user = User.find_by(clerk_id: params[:user_id])
+              if user
+                posts = user.posts
+                render json: posts
+              else
+                render json: { error: "User not found" }, status: :not_found
+              end
+            else
+              render json: { error: "User ID is required" }, status: :bad_request
+          end
         end
       end
     end
