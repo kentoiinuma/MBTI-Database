@@ -16,6 +16,12 @@ module Api
             render json: { error: "User not found" }, status: :not_found
           end
         end 
+
+        def all
+          posts = Post.all.order(created_at: :desc)
+          render json: posts
+        end
+
         def index
           if params[:user_id]
             user = User.find_by(clerk_id: params[:user_id])

@@ -31,7 +31,6 @@
   grid-column: 1 / span 2; /* 両方のカラムにまたがる */
 }
 
-
 /* アーティストの画像が4枚のときのスタイル */
 .image-container-4 {
   display: grid;
@@ -39,5 +38,4 @@
   grid-template-rows: 1fr 1fr;
   gap: 5px;
 }
-
 

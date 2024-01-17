@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-
 import { useUser } from '@clerk/clerk-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal';
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
+import AllPosts from './AllPosts';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -59,7 +59,7 @@ function MainContent() {
             <Routes>
               <Route path="/profile" element={<Profile />} />
               <Route path="/post" element={<ImageContentPost />} />
-              {/* Add more <Route> elements as needed */}
+              <Route path="/" element={<AllPosts />} />
             </Routes>
             {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
           </main>

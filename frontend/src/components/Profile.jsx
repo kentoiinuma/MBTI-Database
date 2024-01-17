@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, UserProfile } from '@clerk/clerk-react';
+import { Image } from 'cloudinary-react';
 import MBTIModal from './MBTIModal2'; 
-import { Image, Transformation } from 'cloudinary-react';
 
 const Profile = () => {
   const { user } = useUser();
@@ -79,7 +79,7 @@ const Profile = () => {
     switch (selectedSection) {
       case 'posts':
         return (
-          <div className="bg-black my-20">
+          <div className="bg-black mt-24 mb-10">
             {renderImages()}
           </div>
         );
