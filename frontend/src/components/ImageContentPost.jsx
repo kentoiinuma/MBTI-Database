@@ -79,11 +79,11 @@ const ImageContentPost = () => {
       if (existingPosts.length > 0) {
         // 既にポストが存在する場合はカスタムアラートを表示して処理を中断
         setCustomAlertVisible(true);
-        return;
+        return false; // ポストが失敗したことを示すためにfalseを返します
       }
     } else {
       console.error('Failed to check existing posts');
-      return;
+      return false; // ポストが失敗したことを示すためにfalseを返します
     }
 
     // ポストを作成
@@ -124,16 +124,26 @@ const ImageContentPost = () => {
 
       // ここでselectedImagesを空の配列にリセット
       setSelectedImages([]);
-
+      return true; // ポストが成功したことを示すためにtrueを返します
     } else {
       console.error('Post creation failed');
+      return false; // ポストが失敗したことを示すためにfalseを返します
     }
   };
 
   // ポストするボタンのonClickイベントを変更します
   const handlePostAndRedirect = async () => {
-    await handlePost(); // 元のポスト処理を実行
-    navigate('/', { state: { postSuccess: true } }); // ルートURLにリダイレクト
+    if (selectedImages.length === 0) {
+      // 選択された画像がない場合は何もしない
+      console.error('No images selected');
+      return;
+    }
+
+    const postResult = await handlePost(); // 元のポスト処理を実行し、結果を受け取ります
+    if (postResult && !customAlertVisible) {
+      // ポストが成功し、カスタムアラートが表示されていない場合のみリダイレクトを実行
+      navigate('/', { state: { postSuccess: true } }); // ルートURLにリダイレクト
+    }
   };
 
   // ImageContentPost.jsxのrenderImages関数内
