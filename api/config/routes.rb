@@ -11,7 +11,9 @@ Rails.application.routes.draw do
       get '/spotify/search/:artist_name', to: 'artists#search'
       post '/upload_image', to: 'images#upload'
       post '/posts', to: 'posts#create'
+      get '/posts', to: 'posts#index'
       post '/media_works', to: 'media_works#create'
+      get '/media_works', to: 'media_works#index'
     end
   end
 end

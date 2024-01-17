@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useUser, UserProfile } from '@clerk/clerk-react';
 import MBTIModal from './MBTIModal2'; 
+import { Image, Transformation } from 'cloudinary-react';
 
 const Profile = () => {
   const { user } = useUser();
   const [mbtiType, setMbtiType] = useState(null);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [showMBTIModal, setShowMBTIModal] = useState(false); 
+  const [userImages, setUserImages] = useState([]);
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -23,6 +25,22 @@ const Profile = () => {
       fetch(`${API_URL}/api/v1/mbti/${user.id}`)
         .then(response => response.json())
         .then(data => setMbtiType(data.mbti_type));
+
+      // ユーザーの投稿を取得
+      fetch(`${API_URL}/api/v1/posts?user_id=${user.id}`)
+        .then(response => response.json())
+        .then(posts => {
+          // 各投稿に対してメディア作品の画像を取得
+          posts.forEach(post => {
+            fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
+              .then(response => response.json())
+              .then(mediaWorks => {
+                // mediaWorks から画像の URL を抽出して state に追加
+                const images = mediaWorks.map(work => work.image);
+                setUserImages(prevImages => [...new Set([...prevImages, ...images])]);
+              });
+          });
+        });
     }
   }, [user, API_URL]); 
 
@@ -44,10 +62,27 @@ const Profile = () => {
     return {};
   };
 
+  const renderImages = () => {
+    const containerClass = `image-container-${userImages.length}`;
+    const imageSize = userImages.length === 1 ? 600 : 297.5;
+
+    return (
+      <div className={containerClass}>
+        {userImages.map((imageUrl, index) => (
+          <Image key={index} cloudName="dputyeqso" publicId={imageUrl} width={imageSize} height={imageSize} />
+        ))}
+      </div>
+    );
+  };
+
   const renderContent = () => {
     switch (selectedSection) {
       case 'posts':
-        return <div className="text-center mt-8">ポスト</div>;
+        return (
+          <div className="bg-black my-20">
+            {renderImages()}
+          </div>
+        );
       case 'comments':
         return <div className="text-center mt-8">コメント</div>;
       case 'likes':

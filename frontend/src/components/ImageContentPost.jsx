@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import SearchModal from './SearchModal';
-import '../App.css';
 import { Image, Transformation } from 'cloudinary-react';
 
 const ImageContentPost = () => {
@@ -65,6 +64,20 @@ const ImageContentPost = () => {
   };
 
   const handlePost = async () => {
+    // ユーザーが既にポストを持っているかどうかを確認
+    const existingPostsResponse = await fetch(`${API_URL}/api/v1/posts?user_id=${user.id}`);
+    if (existingPostsResponse.ok) {
+      const existingPosts = await existingPostsResponse.json();
+      if (existingPosts.length > 0) {
+        // 既にポストが存在する場合はアラートを表示して処理を中断
+        alert('音楽アーティストの投稿は1回のみです。');
+        return;
+      }
+    } else {
+      console.error('Failed to check existing posts');
+      return;
+    }
+
     // ポストを作成
     console.log(user); // ここに追加
     const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
