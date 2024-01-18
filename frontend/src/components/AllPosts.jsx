@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
   const [mediaWorks, setMediaWorks] = useState({});
+  const [mbtiTypes, setMbtiTypes] = useState({}); // New state for MBTI types
   const location = useLocation();
   const [showAlert, setShowAlert] = useState(false);
 
@@ -28,7 +29,8 @@ const AllPosts = () => {
       .then(data => {
         setPosts(data.map(post => ({
           ...post,
-          user: { ...post.user, profileImageUrl: null, username: null }
+          user: { ...post.user, profileImageUrl: null, username: null },
+          createdAt: post.created_at // Add created_at to the post object
         })));
         data.forEach(post => {
           fetch(`${API_URL}/api/v1/users/${post.user.clerk_id}`)
@@ -53,6 +55,15 @@ const AllPosts = () => {
             .then(media => {
               setMediaWorks(prev => ({ ...prev, [post.id]: media.map(work => work.image) }));
             });
+          fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`) // Fetch MBTI type
+            .then(response => response.json())
+            .then(mbtiData => {
+              setMbtiTypes(prevMbtiTypes => ({
+                ...prevMbtiTypes,
+                [post.user.clerk_id]: mbtiData.mbti_type
+              }));
+            })
+            .catch(error => console.error('Error fetching MBTI data:', error));
         });
       });
   }, [API_URL, location]);
@@ -70,7 +81,7 @@ const AllPosts = () => {
     );
   };
 
-  const renderUserDetails = (user) => {
+  const renderUserDetails = (user, createdAt) => {
     return (
       <div className="user-details flex items-center">
         <div className="avatar">
@@ -79,7 +90,7 @@ const AllPosts = () => {
           </div>
         </div>
         <div className="ml-4">
-          <h1 className="text-xl">{user.username}</h1>
+          <h1><span className="text-2xl">{user.username}</span> <span className="ml-4">{mbtiTypes[user.clerk_id]}</span> <span className="ml-4">{new Date(createdAt).toLocaleString()}</span></h1> 
         </div>
       </div>
     );
@@ -98,7 +109,7 @@ const AllPosts = () => {
       {posts.map(post => (
         <React.Fragment key={post.id}>
           <div style={{ margin: '20px 0 0 30px' }}>
-            {post.user && renderUserDetails(post.user)}
+            {post.user && renderUserDetails(post.user, post.createdAt)}
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
             <div style={mediaWorks[post.id] && mediaWorks[post.id].length === 2 ? { width: '500px', height: '247.5px', backgroundColor: 'black' } : { width: '500px', height: '500px', backgroundColor: 'black' }}>
