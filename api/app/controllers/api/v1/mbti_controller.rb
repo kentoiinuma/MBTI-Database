@@ -27,11 +27,15 @@ module Api
 
       def update
         user = User.find_by(clerk_id: params[:user_id])
-        mbti = MbtiType.find_by(user_id: user.id)
-        if mbti.update(mbti_params)
-          render json: { status: 'SUCCESS', data: mbti }
+        if user
+          mbti = MbtiType.find_or_initialize_by(user_id: user.id)
+          if mbti.update(mbti_params)
+            render json: { status: 'SUCCESS', data: mbti }
+          else
+            render json: { status: 'ERROR', data: mbti.errors }
+          end
         else
-          render json: { status: 'ERROR', data: mbti.errors }
+          render json: { error: 'User not found' }, status: 404
         end
       end
 

@@ -31,7 +31,6 @@
   grid-column: 1 / span 2; /* 両方のカラムにまたがる */
 }
 
-
 /* アーティストの画像が4枚のときのスタイル */
 .image-container-4 {
   display: grid;
@@ -40,4 +39,6 @@
   gap: 5px;
 }
 
-
+.input-info {
+  border-color: #7DB9DE !important;
+}
