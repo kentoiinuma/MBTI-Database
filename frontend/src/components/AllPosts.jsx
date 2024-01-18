@@ -100,7 +100,7 @@ const AllPosts = () => {
           <div style={{ margin: '20px 0 0 30px' }}>
             {post.user && renderUserDetails(post.user)}
           </div>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', marginBottom: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: '20px' }}>
             <div style={mediaWorks[post.id] && mediaWorks[post.id].length === 2 ? { width: '500px', height: '247.5px', backgroundColor: 'black' } : { width: '500px', height: '500px', backgroundColor: 'black' }}>
               {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
             </div>
