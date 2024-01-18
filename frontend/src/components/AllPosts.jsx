@@ -1,13 +1,12 @@
-// frontend/src/components/AllPosts.jsx
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
-import { useLocation } from 'react-router-dom'; // Added
+import { useLocation } from 'react-router-dom';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
   const [mediaWorks, setMediaWorks] = useState({});
-  const location = useLocation(); // Added
-  const [showAlert, setShowAlert] = useState(false); // Added
+  const location = useLocation();
+  const [showAlert, setShowAlert] = useState(false);
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -15,21 +14,40 @@ const AllPosts = () => {
   } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
     API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com";
   } else {
-    // デフォルトのURL
     API_URL = 'http://localhost:3000';
   }
 
   useEffect(() => {
     if (location.state?.postSuccess) {
-      setShowAlert(true); // Added
-      setTimeout(() => setShowAlert(false), 3000); // Added
+      setShowAlert(true);
+      setTimeout(() => setShowAlert(false), 3000);
     }
 
     fetch(`${API_URL}/api/v1/posts/all`)
       .then(response => response.json())
       .then(data => {
-        setPosts(data);
+        setPosts(data.map(post => ({
+          ...post,
+          user: { ...post.user, profileImageUrl: null, username: null }
+        })));
         data.forEach(post => {
+          fetch(`${API_URL}/api/v1/users/${post.user.clerk_id}`)
+            .then(response => response.json())
+            .then(userData => {
+              setPosts(currentPosts => currentPosts.map(p => {
+                if (p.id === post.id) {
+                  return {
+                    ...p,
+                    user: {
+                      ...p.user,
+                      profileImageUrl: userData.profile_image_url,
+                      username: userData.username
+                    }
+                  };
+                }
+                return p;
+              }));
+            });
           fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
             .then(response => response.json())
             .then(media => {
@@ -37,7 +55,7 @@ const AllPosts = () => {
             });
         });
       });
-  }, [API_URL, location]); // Added location to dependency array
+  }, [API_URL, location]);
 
   const renderImages = (images) => {
     const containerClass = `image-container-${images.length}`;
@@ -49,6 +67,21 @@ const AllPosts = () => {
             <Image key={index} cloudName="dputyeqso" publicId={imageUrl} width={imageSize} height={imageSize} />
             ))}
         </div>
+    );
+  };
+
+  const renderUserDetails = (user) => {
+    return (
+      <div className="user-details flex items-center">
+        <div className="avatar">
+          <div className="w-20 rounded-full">
+            <img src={user.profileImageUrl} alt={`profileImage`} className="w-full h-full object-cover" />
+          </div>
+        </div>
+        <div className="ml-4">
+          <h1 className="text-xl">{user.username}</h1>
+        </div>
+      </div>
     );
   };
 
@@ -64,7 +97,10 @@ const AllPosts = () => {
       )}
       {posts.map(post => (
         <React.Fragment key={post.id}>
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '100px', marginBottom: '20px' }}>
+          <div style={{ margin: '20px 0 0 30px' }}>
+            {post.user && renderUserDetails(post.user)}
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '20px', marginBottom: '20px' }}>
             <div style={mediaWorks[post.id] && mediaWorks[post.id].length === 2 ? { width: '500px', height: '247.5px', backgroundColor: 'black' } : { width: '500px', height: '500px', backgroundColor: 'black' }}>
               {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
             </div>

@@ -1,3 +1,5 @@
+# api/app/controllers/api/v1/posts_controller.rb
+
 module Api
     module V1
       class PostsController < ApplicationController
@@ -18,8 +20,8 @@ module Api
         end 
 
         def all
-          posts = Post.all.order(created_at: :desc)
-          render json: posts
+          posts = Post.all.order(created_at: :desc).includes(:user)
+          render json: posts.as_json(include: { user: { only: [:clerk_id] } })
         end
 
         def index

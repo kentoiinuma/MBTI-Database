@@ -79,7 +79,7 @@ const Profile = () => {
     switch (selectedSection) {
       case 'posts':
         return (
-          <div className="bg-black mt-24 mb-10">
+          <div className="bg-black my-10">
             {renderImages()}
           </div>
         );
