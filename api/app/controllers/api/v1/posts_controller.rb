@@ -1,18 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Image } from 'cloudinary-react';
-import { useLocation } from 'react-router-dom';
+# api/app/controllers/api/v1/posts_controller.rb
 
-const AllPosts = () => {
-  const [posts, setPosts] = useState([]);
-  const [mediaWorks, setMediaWorks] = useState({});
-  const [mbtiTypes, setMbtiTypes] = useState({}); // New state for MBTI types
-  const location = useLocation();
-  const [showAlert, setShowAlert] = useState(false);
-
-  let API_URL;
-  if (window.location.origin === 'http://localhost:3001') {
-    API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
 module Api
     module V1
       class PostsController < ApplicationController

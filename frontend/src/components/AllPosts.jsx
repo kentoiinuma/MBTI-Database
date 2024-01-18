@@ -82,6 +82,9 @@ const AllPosts = () => {
   };
 
   const renderUserDetails = (user, createdAt) => {
+    const dateOptions = { month: 'long', day: 'numeric' };
+    const formattedDate = new Date(createdAt).toLocaleString('ja-JP', dateOptions);
+
     return (
       <div className="user-details flex items-center">
         <div className="avatar">
@@ -90,7 +93,7 @@ const AllPosts = () => {
           </div>
         </div>
         <div className="ml-4">
-          <h1><span className="text-2xl">{user.username}</span> <span className="ml-4">{mbtiTypes[user.clerk_id]}</span> <span className="ml-4">{new Date(createdAt).toLocaleString()}</span></h1> 
+          <h1><span className="text-2xl">{user.username}</span> <span className="ml-4">{mbtiTypes[user.clerk_id]}</span> <span className="ml-4">{formattedDate}</span></h1> 
         </div>
       </div>
     );

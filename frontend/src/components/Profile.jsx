@@ -103,8 +103,7 @@ const Profile = () => {
                 </div>
             </div>
             <div className="ml-8">
-              <h1 className="text-2xl">{user.username}</h1>
-              <div className="">{mbtiType}</div>
+              <h1><span className="text-2xl">{user.username}</span> <span className="ml-4">{mbtiType}</span></h1>
             </div>
             <div className="ml-auto mb-12 mr-20">
               <div className="dropdown dropdown-end">
