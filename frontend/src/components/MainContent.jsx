@@ -7,6 +7,10 @@ import MBTIModal from './MBTIModal';
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
 import AllPosts from './AllPosts';
+import Se from './Se';
+import Si from './Si';
+import Ne from './Ne';
+import Ni from './Ni';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -55,11 +59,15 @@ function MainContent() {
         <Sidebar />
         <div className="flex flex-col flex-1">
           <Header onSignIn={handleSignIn} />
-          <main className="flex-1 overflow-auto pl-64">
+          <main className="flex-1 overflow-auto pl-69">
             <Routes>
               <Route path="/profile" element={<Profile />} />
               <Route path="/post" element={<ImageContentPost />} />
               <Route path="/" element={<AllPosts />} />
+              <Route path="/Se" element={<Se />} />
+              <Route path="/Si" element={<Si />} />
+              <Route path="/Ne" element={<Ne />} />
+              <Route path="/Ni" element={<Ni />} />
             </Routes>
             {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
           </main>
