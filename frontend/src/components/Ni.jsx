@@ -31,7 +31,7 @@ function Ni() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('${API_URL}/api/v1/media_works/statistics');
+      const response = await fetch(`${API_URL}/api/v1/media_works/statistics`);
       const data = await response.json();
       setChartData({
         labels: Object.keys(data),
