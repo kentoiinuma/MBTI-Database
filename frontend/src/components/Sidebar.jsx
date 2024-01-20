@@ -4,7 +4,7 @@ import '../App.css'; // Import the CSS file
 
 const Sidebar = () => {
   return (
-    <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#7DB9DE]">
+    <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#2EA9DF]">
       <h1 className="text-xl font-bold mb-8">
         <NavLink to="/" style={{ color: '#2EA9DF', fontSize: '1.3em' }}>
         16type Favorite<br />Database

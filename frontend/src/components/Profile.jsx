@@ -53,7 +53,7 @@ const Profile = () => {
   const getSelectedStyle = (section) => {
     if (selectedSection === section) {
       return {
-        borderBottom: '4px solid #7DB9DE',
+        borderBottom: '4px solid #2EA9DF',
         width: '33%',
         margin: '0 auto',
         borderRadius: '10px',
@@ -159,7 +159,7 @@ const Profile = () => {
               <div style={getSelectedStyle('likes')}></div>
             </div>
           </div>
-          <hr className="border-t border-[#7DB9DE] w-full" />
+          <hr className="border-t border-[#2EA9DF] w-full" />
           {renderContent()}
         </>
       )}

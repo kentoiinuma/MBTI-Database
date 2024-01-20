@@ -20,7 +20,7 @@ const Header = ({ onSignIn }) => {
   }, [isSignedIn, onSignIn, user]);
 
   return (
-    <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#7DB9DE]">
+    <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#2EA9DF]">
       {isSignedIn ? (
         <>
           <span ></span>
