@@ -112,7 +112,7 @@ const ImageContentPost = () => {
             post_id: postId,
             title: imagePair.artist,
             image: imagePair.url,
-            media_type: 0
+            media_type: 5
           }) // リクエストボディに含める
         });
 
