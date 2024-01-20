@@ -31,9 +31,18 @@ function Ni() {
     API_URL = 'http://localhost:3000';
   }
 
+  // ボタンの状態を管理するためのステートを追加
+  const [selectedTypes, setSelectedTypes] = useState(['ENFJ', 'ENTJ', 'INFJ', 'INTJ']);
+  const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
+
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${API_URL}/api/v1/media_works/statistics`);
+      const queryParams = new URLSearchParams({
+        mbti_types: selectedTypes,
+        diagnosis_methods: selectedStatus.map(status => (status === '公式' ? 'official_assessment' : 'self_assessment'))
+      });
+
+      const response = await fetch(`${API_URL}/api/v1/media_works/statistics?${queryParams}`);
       const data = await response.json();
       const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
       setChartData({
@@ -48,7 +57,7 @@ function Ni() {
     };
 
     fetchData();
-  }, []);
+  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
 
   const options = {
     indexAxis: 'y',
@@ -61,10 +70,6 @@ function Ni() {
       },
     },
   };
-
-  // ボタンの状態を管理するためのステートを追加
-  const [selectedTypes, setSelectedTypes] = useState(['ENFJ', 'ENTJ', 'INFJ', 'INTJ']);
-  const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
   // ボタンの選択状態を切り替える関数
   const toggleType = (type) => {
@@ -133,7 +138,10 @@ function Ni() {
           ))}
         </ButtonGroup>
       </div>
-
+      {/* 説明テキストを追加 */}
+      <p style={{ color: '#2EA9DF', marginTop: '20px', marginLeft: '130px' }}>
+        ボタンを選択・選択解除することでデータベースをフィルタリングすることができます。
+      </p>
       {/* 既存のグラフ表示コード */}
       <div className="my-8 ml-2" style={{ width: '98%', height: '100%' }}>
         <Bar options={options} data={chartData} />
