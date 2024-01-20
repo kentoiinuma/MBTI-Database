@@ -112,7 +112,7 @@ const ImageContentPost = () => {
             post_id: postId,
             title: imagePair.artist,
             image: imagePair.url,
-            media_type: 0
+            media_type: 5
           }) // リクエストボディに含める
         });
 
@@ -183,7 +183,7 @@ const ImageContentPost = () => {
           </svg>
           <input
             type="text"
-            placeholder="好きなアーティスト名を1~4人検索してください。"
+            placeholder="好きな音楽アーティスト"
             className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
             onKeyPress={handleSearch}
             value={inputValue} // Added value prop
@@ -191,6 +191,7 @@ const ImageContentPost = () => {
           />
         </div>
       </div>
+      <span style={{ color: '#2EA9DF' }}>※音楽アーティストの投稿は1回のみです。</span>
       <div className="bg-black">
         {renderImages()} {/* ここで選択された画像をレンダリング */}
       </div>

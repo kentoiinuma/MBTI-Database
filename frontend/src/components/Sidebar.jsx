@@ -4,36 +4,39 @@ import '../App.css'; // Import the CSS file
 
 const Sidebar = () => {
   return (
-    <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#7DB9DE]">
+    <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#2EA9DF]">
       <h1 className="text-xl font-bold mb-8">
-        <NavLink to="/" activeClassName="active" style={{ color: '#2EA9DF', fontSize: '1.3em' }}>
+        <NavLink to="/" style={{ color: '#2EA9DF', fontSize: '1.3em' }}>
         16type Favorite<br />Database
         </NavLink>
       </h1>      
       <nav className="flex-grow">
         <ul className="space-y-4">
           <li>
-            <NavLink to="/" activeClassName="active" className="sidebar-link">
+            <NavLink to="/" className={({ isActive }) => isActive ? "sidebar-link active" : "sidebar-link"}>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 inline-block mr-2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+              </svg>
               ホーム
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Se" activeClassName="active" className="sidebar-link">
+            <NavLink to="/Se" className={({ isActive }) => isActive ? "sidebar-link active" : "sidebar-link"}>
               Se ESFP/ESTP/ISFP/ISTP
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Si" activeClassName="active" className="sidebar-link">
+            <NavLink to="/Si" className={({ isActive }) => isActive ? "sidebar-link active" : "sidebar-link"}>
               Si ESFJ/ESTJ/ISFJ/ISTJ
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Ne" activeClassName="active" className="sidebar-link">
+            <NavLink to="/Ne" className={({ isActive }) => isActive ? "sidebar-link active" : "sidebar-link"}>
               Ne ENFP/ENTP/INFP/INTP
             </NavLink>
           </li>
           <li>
-            <NavLink to="/Ni" activeClassName="active" className="sidebar-link">
+            <NavLink to="/Ni" className={({ isActive }) => isActive ? "sidebar-link active" : "sidebar-link"}>
               Ni ENFJ/ENTJ/INFJ/INTJ
             </NavLink>
           </li>
@@ -43,7 +46,6 @@ const Sidebar = () => {
         <ul className="space-y-2">
           <li>利用規約</li>
           <li>プライバシーポリシー</li>
-          <li>お問い合わせ</li>
         </ul>
       </nav>
     </aside>

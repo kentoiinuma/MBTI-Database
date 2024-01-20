@@ -119,7 +119,7 @@ const AllPosts = () => {
               {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
             </div>
           </div>
-          <hr className="border-t border-[#7DB9DE] w-full" />
+          <hr className="border-t border-[#2EA9DF] w-full" />
         </React.Fragment>
       ))}
     </div>
