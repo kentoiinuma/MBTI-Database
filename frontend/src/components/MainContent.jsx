@@ -11,6 +11,7 @@ import Se from './Se';
 import Si from './Si';
 import Ne from './Ne';
 import Ni from './Ni';
+import Notifications from './Notifications';
 
 function MainContent() {
     const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -68,6 +69,7 @@ function MainContent() {
               <Route path="/Si" element={<Si />} />
               <Route path="/Ne" element={<Ne />} />
               <Route path="/Ni" element={<Ni />} />
+              <Route path="/notifications" element={<Notifications />} />
             </Routes>
             {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
           </main>

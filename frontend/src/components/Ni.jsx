@@ -47,13 +47,23 @@ function Ni() {
     fetchData();
   }, []);
 
+  const options = {
+    indexAxis: 'y',
+    scales: {
+      x: {
+        ticks: {
+          stepSize: 1,
+        },
+      },
+    },
+  };
+
   return (
     <div>
       <h2>Media Works Title Statistics for ENFJ, ENTJ, INFJ, INTJ MBTI Types</h2>
-      <Bar data={chartData} />
+      <Bar options={options} data={chartData} />
     </div>
   );
 }
 
 export default Ni;
-
