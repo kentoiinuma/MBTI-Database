@@ -20,28 +20,28 @@ const Header = ({ onSignIn }) => {
   }, [isSignedIn, onSignIn, user]);
 
   return (
-    <header className="flex justify-between items-center p-4 bg-white text-black border-b border-[#2EA9DF]">
+    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#7DB9DE]">
       {isSignedIn ? (
         <>
           <span ></span>
           <div className="flex items-center gap-4">
             {/* Upload icon button */}
             <button className="p-2 rounded-full hover:bg-gray-100" onClick={() => navigate('/post')}>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.0} stroke="#2EA9DF" className="w-11 h-11">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </button>
             {/* Notifications button */}
             <button onClick={() => navigate('/notifications')} className="p-2 rounded-full hover:bg-gray-100">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
               </svg>
             </button>
             {/* User avatar */}
             <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button" ><img src={user?.profileImageUrl} alt="User avatar" className="h-10 w-10 object-cover rounded-full" /></div>
+              <div tabIndex={0} role="button" ><img src={user?.profileImageUrl} alt="User avatar" className="h-11 w-11 object-cover rounded-full" /></div>
               <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                <li><Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">プロフィール</Link></li>
+                <li><Link to="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{user.username}</Link></li>
                 <li><Link to="/how-to" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">使い方</Link></li>
                 <li><Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">お問い合わせ</Link></li>
                 <li><button onClick={handleSignOut} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">サインアウト</button></li>
