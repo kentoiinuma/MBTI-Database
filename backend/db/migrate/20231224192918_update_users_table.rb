@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# このクラスはusersテーブルを更新するマイグレーションを定義します。
 class UpdateUsersTable < ActiveRecord::Migration[7.0]
   def change
     remove_column :users, :name
@@ -5,5 +8,3 @@ class UpdateUsersTable < ActiveRecord::Migration[7.0]
     add_column :users, :clerk_id, :string
   end
 end
-
-

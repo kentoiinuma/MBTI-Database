@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 # app/services/spotify_service.rb
 
 require 'base64'
 require 'net/http'
 
+# Spotify APIへの接続を提供するサービス
 class SpotifyService
   SPOTIFY_ACCOUNTS_ENDPOINT = 'https://accounts.spotify.com/api/token'
   SPOTIFY_API_ENDPOINT = 'https://api.spotify.com/v1'

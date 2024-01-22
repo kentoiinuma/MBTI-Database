@@ -1,10 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from 'chart.js';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+);
 
 function Ne() {
   const [chartData, setChartData] = useState({
@@ -23,33 +38,45 @@ function Ne() {
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
-    API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com";
+  } else if (
+    window.location.origin ===
+    'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
+  ) {
+    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
     // デフォルトのURL
     API_URL = 'http://localhost:3000';
   }
 
   // ボタンの状態を管理するためのステートを追加
-  const [selectedTypes, setSelectedTypes] = useState(['ENFP', 'ENTP', 'INFP', 'INTP']);
+  const [selectedTypes, setSelectedTypes] = useState([
+    'ENFP',
+    'ENTP',
+    'INFP',
+    'INTP',
+  ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
   useEffect(() => {
     const fetchData = async () => {
       const queryParams = new URLSearchParams({
         mbti_types: selectedTypes,
-        diagnosis_methods: selectedStatus.map(status => (status === '公式' ? 'official_assessment' : 'self_assessment'))
+        diagnosis_methods: selectedStatus.map((status) =>
+          status === '公式' ? 'official_assessment' : 'self_assessment',
+        ),
       });
 
-      const response = await fetch(`${API_URL}/api/v1/media_works/statistics?${queryParams}`);
+      const response = await fetch(
+        `${API_URL}/api/v1/media_works/statistics?${queryParams}`,
+      );
       const data = await response.json();
       const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
       setChartData({
-        labels: sortedData.map(item => item[0]),
+        labels: sortedData.map((item) => item[0]),
         datasets: [
           {
             ...chartData.datasets[0],
-            data: sortedData.map(item => item[1]),
+            data: sortedData.map((item) => item[1]),
           },
         ],
       });
@@ -72,9 +99,9 @@ function Ne() {
 
   // ボタンの選択状態を切り替える関数
   const toggleType = (type) => {
-    setSelectedTypes(prev => {
+    setSelectedTypes((prev) => {
       if (prev.includes(type)) {
-        return prev.filter(t => t !== type);
+        return prev.filter((t) => t !== type);
       } else {
         return [...prev, type];
       }
@@ -82,9 +109,9 @@ function Ne() {
   };
 
   const toggleStatus = (status) => {
-    setSelectedStatus(prev => {
+    setSelectedStatus((prev) => {
       if (prev.includes(status)) {
-        return prev.filter(s => s !== status);
+        return prev.filter((s) => s !== status);
       } else {
         return [...prev, status];
       }
@@ -103,7 +130,7 @@ function Ne() {
     '&.MuiButton-outlined': {
       color: '#2EA9DF',
       borderColor: '#2EA9DF',
-    }
+    },
   });
 
   return (
@@ -129,7 +156,9 @@ function Ne() {
             <Button
               key={status}
               onClick={() => toggleStatus(status)}
-              variant={selectedStatus.includes(status) ? 'contained' : 'outlined'}
+              variant={
+                selectedStatus.includes(status) ? 'contained' : 'outlined'
+              }
               sx={buttonStyle(selectedStatus.includes(status))}
             >
               {status}

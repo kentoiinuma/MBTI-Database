@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# MBTIタイプを管理するモデル
 class MbtiType < ApplicationRecord
   belongs_to :user
 
@@ -6,7 +9,7 @@ class MbtiType < ApplicationRecord
     ESFP: 0, ESTP: 1, ISFP: 2, ISTP: 3, # Se
     ESFJ: 4, ESTJ: 5, ISFJ: 6, ISTJ: 7, # Si
     ENFP: 8, ENTP: 9, INFP: 10, INTP: 11, # Ne
-    ENFJ: 12, ENTJ: 13, INFJ: 14, INTJ: 15  # Ni
+    ENFJ: 12, ENTJ: 13, INFJ: 14, INTJ: 15 # Ni
   }
 
   # 診断方法を逆の順番に定義

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# 通知を管理するモデル
 class Notification < ApplicationRecord
   # 関連付け
   belongs_to :user
@@ -7,6 +10,5 @@ class Notification < ApplicationRecord
   belongs_to :related_user, class_name: 'User', foreign_key: 'related_for_id'
 
   # enumの定義
-  enum notification_type: { like: 0, comment: 1}
+  enum notification_type: { like: 0, comment: 1 }
 end
-

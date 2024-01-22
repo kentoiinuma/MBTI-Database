@@ -5,12 +5,12 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        '69': '17.25rem', // 65の値を追加（65 * 0.25 = 16.25rem）
-      }
+        69: '17.25rem', // 65の値を追加（65 * 0.25 = 16.25rem）
+      },
     },
   },
   variants: {
     extend: {},
   },
-  plugins: [require("daisyui")],
-}
+  plugins: [require('daisyui')],
+};
