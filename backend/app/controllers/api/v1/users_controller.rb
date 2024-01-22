@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # api/app/controllers/api/v1/users_controller.rb
 
 module Api

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # app/services/spotify_service.rb
 
 require 'base64'

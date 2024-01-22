@@ -1,37 +1,38 @@
-source "https://rubygems.org"
+# frozen_string_literal: true
+
+source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "3.2.2"
+ruby '3.2.2'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 7.0.8"
+gem 'rails', '~> 7.0.8'
 
 # Use postgresql as the database for Active Record
-gem "pg", "~> 1.1"
+gem 'pg', '~> 1.1'
 
 # Use the Puma web server [https://github.com/puma/puma]
-gem "puma", "~> 5.0"
+gem 'puma', '~> 5.0'
 
 # Googleログイン
-gem "devise"
-gem "omniauth"
+gem 'devise'
+gem 'omniauth'
 
 # 画像加工
 gem 'cloudinary'
-
 
 # 通知
 # WebSocket通信・ActionCable is included in Rails
 
 # キューとバックグラウンド処理
 # ActiveJob is included in Rails
-gem "sidekiq"
-gem "redis"
+gem 'redis'
+gem 'sidekiq'
 
 # その他
-gem "pundit"
-gem "rspec-rails", group: [:development, :test]
-gem "rubocop", require: false, group: :development
+gem 'pundit'
+gem 'rspec-rails', group: %i[development test]
+gem 'rubocop', require: false, group: :development
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
@@ -46,22 +47,22 @@ gem "rubocop", require: false, group: :development
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
+gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
-gem "bootsnap", require: false
+gem 'bootsnap', require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
 # gem "image_processing", "~> 1.2"
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
-gem "rack-cors"
+gem 'rack-cors'
 
-gem 'clerk-sdk-ruby', require: "clerk"
+gem 'clerk-sdk-ruby', require: 'clerk'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri mingw x64_mingw ]
+  gem 'debug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
 end
 

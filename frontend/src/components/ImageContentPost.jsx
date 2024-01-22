@@ -17,8 +17,11 @@ const ImageContentPost = () => {
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com') {
-    API_URL = "https://favorite-database-16type-5020d6339517.herokuapp.com";
+  } else if (
+    window.location.origin ===
+    'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
+  ) {
+    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
     // デフォルトのURL
     API_URL = 'http://localhost:3000';
@@ -30,7 +33,9 @@ const ImageContentPost = () => {
       const trimmedValue = event.target.value.trim();
       if (trimmedValue !== '') {
         setSearchQuery(trimmedValue);
-        const response = await fetch(`${API_URL}/api/v1/spotify/search/${trimmedValue}`);
+        const response = await fetch(
+          `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
+        );
         if (response.ok) {
           const data = await response.json();
           setArtist(data.artist);
@@ -50,7 +55,7 @@ const ImageContentPost = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ imageUrl: imageUrl }) // imageUrlをリクエストボディに含める
+      body: JSON.stringify({ imageUrl: imageUrl }), // imageUrlをリクエストボディに含める
     });
 
     if (response.ok) {
@@ -59,9 +64,14 @@ const ImageContentPost = () => {
       const uploadedImageUrl = data.url;
 
       // 既存の画像と同じでない場合のみ追加
-      if (!selectedImages.some(image => image.url === uploadedImageUrl)) {
+      if (!selectedImages.some((image) => image.url === uploadedImageUrl)) {
         console.log(selectedImages); // selectedImages配列をログに出力
-        setSelectedImages(prevImages => [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(0, 4)); // 最大4枚まで画像を追加
+        setSelectedImages((prevImages) =>
+          [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(
+            0,
+            4,
+          ),
+        ); // 最大4枚まで画像を追加
       }
     } else {
       console.error('Image upload failed');
@@ -73,7 +83,9 @@ const ImageContentPost = () => {
 
   const handlePost = async () => {
     // ユーザーが既にポストを持っているかどうかを確認
-    const existingPostsResponse = await fetch(`${API_URL}/api/v1/posts?user_id=${user.id}`);
+    const existingPostsResponse = await fetch(
+      `${API_URL}/api/v1/posts?user_id=${user.id}`,
+    );
     if (existingPostsResponse.ok) {
       const existingPosts = await existingPostsResponse.json();
       if (existingPosts.length > 0) {
@@ -93,7 +105,7 @@ const ImageContentPost = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clerk_id: user.id }) // clerk_idをリクエストボディに含める
+      body: JSON.stringify({ clerk_id: user.id }), // clerk_idをリクエストボディに含める
     });
 
     if (postResponse.ok) {
@@ -112,8 +124,8 @@ const ImageContentPost = () => {
             post_id: postId,
             title: imagePair.artist,
             image: imagePair.url,
-            media_type: 5
-          }) // リクエストボディに含める
+            media_type: 5,
+          }), // リクエストボディに含める
         });
 
         if (!mediaWorkResponse.ok) {
@@ -153,14 +165,23 @@ const ImageContentPost = () => {
 
     if (selectedImages.length === 0) {
       return (
-        <div className={containerClass} style={{ width: '600px', height: '600px', backgroundColor: 'black' }} />
+        <div
+          className={containerClass}
+          style={{ width: '600px', height: '600px', backgroundColor: 'black' }}
+        />
       );
     }
 
     return (
-      <div className={containerClass} > 
+      <div className={containerClass}>
         {selectedImages.map((imagePair, index) => (
-          <Image key={index} cloudName="dputyeqso" publicId={imagePair.url} width={imageSize} height={imageSize} />
+          <Image
+            key={index}
+            cloudName="dputyeqso"
+            publicId={imagePair.url}
+            width={imageSize}
+            height={imageSize}
+          />
         ))}
       </div>
     );
@@ -170,16 +191,37 @@ const ImageContentPost = () => {
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
       {customAlertVisible && (
         <div role="alert" className="alert">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="stroke-info shrink-0 w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="stroke-info shrink-0 w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
           </svg>
           <span>音楽アーティストの投稿は1回のみです。</span>
         </div>
       )}
       <div className="flex items-center space-x-2">
         <div className="relative w-full max-w-xs">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2">
-            <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+            />
           </svg>
           <input
             type="text"
@@ -191,21 +233,32 @@ const ImageContentPost = () => {
           />
         </div>
       </div>
-      <span style={{ color: '#2EA9DF' }}>※音楽アーティストの投稿は1回のみです。</span>
+      <span style={{ color: '#2EA9DF' }}>
+        ※音楽アーティストの投稿は1回のみです。
+      </span>
       <div className="bg-black">
         {renderImages()} {/* ここで選択された画像をレンダリング */}
       </div>
       <div className="flex justify-center gap-4">
-          <button type="submit" onClick={handlePostAndRedirect} className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50" style={{ backgroundColor: '#2EA9DF', color: 'white', borderRadius: '50px' }}>
-            ポストする
-          </button>
+        <button
+          type="submit"
+          onClick={handlePostAndRedirect}
+          className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50"
+          style={{
+            backgroundColor: '#2EA9DF',
+            color: 'white',
+            borderRadius: '50px',
+          }}
+        >
+          ポストする
+        </button>
       </div>
-      <SearchModal 
-        isOpen={isModalOpen} 
-        searchQuery={searchQuery} 
-        artist={artist} 
-        onImageSelect={handleImageSelect} 
-        onClose={() => setModalOpen(false)} 
+      <SearchModal
+        isOpen={isModalOpen}
+        searchQuery={searchQuery}
+        artist={artist}
+        onImageSelect={handleImageSelect}
+        onClose={() => setModalOpen(false)}
       />
     </div>
   );
