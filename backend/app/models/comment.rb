@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 投稿に対するコメントを表すモデル
 class Comment < ApplicationRecord
   # 関連付け
   belongs_to :user

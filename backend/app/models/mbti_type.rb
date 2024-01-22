@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# MBTIタイプを管理するモデル
 class MbtiType < ApplicationRecord
   belongs_to :user
 

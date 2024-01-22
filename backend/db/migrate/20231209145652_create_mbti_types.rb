@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# このクラスはmbti_typesテーブルを作成するためのマイグレーションを定義します。
 class CreateMbtiTypes < ActiveRecord::Migration[7.0]
   def change
     create_table :mbti_types do |t|

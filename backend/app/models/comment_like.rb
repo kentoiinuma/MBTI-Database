@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# コメントに対する「いいね」を表すモデル
 class CommentLike < ApplicationRecord
   belongs_to :user
   belongs_to :comment

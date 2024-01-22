@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 知覚グループを管理するモデル
 class PerceptionGroup < ApplicationRecord
   # 関連付け
   has_many :comments

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# このクラスはcomment_likesテーブルを作成するためのマイグレーションを定義します。
 class CreateCommentLikes < ActiveRecord::Migration[7.0]
   def change
     create_table :comment_likes do |t|

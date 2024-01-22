@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# 投稿に対する「いいね」を表すモデル
 class PostLike < ApplicationRecord
   belongs_to :user
   belongs_to :post

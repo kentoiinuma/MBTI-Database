@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# メディア作品を表すモデル
 class MediaWork < ApplicationRecord
   # 関連付け
   belongs_to :post

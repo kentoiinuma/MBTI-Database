@@ -100,6 +100,7 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
     - React 18.2.0
     - Tailwind CSS 3.3.6
     - daisyUI 3.8.3
+    - MUI 5.15.5
 - バックエンド  
     -  Ruby 3.2.2
 	-  Rails(APIモード) 7.0.8
@@ -117,10 +118,6 @@ MBTIは最終的には自分でタイプを決める必要がある主観的な�
 		- react-chartjs-2
     - キューとバックグラウンド処理
 		- Redis
-    - その他
-        - Pundit
-        - RSpec
-        - RuboCop
 - インフラ  
     - Heroku
 - データベース
