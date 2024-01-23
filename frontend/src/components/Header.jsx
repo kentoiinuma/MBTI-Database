@@ -161,7 +161,7 @@ const Header = ({ onSignIn }) => {
                   <InfoOutlinedIcon
                     style={{ fontSize: '20px', marginRight: '8px' }}
                   />
-                  16type Favorite Databaseについて
+                  このアプリについて
                 </MenuItem>
                 <MenuItem
                   onClick={handleClose}
