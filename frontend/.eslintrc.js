@@ -18,6 +18,8 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'react/react-in-jsx-scope': 'off',
+    'camelcase': 'off',
+    'react/prop-types': 'off',
     // その他のカスタムルール
   },
   settings: {
