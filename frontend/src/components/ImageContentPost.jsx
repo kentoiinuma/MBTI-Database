@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import SearchModal from './SearchModal';
-import { Image, Transformation } from 'cloudinary-react';
+import { Image } from 'cloudinary-react';
 import { useNavigate } from 'react-router-dom'; // Added
 
 const ImageContentPost = () => {
@@ -13,6 +13,7 @@ const ImageContentPost = () => {
   const [inputValue, setInputValue] = useState(''); // Added state for input value
   const navigate = useNavigate(); // Added
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // Added state for custom alert visibility
+  const [artistNotFound, setArtistNotFound] = useState(false); // Added state for artist not found
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -38,10 +39,16 @@ const ImageContentPost = () => {
         );
         if (response.ok) {
           const data = await response.json();
-          setArtist(data.artist);
-          setModalOpen(true);
+          if (data.artist) {
+            setArtist(data.artist);
+            setModalOpen(true);
+            setArtistNotFound(false); // Artist found, reset the error
+          } else {
+            setArtistNotFound(true); // Artist not found, set the error
+          }
         } else {
           console.error('API request failed');
+          setArtistNotFound(true); // API request failed, set the error
         }
       }
     }
@@ -63,8 +70,8 @@ const ImageContentPost = () => {
       console.log(data); // レスポンスをログに出力
       const uploadedImageUrl = data.url;
 
-      // 既存の画像と同じでない場合のみ追加
-      if (!selectedImages.some((image) => image.url === uploadedImageUrl)) {
+      // 既存のアーティスト名と同じでない場合のみ追加
+      if (!selectedImages.some((image) => image.artist === artistName)) {
         console.log(selectedImages); // selectedImages配列をログに出力
         setSelectedImages((prevImages) =>
           [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(
@@ -189,6 +196,24 @@ const ImageContentPost = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
+      {artistNotFound && (
+        <div role="alert" className="alert">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            className="stroke-info shrink-0 w-6 h-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span>正しいアーティスト名を入力してください。</span>
+        </div>
+      )}
       {customAlertVisible && (
         <div role="alert" className="alert">
           <svg
