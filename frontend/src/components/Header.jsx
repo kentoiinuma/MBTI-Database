@@ -1,16 +1,34 @@
 // frontend/src/components/Header.jsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
   const navigate = useNavigate();
   const { signOut } = useClerk();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
+  };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   useEffect(() => {
@@ -19,11 +37,46 @@ const Header = ({ onSignIn }) => {
     }
   }, [isSignedIn, onSignIn, user]);
 
+  const smallText = (text) => <span style={{ fontSize: '18px' }}>{text}</span>;
+
+  const getTitle = () => {
+    switch (window.location.pathname) {
+      case '/profile':
+        return 'プロフィール';
+      case '/post':
+        return 'ポスト';
+      case '/':
+        return 'ホーム';
+      case '/Se':
+        return <>Se {smallText('ESFP/ESTP/ISFP/ISTP')} のデータベース</>;
+      case '/Si':
+        return <>Si {smallText('ESFJ/ESTJ/ISFJ/ISTJ')} のデータベース</>;
+      case '/Ne':
+        return <>Ne {smallText('ENFP/ENTP/INFP/INTP')} のデータベース</>;
+      case '/Ni':
+        return <>Ni {smallText('ENFJ/ENTJ/INFJ/INTJ')} のデータベース</>;
+      case '/notifications':
+        return '通知';
+      case '/terms-of-service':
+        return '利用規約';
+      case '/privacy-policy':
+        return 'プライバシーポリシー';
+      case '/about':
+        return '16type Favorite Databaseとは？';
+      case '/contact':
+        return 'お問い合わせ';
+      default:
+        return '';
+    }
+  };
+
   return (
     <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#7DB9DE]">
+      <span className="ml-72" style={{ fontSize: '24px' }}>
+        {getTitle()}
+      </span>
       {isSignedIn ? (
         <>
-          <span></span>
           <div className="flex items-center gap-4">
             {/* Upload icon button */}
             <button
@@ -66,61 +119,94 @@ const Header = ({ onSignIn }) => {
               </svg>
             </button>
             {/* User avatar */}
-            <div className="dropdown dropdown-end">
-              <div tabIndex={0} role="button">
+            <div>
+              <button
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={open ? 'true' : undefined}
+                onClick={handleClick}
+              >
                 <img
                   src={user?.profileImageUrl}
                   alt="User avatar"
                   className="h-11 w-11 object-cover rounded-full"
                 />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+              </button>
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
               >
-                <li>
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    {user.username}
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/how-to"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    使い方
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/contact"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    お問い合わせ
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    onClick={handleSignOut}
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    サインアウト
-                  </button>
-                </li>
-              </ul>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/profile"
+                  className="flex items-center"
+                >
+                  <AccountCircleOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  {user.username}
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/about" // Updated link
+                  className="flex items-center"
+                >
+                  <InfoOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  16type Favorite Databaseについて
+                </MenuItem>
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/contact" // Updated link
+                  className="flex items-center"
+                >
+                  <HelpOutlineOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  お問い合わせ
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleSignOut();
+                    handleClose();
+                  }}
+                >
+                  <LogoutOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  サインアウト
+                </MenuItem>
+              </Menu>
             </div>
           </div>
         </>
       ) : (
-        <div className="ml-auto">
-          <SignInButton>SignIn</SignInButton>
-        </div>
+        <span className="ml-auto">
+          <Link to="/about">
+            <InfoOutlinedIcon
+              style={{ fontSize: '32px', marginRight: '8px' }}
+            />
+          </Link>
+          <SignInButton>
+            <LoginOutlinedIcon style={{ fontSize: '32px' }} />
+          </SignInButton>
+        </span>
       )}
     </header>
   );
+};
+
+Header.propTypes = {
+  onSignIn: PropTypes.func, // Add type checking for onSignIn
 };
 
 export default Header;
