@@ -1,7 +1,13 @@
 // frontend/src/components/Header.jsx
 import React, { useEffect } from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
 import { Link, useNavigate } from 'react-router-dom';
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 
 const Header = ({ onSignIn }) => {
   const { isSignedIn, user } = useUser();
@@ -83,6 +89,12 @@ const Header = ({ onSignIn }) => {
                     to="/profile"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
+                    <AccountCircleOutlinedIcon
+                      style={{
+                        fontSize: '20px',
+                        marginRight: '8px',
+                      }}
+                    />
                     {user.username}
                   </Link>
                 </li>
@@ -91,7 +103,13 @@ const Header = ({ onSignIn }) => {
                     to="/how-to"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    使い方
+                    <InfoOutlinedIcon
+                      style={{
+                        fontSize: '20px',
+                        marginRight: '8px',
+                      }}
+                    />
+                    このアプリについて
                   </Link>
                 </li>
                 <li>
@@ -99,6 +117,12 @@ const Header = ({ onSignIn }) => {
                     to="/contact"
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
+                    <HelpOutlineOutlinedIcon
+                      style={{
+                        fontSize: '20px',
+                        marginRight: '8px',
+                      }}
+                    />
                     お問い合わせ
                   </Link>
                 </li>
@@ -107,6 +131,12 @@ const Header = ({ onSignIn }) => {
                     onClick={handleSignOut}
                     className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
+                    <LogoutOutlinedIcon
+                      style={{
+                        fontSize: '20px',
+                        marginRight: '8px',
+                      }}
+                    />
                     サインアウト
                   </button>
                 </li>
@@ -115,12 +145,24 @@ const Header = ({ onSignIn }) => {
           </div>
         </>
       ) : (
-        <div className="ml-auto">
-          <SignInButton>SignIn</SignInButton>
-        </div>
+        <span className="ml-auto">
+          <InfoOutlinedIcon
+            style={{
+              fontSize: '32px',
+              marginRight: '8px',
+            }}
+          />
+          <SignInButton>
+            <LoginOutlinedIcon style={{ fontSize: '32px' }} />
+          </SignInButton>
+        </span>
       )}
     </header>
   );
+};
+
+Header.propTypes = {
+  onSignIn: PropTypes.func, // Add type checking for onSignIn
 };
 
 export default Header;
