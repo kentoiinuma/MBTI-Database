@@ -62,7 +62,7 @@ const Header = ({ onSignIn }) => {
       case '/privacy-policy':
         return 'プライバシーポリシー';
       case '/about':
-        return '16type Favorite Databaseについて';
+        return '16type Favorite Databaseとは？';
       case '/contact':
         return 'お問い合わせ';
       default:
