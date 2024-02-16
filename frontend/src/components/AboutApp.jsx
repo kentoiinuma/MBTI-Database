@@ -1,29 +1,88 @@
 // frontend/src/components/AboutApp.jsx
 import React from 'react';
+import Link from '@mui/material/Link'; // MUIのLinkコンポーネントをインポート
 
 function AboutApp() {
   return (
-    <div className="flex justify-center mt-10">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-        className="w-6 h-6"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"
+    <div>
+      <p>
+        MBTIタイプ診断をしたことのあるユーザーが、音楽やアニメなどのメディアごとに好きな作品やアーティストを投稿することにより、MBTIタイプごとの好みをデータベース化するWebアプリケーションです。
+      </p>
+
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <h2>Step1</h2>
+        <div>
+          <p>ログインしてMBTIタイプとその診断方法を登録しよう！</p>
+          <p>
+            MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視されていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました。
+          </p>
+        </div>
+      </div>
+      <ul>
+        <li>
+          診断方法とは？
+          <ul>
+            <li>
+              診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定したものなのか？（非公式）
+            </li>
+            <li>
+              参考URL
+              <ul>
+                <li>
+                  <Link href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88">
+                    16personalities
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://www.idrlabs.com/jp/cognitive-function/test.php">
+                    心理機能テスト
+                  </Link>
+                </li>
+                <li>
+                  <Link href="http://rinnsyou.com/archives/category/0200sinriryouhou/0203yungu">
+                    心理機能について
+                  </Link>
+                </li>
+                <li>
+                  <Link href="https://www.amazon.co.jp/dp/4905050219">
+                    MBTIの書籍
+                  </Link>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <Link href="https://www.mbti.or.jp/">公式</Link>
+              のセッションを通じて決定したものなのか？（公式）
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <h2>Step2</h2>
+        <div>
+          <p>
+            好きな作品やアーティストのイメージ画像を投稿しよう！(現在音楽アーティストのみ)
+          </p>
+          <p>1~4枚のイメージ画像を投稿できます。</p>
+        </div>
+      </div>
+      <p>
+        <img
+          src="https://res.cloudinary.com/dputyeqso/image/upload/f_auto/KD48HXJGNCLJGKODATI3"
+          alt="イメージ画像投稿例"
         />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4.867 19.125h.008v.008h-.008v-.008Z"
-        />
-      </svg>
-      <h1>実装中</h1>
+      </p>
+
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <h2>Step3</h2>
+        <div>
+          <p>投稿した作品やアーティストについてのコメントを書こう！</p>
+          <p>
+            なぜこの作品やアーティストが好きなのか、どのMBTIタイプの人におすすめなのかなど、自由に書いてみましょう。
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

@@ -13,9 +13,6 @@ module Api
         # 画像URLをリクエストボディから取得
         image_url = params[:imageUrl]
 
-        # Debug log to inspect the received params
-        Rails.logger.debug "Received params: #{params.inspect}"
-
         # Cloudinaryに画像をアップロードし、中央をクロップ
         result = Cloudinary::Uploader.upload(image_url, width: 600, height: 600, crop: 'fill')
 

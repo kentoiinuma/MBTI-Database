@@ -71,7 +71,7 @@ const Header = ({ onSignIn }) => {
   };
 
   return (
-    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#7DB9DE]">
+    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#2EA9DF]">
       <span className="ml-72" style={{ fontSize: '24px' }}>
         {getTitle()}
       </span>
@@ -191,10 +191,11 @@ const Header = ({ onSignIn }) => {
         </>
       ) : (
         <span className="ml-auto">
-          <Link to="/about">
-            <InfoOutlinedIcon
-              style={{ fontSize: '32px', marginRight: '8px' }}
-            />
+          <Link
+            to="/about"
+            style={{ fontSize: '20px', marginRight: '10px', color: '#2EA9DF' }}
+          >
+            このアプリについて
           </Link>
           <SignInButton>
             <LoginOutlinedIcon style={{ fontSize: '32px' }} />
