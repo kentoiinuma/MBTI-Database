@@ -12,6 +12,7 @@ import {
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
+// Chart.jsの設定を登録
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,6 +23,7 @@ ChartJS.register(
 );
 
 function Ne() {
+  // グラフのデータを管理するステート
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -35,6 +37,7 @@ function Ne() {
     ],
   });
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -48,7 +51,7 @@ function Ne() {
     API_URL = 'http://localhost:3000';
   }
 
-  // ボタンの状態を管理するためのステートを追加
+  // ボタンの状態を管理するステート
   const [selectedTypes, setSelectedTypes] = useState([
     'ENFP',
     'ENTP',
@@ -57,6 +60,7 @@ function Ne() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // データをフェッチしてグラフを更新する
   useEffect(() => {
     const fetchData = async () => {
       const queryParams = new URLSearchParams({
@@ -85,6 +89,7 @@ function Ne() {
     fetchData();
   }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
 
+  // グラフのオプション設定
   const options = {
     indexAxis: 'y',
     maintainAspectRatio: false,

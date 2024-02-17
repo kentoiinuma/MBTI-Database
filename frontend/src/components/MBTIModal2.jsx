@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 
+// MBTIのタイプを定義
 const MBTI_TYPES = [
   'ESFP',
   'ESTP',
@@ -20,13 +21,15 @@ const MBTI_TYPES = [
   'INTJ', // Ni
 ];
 
+// MBTIModalコンポーネントの定義
 const MBTIModal = ({ onClose, onUpdate }) => {
-  const { user } = useUser();
-  const [selectedMBTI, setSelectedMBTI] = useState('');
-  const [diagnosisMethod, setDiagnosisMethod] = useState('');
-  const [mbtiError, setMbtiError] = useState(false);
-  const [methodError, setMethodError] = useState(false);
+  const { user } = useUser(); // Clerkからユーザー情報を取得
+  const [selectedMBTI, setSelectedMBTI] = useState(''); // 選択されたMBTIタイプの状態
+  const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法の状態
+  const [mbtiError, setMbtiError] = useState(false); // MBTIタイプ選択エラーの状態
+  const [methodError, setMethodError] = useState(false); // 診断方法選択エラーの状態
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -40,14 +43,17 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     API_URL = 'http://localhost:3000';
   }
 
+  // MBTIタイプ選択時の処理
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
   };
 
+  // 診断方法選択時の処理
   const handleDiagnosisMethodChange = (event) => {
     setDiagnosisMethod(event.target.value);
   };
 
+  // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!selectedMBTI) {
@@ -76,8 +82,8 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         // エラーハンドリング
       }
 
-      onUpdate(selectedMBTI);
-      onClose();
+      onUpdate(selectedMBTI); // 親コンポーネントの更新処理を呼び出し
+      onClose(); // モーダルを閉じる
     }
   };
 

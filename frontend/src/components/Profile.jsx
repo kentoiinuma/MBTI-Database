@@ -3,13 +3,17 @@ import { useUser, UserProfile } from '@clerk/clerk-react';
 import { Image } from 'cloudinary-react';
 import MBTIModal from './MBTIModal2';
 
+// Profile コンポーネントの定義
 const Profile = () => {
+  // Clerk からユーザー情報を取得
   const { user } = useUser();
+  // MBTIタイプ、ユーザープロファイルの表示状態、MBTIモーダルの表示状態、ユーザー画像の状態を管理
   const [mbtiType, setMbtiType] = useState(null);
   const [showUserProfile, setShowUserProfile] = useState(false);
   const [showMBTIModal, setShowMBTIModal] = useState(false);
   const [userImages, setUserImages] = useState([]);
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -23,8 +27,10 @@ const Profile = () => {
     API_URL = 'http://localhost:3000';
   }
 
+  // ユーザー情報やAPI_URLが変更された時に実行される副作用
   useEffect(() => {
     if (user) {
+      // ユーザーのMBTIタイプを取得
       fetch(`${API_URL}/api/v1/mbti/${user.id}`)
         .then((response) => response.json())
         .then((data) => setMbtiType(data.mbti_type));
@@ -49,12 +55,15 @@ const Profile = () => {
     }
   }, [user, API_URL]);
 
+  // 選択されたセクションを管理
   const [selectedSection, setSelectedSection] = useState('posts');
 
+  // セクションを選択する関数
   const selectSection = (section) => {
     setSelectedSection(section);
   };
 
+  // 選択されたセクションにスタイルを適用する関数
   const getSelectedStyle = (section) => {
     if (selectedSection === section) {
       return {
@@ -67,6 +76,7 @@ const Profile = () => {
     return {};
   };
 
+  // ユーザー画像をレンダリングする関数
   const renderImages = () => {
     const containerClass = `image-container-${userImages.length}`;
     const imageSize = userImages.length === 1 ? 600 : 297.5;
@@ -86,6 +96,7 @@ const Profile = () => {
     );
   };
 
+  // 選択されたセクションに応じたコンテンツをレンダリングする関数
   const renderContent = () => {
     switch (selectedSection) {
       case 'posts':
