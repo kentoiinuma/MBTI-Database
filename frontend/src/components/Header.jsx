@@ -1,44 +1,51 @@
 // frontend/src/components/Header.jsx
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
-import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
-import { Link, useNavigate } from 'react-router-dom';
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
+import PropTypes from 'prop-types'; // PropTypesをインポート
+import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
+import { Link, useNavigate } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // 情報アイコン
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'; // ログアウトアイコン
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'; // アカウントアイコン
+import Menu from '@mui/material/Menu'; // メニューコンポーネント
+import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
 
+// Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
-  const { isSignedIn, user } = useUser();
-  const navigate = useNavigate();
-  const { signOut } = useClerk();
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
+  const { isSignedIn, user } = useUser(); // ユーザーのサインイン状態と情報を取得
+  const navigate = useNavigate(); // ナビゲーションフック
+  const { signOut } = useClerk(); // サインアウト関数を取得
+  const [anchorEl, setAnchorEl] = useState(null); // メニューのアンカー要素の状態
+  const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
 
+  // サインアウト処理
   const handleSignOut = async () => {
     await signOut();
     navigate('/');
   };
 
+  // メニューを開く処理
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
+  // メニューを閉じる処理
   const handleClose = () => {
     setAnchorEl(null);
   };
 
+  // サインイン状態が変わった時の処理
   useEffect(() => {
     if (isSignedIn && user) {
       onSignIn();
     }
   }, [isSignedIn, onSignIn, user]);
 
+  // テキストを小さく表示するための関数
   const smallText = (text) => <span style={{ fontSize: '18px' }}>{text}</span>;
 
+  // 現在のパスに応じたタイトルを取得する関数
   const getTitle = () => {
     switch (window.location.pathname) {
       case '/profile':
@@ -70,15 +77,17 @@ const Header = ({ onSignIn }) => {
     }
   };
 
+  // ヘッダーコンポーネントのレンダリング
   return (
     <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#2EA9DF]">
+      {/* タイトル表示 */}
       <span className="ml-72" style={{ fontSize: '24px' }}>
         {getTitle()}
       </span>
       {isSignedIn ? (
         <>
           <div className="flex items-center gap-4">
-            {/* Upload icon button */}
+            {/* 投稿アイコンボタン */}
             <button
               className="p-2 rounded-full hover:bg-gray-100"
               onClick={() => navigate('/post')}
@@ -98,7 +107,7 @@ const Header = ({ onSignIn }) => {
                 />
               </svg>
             </button>
-            {/* Notifications button */}
+            {/* 通知アイコンボタン */}
             <button
               onClick={() => navigate('/notifications')}
               className="p-2 rounded-full hover:bg-gray-100"
@@ -118,7 +127,7 @@ const Header = ({ onSignIn }) => {
                 />
               </svg>
             </button>
-            {/* User avatar */}
+            {/* ユーザーアバター */}
             <div>
               <button
                 aria-controls="basic-menu"
@@ -132,6 +141,7 @@ const Header = ({ onSignIn }) => {
                   className="h-11 w-11 object-cover rounded-full"
                 />
               </button>
+              {/* ユーザーメニュー */}
               <Menu
                 id="basic-menu"
                 anchorEl={anchorEl}
@@ -141,6 +151,7 @@ const Header = ({ onSignIn }) => {
                   'aria-labelledby': 'basic-button',
                 }}
               >
+                {/* プロフィールメニューアイテム */}
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
@@ -152,6 +163,7 @@ const Header = ({ onSignIn }) => {
                   />
                   {user.username}
                 </MenuItem>
+                {/* アプリ情報メニューアイテム */}
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
@@ -163,6 +175,7 @@ const Header = ({ onSignIn }) => {
                   />
                   このアプリについて
                 </MenuItem>
+                {/* お問い合わせメニューアイテム */}
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
@@ -174,6 +187,7 @@ const Header = ({ onSignIn }) => {
                   />
                   お問い合わせ
                 </MenuItem>
+                {/* サインアウトメニューアイテム */}
                 <MenuItem
                   onClick={() => {
                     handleSignOut();
@@ -207,7 +221,7 @@ const Header = ({ onSignIn }) => {
 };
 
 Header.propTypes = {
-  onSignIn: PropTypes.func, // Add type checking for onSignIn
+  onSignIn: PropTypes.func, // onSignInの型チェックを追加
 };
 
 export default Header;

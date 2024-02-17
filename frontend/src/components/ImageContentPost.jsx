@@ -15,6 +15,7 @@ const ImageContentPost = () => {
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // Added state for custom alert visibility
   const [artistNotFound, setArtistNotFound] = useState(false); // Added state for artist not found
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -24,11 +25,10 @@ const ImageContentPost = () => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    // デフォルトのURL
-    API_URL = 'http://localhost:3000';
+    API_URL = 'http://localhost:3000'; // デフォルトのURL
   }
 
-  // 検索ハンドラー
+  // 検索処理
   const handleSearch = async (event) => {
     if (event.key === 'Enter') {
       const trimmedValue = event.target.value.trim();
@@ -54,7 +54,7 @@ const ImageContentPost = () => {
     }
   };
 
-  // モーダル内の画像クリックハンドラー
+  // 画像選択処理
   const handleImageSelect = async (imageUrl, artistName) => {
     // 画像をアップロードするためのAPIエンドポイントにリクエストを送信します
     const response = await fetch(`${API_URL}/api/v1/upload_image`, {
@@ -84,10 +84,11 @@ const ImageContentPost = () => {
       console.error('Image upload failed');
     }
 
-    setInputValue(''); // Reset the input value
+    setInputValue(''); // 入力値をリセット
     setModalOpen(false); // モーダルを閉じる
   };
 
+  // 投稿処理
   const handlePost = async () => {
     // ユーザーが既にポストを持っているかどうかを確認
     const existingPostsResponse = await fetch(
