@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 
+// MBTIのタイプを定義
 const MBTI_TYPES = [
   'ESFP',
   'ESTP',
@@ -20,15 +21,17 @@ const MBTI_TYPES = [
   'INTJ', // Ni
 ];
 
+// MBTIModalコンポーネント
 const MBTIModal = ({ onClose }) => {
-  const { user } = useUser();
-  const [selectedMBTI, setSelectedMBTI] = useState('');
-  const [diagnosisMethod, setDiagnosisMethod] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [mbtiError, setMbtiError] = useState(false);
-  const [methodError, setMethodError] = useState(false);
+  const { user } = useUser(); // Clerkからユーザー情報を取得
+  const [selectedMBTI, setSelectedMBTI] = useState(''); // 選択されたMBTIタイプ
+  const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法
+  const [agreedToTerms, setAgreedToTerms] = useState(false); // 利用規約への同意状態
+  const [showAlert, setShowAlert] = useState(false); // アラート表示状態
+  const [mbtiError, setMbtiError] = useState(false); // MBTI選択エラー
+  const [methodError, setMethodError] = useState(false); // 診断方法選択エラー
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -42,20 +45,25 @@ const MBTIModal = ({ onClose }) => {
     API_URL = 'http://localhost:3000';
   }
 
+  // MBTIタイプ変更時の処理
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
   };
 
+  // 診断方法変更時の処理
   const handleDiagnosisMethodChange = (event) => {
     setDiagnosisMethod(event.target.value);
   };
 
+  // 利用規約同意チェックボックス変更時の処理
   const handleAgreementChange = (event) => {
     setAgreedToTerms(event.target.checked);
   };
 
+  // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
+    // エラーチェック
     if (!selectedMBTI) {
       setMbtiError(true);
     } else {
@@ -66,9 +74,9 @@ const MBTIModal = ({ onClose }) => {
     } else {
       setMethodError(false);
     }
+    // 全ての条件が満たされた場合のみ送信
     if (agreedToTerms && selectedMBTI && diagnosisMethod) {
       const response = await fetch(`${API_URL}/api/v1/mbti`, {
-        // バックエンドのエンドポイントを指定
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -84,9 +92,9 @@ const MBTIModal = ({ onClose }) => {
         // エラーハンドリング
       }
 
-      onClose(); // モーダルを閉じます
+      onClose(); // モーダルを閉じる
     } else {
-      setShowAlert(true);
+      setShowAlert(true); // アラートを表示
     }
   };
 

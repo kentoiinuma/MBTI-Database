@@ -10,11 +10,13 @@ class SpotifyService
   SPOTIFY_ACCOUNTS_ENDPOINT = 'https://accounts.spotify.com/api/token'
   SPOTIFY_API_ENDPOINT = 'https://api.spotify.com/v1'
 
+  # 初期化メソッド。環境変数からSpotifyのクライアントIDとクライアントシークレットを読み込む
   def initialize
     @client_id = ENV['SPOTIFY_CLIENT_ID']
     @client_secret = ENV['SPOTIFY_CLIENT_SECRET']
   end
 
+  # Spotify APIで認証を行い、アクセストークンを取得する
   def authenticate
     credentials = Base64.strict_encode64("#{@client_id}:#{@client_secret}")
     body = {
@@ -29,6 +31,7 @@ class SpotifyService
     JSON.parse(response.body)['access_token']
   end
 
+  # 指定されたアーティスト名でSpotifyを検索し、最初に見つかったアーティストの情報を返す
   def search_artist(artist_name)
     access_token = authenticate
     headers = {
@@ -50,6 +53,7 @@ class SpotifyService
 
   private
 
+  # 指定されたURLにPOSTリクエストを送信する
   def post_request(url, body, headers)
     uri = URI(url)
     Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https') do |http|
@@ -59,6 +63,7 @@ class SpotifyService
     end
   end
 
+  # 指定されたURLにGETリクエストを送信する
   def get_request(url, params, headers)
     uri = URI(url)
     uri.query = URI.encode_www_form(params)

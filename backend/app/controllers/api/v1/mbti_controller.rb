@@ -6,8 +6,9 @@ module Api
   module V1
     # MBTIタイプに関連するアクションを処理するコントローラー
     class MbtiController < ApplicationController
+      # 新しいMBTIタイプを作成し、ユーザーに関連付けるアクション
       def create
-        user = User.find_by(clerk_id: params[:user_id])
+        user = find_user_by_clerk_id
         mbti = MbtiType.new(mbti_params.merge(user_id: user.id))
         if mbti.save
           render json: { status: 'SUCCESS', data: mbti }
@@ -16,6 +17,7 @@ module Api
         end
       end
 
+      # 特定のユーザーのMBTIタイプを表示するアクション
       def show
         user = find_user_by_clerk_id
         return render_user_not_found unless user
@@ -28,6 +30,7 @@ module Api
         end
       end
 
+      # ユーザーのMBTIタイプを更新するアクション
       def update
         user = find_user_by_clerk_id
         return render_user_not_found unless user

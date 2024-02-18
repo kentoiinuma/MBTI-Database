@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@clerk/clerk-react'; // Clerkを使ったユーザー認証のためのフック
 import Header from './Header';
 import Sidebar from './Sidebar';
-import MBTIModal from './MBTIModal';
+import MBTIModal from './MBTIModal'; // MBTIモーダルのインポート
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
 import AllPosts from './AllPosts';
@@ -18,10 +18,11 @@ import AboutApp from './AboutApp';
 import Contact from './Contact';
 
 function MainContent() {
-  const [showMBTIModal, setShowMBTIModal] = useState(false);
-  const { isSignedIn, user, loading } = useUser();
+  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
+  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
 
-  let API_URL;
+  let API_URL; // APIのURLを格納する変数
+  // 環境に応じてAPIのURLを設定
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
   } else if (
@@ -34,6 +35,7 @@ function MainContent() {
     API_URL = 'http://localhost:3000';
   }
 
+  // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
       // バックエンドにユーザーIDを送信
@@ -46,18 +48,20 @@ function MainContent() {
       });
       const data = await response.json();
       if (data.is_new_user) {
-        setShowMBTIModal(true);
+        setShowMBTIModal(true); // 新規ユーザーの場合はMBTIモーダルを表示
       }
       // その他のレスポンス処理...
     }
   }, [user, API_URL]);
 
+  // コンポーネントがマウントされた後、サインイン状態が変わるたびにhandleSignInを呼び出す
   useEffect(() => {
     if (!loading && isSignedIn && user) {
       handleSignIn();
     }
   }, [isSignedIn, user, loading, handleSignIn]);
 
+  // MBTIモーダルを閉じる関数
   const handleCloseModal = useCallback(() => {
     setShowMBTIModal(false);
   }, []);
@@ -69,6 +73,7 @@ function MainContent() {
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto pl-69">
           <Routes>
+            {/* 各ルートに対応するコンポーネントを設定 */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
             <Route path="/" element={<AllPosts />} />
@@ -82,7 +87,8 @@ function MainContent() {
             <Route path="/about" element={<AboutApp />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
-          {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
+          {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}{' '}
+          {/* MBTIモーダルを表示 */}
         </main>
       </div>
     </div>

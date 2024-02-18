@@ -1,26 +1,29 @@
 import React from 'react';
-
+// SearchModalコンポーネントの定義。検索モーダルのUIを担当。
 const SearchModal = ({
-  isOpen,
-  searchQuery,
-  artist,
-  onImageSelect,
-  onClose,
+  isOpen, // モーダルが開いているかどうかの状態
+  searchQuery, // 検索クエリ
+  artist, // アーティスト情報
+  onImageSelect, // 画像選択時のコールバック関数
+  onClose, // モーダルを閉じる際のコールバック関数
 }) => {
+  // モーダルが開いていない、またはアーティスト情報がない場合は何も表示しない
   if (!isOpen || !artist) return null;
 
-  // 画像クリックハンドラー
+  // 画像クリック時のハンドラー。選択された画像のURLとアーティスト名を親コンポーネントに通知する。
   const handleImageClick = () => {
     onImageSelect(artist.images[0].url, artist.name); // 画像URLとアーティスト名を親コンポーネントのコールバックでセット
   };
 
+  // モーダルのUI部分
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
       <div className="bg-white rounded-lg shadow-xl modal-width modal-height overflow-hidden">
         <div className="flex justify-between items-center p-4">
-          <h2 className="text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>
+          <h2 className="text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>{' '}
+          {/* 検索クエリを表示 */}
           <button
-            onClick={onClose}
+            onClick={onClose} // 閉じるボタン。クリックでモーダルを閉じる。
             className="text-gray-600 hover:text-gray-800"
           >
             <svg
@@ -40,14 +43,15 @@ const SearchModal = ({
           </button>
         </div>
         <div className="flex justify-between items-center pl-8">
-          <h2 className="text-xl font-semibold">{`${artist.name}`}</h2>
+          <h2 className="text-xl font-semibold">{`${artist.name}`}</h2>{' '}
+          {/* アーティスト名を表示 */}
         </div>
         <div className="px-8 pb-8 flex justify-center">
           <img
-            src={artist.images[0].url}
+            src={artist.images[0].url} // アーティストの画像を表示
             alt={`Artist ${artist.name}`}
             className="max-w-full h-auto cursor-pointer"
-            onClick={handleImageClick}
+            onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し
           />
         </div>
       </div>
@@ -55,4 +59,4 @@ const SearchModal = ({
   );
 };
 
-export default SearchModal;
+export default SearchModal; // SearchModalコンポーネントをエクスポート

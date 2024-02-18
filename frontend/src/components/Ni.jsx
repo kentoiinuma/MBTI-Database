@@ -12,6 +12,7 @@ import {
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
+// Chart.jsの設定を初期化
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -22,6 +23,7 @@ ChartJS.register(
 );
 
 function Ni() {
+  // グラフのデータを管理するステート
   const [chartData, setChartData] = useState({
     labels: [],
     datasets: [
@@ -35,6 +37,7 @@ function Ni() {
     ],
   });
 
+  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -48,7 +51,7 @@ function Ni() {
     API_URL = 'http://localhost:3000';
   }
 
-  // ボタンの状態を管理するためのステートを追加
+  // ボタンの状態を管理するステート
   const [selectedTypes, setSelectedTypes] = useState([
     'ENFJ',
     'ENTJ',
@@ -57,8 +60,10 @@ function Ni() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // データをフェッチするための副作用
   useEffect(() => {
     const fetchData = async () => {
+      // クエリパラメータを設定
       const queryParams = new URLSearchParams({
         mbti_types: selectedTypes,
         diagnosis_methods: selectedStatus.map((status) =>
@@ -66,11 +71,14 @@ function Ni() {
         ),
       });
 
+      // APIからデータをフェッチ
       const response = await fetch(
         `${API_URL}/api/v1/media_works/statistics?${queryParams}`,
       );
       const data = await response.json();
+      // データをソート
       const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
+      // グラフのデータを更新
       setChartData({
         labels: sortedData.map((item) => item[0]),
         datasets: [
@@ -85,6 +93,7 @@ function Ni() {
     fetchData();
   }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
 
+  // グラフのオプション設定
   const options = {
     indexAxis: 'y',
     maintainAspectRatio: false,
