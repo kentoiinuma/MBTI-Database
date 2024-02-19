@@ -9,25 +9,36 @@ function AboutApp() {
   const navigate = useNavigate(); // 追加
 
   return (
-    <div>
+    <div style={{ margin: '40px', fontSize: '1.1em' }}>
       <p>
         MBTIタイプ診断をしたことのあるユーザーが、音楽やアニメなどのメディアごとに好きな作品やアーティストを投稿することにより、MBTIタイプごとの好みをデータベース化するWebアプリケーションです。
       </p>
 
-      <h2>Step1 ログインしてMBTIタイプとその診断方法を登録しよう！</h2>
-      <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
+        Step1 ログインしてMBTIタイプとその診断方法を登録しよう！
+      </h2>
+      <div
+        style={{ display: 'flex', alignItems: 'flex-start', marginTop: '10px' }}
+      >
         <div style={{ flex: 1 }}>
           <p>
             MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視されていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました。
           </p>
           <ul>
-            <li>
-              診断方法とは？
+            <li style={{ marginTop: '20px' }}>
+              診断方法とは?
               <ul>
                 <li>
-                  診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定したものなのか？（非公式）
+                  ・診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定したものなのか?（非公式）
                 </li>
-                <li>
+                <li style={{ marginTop: '20px' }}>
                   参考URL
                   <ul>
                     <li>
@@ -68,15 +79,15 @@ function AboutApp() {
                     </li>
                   </ul>
                 </li>
-                <li>
-                  <Link
+                <li style={{ marginTop: '20px' }}>
+                  ・<Link
                     href="https://www.mbti.or.jp/"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     公式
                   </Link>
-                  のセッションを通じて決定したものなのか？（公式）
+                  のセッションを通じて決定したものなのか?（公式）
                 </li>
               </ul>
             </li>
@@ -90,7 +101,14 @@ function AboutApp() {
           />
         </div>
       </div>
-      <h2>
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
         Step2
         好きな作品やアーティストのイメージ画像を投稿しよう！(現在音楽アーティストのみ)
       </h2>
@@ -103,7 +121,16 @@ function AboutApp() {
         1~4枚のイメージ画像を投稿できます。
       </p>
 
-      <h2>Step3 気になるMBTIタイプの好きな作品やアーティストを見てみよう！</h2>
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
+        Step3 気になるMBTIタイプの好きな作品やアーティストを見てみよう！
+      </h2>
       <p
         style={{
           display: 'flex',
