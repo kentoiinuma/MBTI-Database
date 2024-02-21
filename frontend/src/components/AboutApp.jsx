@@ -3,6 +3,7 @@ import React from 'react';
 import Link from '@mui/material/Link'; // Linkコンポーネント
 import { useUser, SignInButton } from '@clerk/clerk-react'; // useUserとSignInButtonを1行でインポート
 import { useNavigate } from 'react-router-dom'; // 追加
+import Paper from '@mui/material/Paper'; // Paperコンポーネントをインポート
 
 function AboutApp() {
   const { isSignedIn } = useUser();
@@ -36,7 +37,7 @@ function AboutApp() {
               診断方法とは?
               <ul>
                 <li>
-                  ・診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定したものなのか?（非公式）
+                  診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定したものなのか?（非公式）
                 </li>
                 <li style={{ marginTop: '20px' }}>
                   参考URL
@@ -80,7 +81,7 @@ function AboutApp() {
                   </ul>
                 </li>
                 <li style={{ marginTop: '20px' }}>
-                  ・<Link
+                  <Link
                     href="https://www.mbti.or.jp/"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -94,11 +95,16 @@ function AboutApp() {
           </ul>
         </div>
         <div>
-          <img
-            src="https://i.gyazo.com/ce36080ef1129f38491cda509fa16dc6.png"
-            alt="公式セッション画像"
-            style={{ width: '550px', height: 'auto', marginLeft: '20px' }} // 画像の大きさと左マージンを指定
-          />
+          <Paper
+            elevation={8}
+            style={{ width: '550px', height: 'auto', marginLeft: '20px' }}
+          >
+            <img
+              src="https://i.gyazo.com/ce36080ef1129f38491cda509fa16dc6.png"
+              alt="公式セッション画像"
+              style={{ width: '100%', height: 'auto' }} // 画像の大きさと左マージンを指定
+            />
+          </Paper>
         </div>
       </div>
       <h2
@@ -113,11 +119,16 @@ function AboutApp() {
         好きな作品やアーティストのイメージ画像を投稿しよう！(現在音楽アーティストのみ)
       </h2>
       <p style={{ display: 'flex', alignItems: 'center' }}>
-        <img
-          src="https://i.gyazo.com/a6a96ad4aa2c5d4dad2675963f7d3886.png"
-          alt="イメージ画像投稿例"
-          style={{ width: '550px', height: 'auto', marginRight: '20px' }} // 画像の大きさを指定し、右マージンを追加
-        />
+        <Paper
+          elevation={8}
+          style={{ width: '550px', height: 'auto', marginRight: '20px' }}
+        >
+          <img
+            src="https://i.gyazo.com/a6a96ad4aa2c5d4dad2675963f7d3886.png"
+            alt="イメージ画像投稿例"
+            style={{ width: '100%', height: 'auto' }} // 画像の大きさを指定し、右マージンを追加
+          />
+        </Paper>
         1~4枚のイメージ画像を投稿できます。
       </p>
 
@@ -139,11 +150,16 @@ function AboutApp() {
           flexDirection: 'row-reverse',
         }}
       >
-        <img
-          src="https://i.gyazo.com/ca4cafdaa7e67f40eccc3683c6b86826.png"
-          alt="データベース詳細画面"
-          style={{ width: '550px', height: 'auto', marginLeft: '20px' }} // 画像の大きさと左マージンを指定
-        />
+        <Paper
+          elevation={8}
+          style={{ minWidth: '550px', height: 'auto', marginLeft: '20px' }}
+        >
+          <img
+            src="https://i.gyazo.com/ca4cafdaa7e67f40eccc3683c6b86826.png"
+            alt="データベース詳細画面"
+            style={{ width: '100%', height: 'auto' }} // 画像の大きさと左マージンを指定
+          />
+        </Paper>
         データベース詳細画面ではユーザーがメディアごとに選んだ作品やアーティストをもとに作られたデータベースを閲覧できます。データベース詳細画面はMBTI16タイプを知覚機能（Ni/Ne/Si/Se）ごとに分けられていて、ボタンを選択・選択解除することで任意のタイプや診断方法のデータベースをフィルタリングすることができます。
       </p>
       {isSignedIn ? (
@@ -151,7 +167,7 @@ function AboutApp() {
           style={{
             display: 'flex',
             justifyContent: 'center',
-            margin: '20px 0',
+            margin: '50px 0',
           }}
         >
           <button
