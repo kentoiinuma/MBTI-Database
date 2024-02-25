@@ -69,7 +69,7 @@ const AllPosts = () => {
             .then((media) => {
               setMediaWorks((prev) => ({
                 ...prev,
-                [post.id]: media.map((work) => work.image),
+                [post.id]: media,
               }));
             });
           // MBTIタイプデータを取得
@@ -89,17 +89,17 @@ const AllPosts = () => {
   }, [API_URL, location]);
 
   // 画像をレンダリングする関数
-  const renderImages = (images) => {
-    const containerClass = `image-container-${images.length}`;
-    const imageSize = images.length === 1 ? 500 : 247.5;
+  const renderImages = (works) => {
+    const containerClass = `image-container-${works.length}`;
+    const imageSize = works.length === 1 ? 500 : 247.5;
 
     return (
       <div className={containerClass}>
-        {images.map((imageUrl, index) => (
+        {works.map((work, index) => (
           <Image
             key={index}
             cloudName="dputyeqso"
-            publicId={imageUrl}
+            publicId={work.image}
             width={imageSize}
             height={imageSize}
           />
@@ -167,6 +167,20 @@ const AllPosts = () => {
           {/* ユーザー詳細表示 */}
           <div style={{ margin: '20px 0 0 30px' }}>
             {post.user && renderUserDetails(post.user, post.createdAt)}
+          </div>
+          {/* 好きな音楽アーティストの表示 */}
+          <div className="mb-5 text-center">
+            <span className="text-xl">
+              私が好きな音楽アーティストは
+              {mediaWorks[post.id] &&
+                mediaWorks[post.id]
+                  .map(
+                    (work, index, array) =>
+                      `${work.title}${index < array.length - 1 ? '、' : ''}`,
+                  )
+                  .join('')}
+              です！
+            </span>
           </div>
           {/* メディア作品表示エリア */}
           <div
