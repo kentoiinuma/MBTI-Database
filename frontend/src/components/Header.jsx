@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // PropTypesをインポート
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
-import { Link, useNavigate } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // 情報アイコン
@@ -18,6 +18,7 @@ const Header = ({ onSignIn }) => {
   const { signOut } = useClerk(); // サインアウト関数を取得
   const [anchorEl, setAnchorEl] = useState(null); // メニューのアンカー要素の状態
   const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
+  const location = useLocation(); // 現在のパスを取得
 
   // サインアウト処理
   const handleSignOut = async () => {
@@ -89,7 +90,7 @@ const Header = ({ onSignIn }) => {
           <div className="flex items-center gap-4">
             {/* 投稿アイコンボタン */}
             <button
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-gray-200"
               onClick={() => navigate('/post')}
             >
               <svg
@@ -110,7 +111,7 @@ const Header = ({ onSignIn }) => {
             {/* 通知アイコンボタン */}
             <button
               onClick={() => navigate('/notifications')}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-gray-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -204,17 +205,24 @@ const Header = ({ onSignIn }) => {
           </div>
         </>
       ) : (
-        <span className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
           <Link
             to="/about"
-            style={{ fontSize: '20px', marginRight: '10px', color: '#2EA9DF' }}
+            className={
+              location.pathname === '/about'
+                ? 'sidebar-link active'
+                : 'sidebar-link'
+            }
+            style={{ fontSize: '20px', color: '#2EA9DF' }}
           >
             このアプリについて
           </Link>
-          <SignInButton>
-            <LoginOutlinedIcon style={{ fontSize: '32px' }} />
-          </SignInButton>
-        </span>
+          <div className="p-2 rounded-full hover:bg-gray-200">
+            <SignInButton>
+              <LoginOutlinedIcon style={{ fontSize: '32px' }} />
+            </SignInButton>
+          </div>
+        </div>
       )}
     </header>
   );
