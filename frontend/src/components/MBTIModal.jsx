@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
+import { Link } from 'react-router-dom'; // react-router-domのLinkコンポーネントをインポート
+import { Link as MuiLink } from '@mui/material'; // MUIのLinkコンポーネントを別名でインポート
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -211,41 +213,37 @@ const MBTIModal = ({ onClose }) => {
               <div className="ml-4 mt-2">
                 {' '}
                 {/* インデントと上部の余白を追加 */}
-                <a
+                <MuiLink
                   href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#2EA9DF' }}
                 >
                   16personalities
-                </a>
+                </MuiLink>
                 <br />
-                <a
+                <MuiLink
                   href="https://www.idrlabs.com/jp/cognitive-function/test.php"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#2EA9DF' }}
                 >
                   心理機能テスト
-                </a>
+                </MuiLink>
                 <br />
-                <a
+                <MuiLink
                   href="http://rinnsyou.com/archives/category/0200sinriryouhou/0203yungu"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#2EA9DF' }}
                 >
                   心理機能について
-                </a>
+                </MuiLink>
                 <br />
-                <a
+                <MuiLink
                   href="https://www.amazon.co.jp/dp/4905050219"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#2EA9DF' }}
                 >
                   MBTIの書籍
-                </a>
+                </MuiLink>
               </div>
             </label>
 
@@ -258,14 +256,13 @@ const MBTIModal = ({ onClose }) => {
                 onChange={handleDiagnosisMethodChange}
                 className="mr-2"
               />
-              <a
+              <MuiLink
                 href="https://www.mbti.or.jp/"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#2EA9DF' }}
               >
                 公式
-              </a>
+              </MuiLink>
               のセッションを通じて決定した
             </label>
           </fieldset>
@@ -277,11 +274,15 @@ const MBTIModal = ({ onClose }) => {
                 onChange={handleAgreementChange}
                 className="mr-2"
               />
-              <span
-                className="text-sm font-medium"
-                style={{ color: '#2EA9DF' }}
-              >
-                利用規約、プライバシーポリシーに同意する
+              <span className="text-sm font-medium">
+                <Link to="/terms-of-service" style={{ color: '#2EA9DF' }}>
+                  利用規約
+                </Link>
+                、
+                <Link to="/privacy-policy" style={{ color: '#2EA9DF' }}>
+                  プライバシーポリシー
+                </Link>
+                に同意する
               </span>
             </label>
           </div>

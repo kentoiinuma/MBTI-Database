@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
+import { Link } from '@mui/material'; // MUIのLinkコンポーネントをインポート
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -192,41 +193,37 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                 />
                 診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
                 <div className="ml-4 mt-2">
-                  <a
+                  <Link
                     href="https://www.16personalities.com/ja/%E6%80%A7%E6%A0%BC%E8%A8%BA%E6%96%AD%E3%83%86%E3%82%B9%E3%83%88"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#2EA9DF' }}
                   >
                     16personalities
-                  </a>
+                  </Link>
                   <br />
-                  <a
+                  <Link
                     href="https://www.idrlabs.com/jp/cognitive-function/test.php"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#2EA9DF' }}
                   >
                     心理機能テスト
-                  </a>
+                  </Link>
                   <br />
-                  <a
+                  <Link
                     href="http://rinnsyou.com/archives/category/0200sinriryouhou/0203yungu"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#2EA9DF' }}
                   >
                     心理機能について
-                  </a>
+                  </Link>
                   <br />
-                  <a
+                  <Link
                     href="https://www.amazon.co.jp/dp/4905050219"
                     target="_blank"
                     rel="noopener noreferrer"
-                    style={{ color: '#2EA9DF' }}
                   >
                     MBTIの書籍
-                  </a>
+                  </Link>
                 </div>
               </label>
               <label className="block">
@@ -237,14 +234,13 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   onChange={handleDiagnosisMethodChange}
                   className="mr-2"
                 />
-                <a
+                <Link
                   href="https://www.mbti.or.jp/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ color: '#2EA9DF' }}
                 >
                   公式
-                </a>
+                </Link>
                 のセッションを通じて決定した
               </label>
             </fieldset>
