@@ -3,6 +3,7 @@ import { useUser } from '@clerk/clerk-react'; // Clerkを使用してユーザ�
 import SearchModal from './SearchModal'; // 検索モーダルコンポーネント
 import { Image } from 'cloudinary-react'; // Cloudinaryを使用して画像を表示
 import { useNavigate } from 'react-router-dom'; // ページ遷移を扱うためのフック
+import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 
 const ImageContentPost = () => {
   const { user } = useUser(); // 現在のユーザー情報を取得
@@ -192,46 +193,38 @@ const ImageContentPost = () => {
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
       {artistNotFound && (
-        <div role="alert" className="alert">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info shrink-0 w-6 h-6"
+        <Snackbar
+          open={artistNotFound}
+          autoHideDuration={6000}
+          onClose={() => setArtistNotFound(false)}
+        >
+          <Alert
+            onClose={() => setArtistNotFound(false)}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          <span>
             正しいアーティスト名を入力してください。
             {/* アーティストが見つからなかった場合のメッセージ */}
-          </span>
-        </div>
+          </Alert>
+        </Snackbar>
       )}
       {customAlertVisible && (
-        <div role="alert" className="alert">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info shrink-0 w-6 h-6"
+        <Snackbar
+          open={customAlertVisible}
+          autoHideDuration={6000}
+          onClose={() => setCustomAlertVisible(false)}
+        >
+          <Alert
+            onClose={() => setCustomAlertVisible(false)}
+            severity="error"
+            variant="filled"
+            sx={{ width: '100%' }}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          <span>
             音楽アーティストの投稿は1回のみです。
             {/* 既にポストが存在する場合のメッセージ */}
-          </span>
-        </div>
+          </Alert>
+        </Snackbar>
       )}
       <div className="flex items-center space-x-2">
         <div className="relative w-full max-w-xs">
