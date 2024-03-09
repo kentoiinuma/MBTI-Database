@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { SnackbarProvider, useSnackbar } from 'notistack';
+import { Snackbar, Alert } from '@mui/material'; // MUIのSnackbarとAlertをインポート
 
 const AllPosts = () => {
   // 状態管理
@@ -10,7 +10,7 @@ const AllPosts = () => {
   const [mbtiTypes, setMbtiTypes] = useState({}); // MBTIタイプデータ
   const location = useLocation(); // 現在のURL情報
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar(); // Snackbarの使用
+  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -28,10 +28,10 @@ const AllPosts = () => {
   // 投稿成功時にスナックバーを表示するためのuseEffect
   useEffect(() => {
     if (location.state?.postSuccess) {
-      enqueueSnackbar('投稿が成功しました。', { variant: 'success' });
-      navigate('/', { replace: true, state: {} });
+      setOpenSnackbar(true); // Snackbarを開く
+      navigate(location.pathname, { replace: true, state: {} });
     }
-  }, [location, navigate, enqueueSnackbar]);
+  }, [location.state?.postSuccess]); // 依存配列にlocation.state.postSuccessのみを含める
 
   // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
   useEffect(() => {
@@ -197,14 +197,21 @@ const AllPosts = () => {
           <hr className="border-t border-[#2EA9DF] w-full" />
         </React.Fragment>
       ))}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          投稿が成功しました。
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
 
-export default function AllPostsWrapper() {
-  return (
-    <SnackbarProvider maxSnack={2}>
-      <AllPosts />
-    </SnackbarProvider>
-  );
-}
+export default AllPosts;

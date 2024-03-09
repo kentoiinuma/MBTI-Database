@@ -16,10 +16,13 @@ import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
 import Contact from './Contact';
+import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
   const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
+  const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
 
   let API_URL; // APIのURLを格納する変数
   // 環境に応じてAPIのURLを設定
@@ -38,6 +41,9 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
+      // スナックバーを表示
+      setSnackbarMessage('サインインしました！');
+      setSnackbarOpen(true);
       // バックエンドにユーザーIDを送信
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
@@ -54,16 +60,39 @@ function MainContent() {
     }
   }, [user, API_URL]);
 
+  // サインアウト処理を行う関数
+  const handleSignOut = useCallback(() => {
+    // サインアウトのスナックバーを表示
+    setSnackbarMessage('サインアウトしました！');
+    setSnackbarOpen(true);
+  }, []);
+
   // コンポーネントがマウントされた後、サインイン状態が変わるたびにhandleSignInを呼び出す
   useEffect(() => {
-    if (!loading && isSignedIn && user) {
-      handleSignIn();
+    if (!loading) {
+      if (isSignedIn && user) {
+        handleSignIn();
+      } else if (!isSignedIn) {
+        // サインアウトの処理を行う前に、以前はサインインしていたかどうかを確認
+        const wasSignedIn = localStorage.getItem('wasSignedIn') === 'true';
+        if (wasSignedIn) {
+          handleSignOut();
+        }
+      }
+      // 現在のサインイン状態をlocalStorageに保存
+      // isSignedInがundefinedの場合はfalseとして扱う
+      localStorage.setItem('wasSignedIn', (isSignedIn ?? false).toString());
     }
-  }, [isSignedIn, user, loading, handleSignIn]);
+  }, [isSignedIn, user, loading, handleSignIn, handleSignOut]);
 
   // MBTIモーダルを閉じる関数
   const handleCloseModal = useCallback(() => {
     setShowMBTIModal(false);
+  }, []);
+
+  // スナックバーを閉じる関数
+  const handleCloseSnackbar = useCallback(() => {
+    setSnackbarOpen(false);
   }, []);
 
   return (
@@ -91,6 +120,19 @@ function MainContent() {
           {/* MBTIモーダルを表示 */}
         </main>
       </div>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: '100%' }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }
