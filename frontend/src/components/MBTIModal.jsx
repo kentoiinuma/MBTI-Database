@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
-import { Link } from 'react-router-dom'; // react-router-domのLinkコンポーネントをインポート
-import { Link as MuiLink } from '@mui/material'; // MUIのLinkコンポーネントを別名でインポート
+import { Link } from 'react-router-dom';
+import { Link as MuiLink } from '@mui/material';
+import Alert from '@mui/material/Alert';
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -25,13 +26,14 @@ const MBTI_TYPES = [
 
 // MBTIModalコンポーネント
 const MBTIModal = ({ onClose }) => {
-  const { user } = useUser(); // Clerkからユーザー情報を取得
-  const [selectedMBTI, setSelectedMBTI] = useState(''); // 選択されたMBTIタイプ
-  const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法
-  const [agreedToTerms, setAgreedToTerms] = useState(false); // 利用規約への同意状態
-  const [showAlert, setShowAlert] = useState(false); // アラート表示状態
-  const [mbtiError, setMbtiError] = useState(false); // MBTI選択エラー
-  const [methodError, setMethodError] = useState(false); // 診断方法選択エラー
+  const { user } = useUser();
+  const [selectedMBTI, setSelectedMBTI] = useState('');
+  const [diagnosisMethod, setDiagnosisMethod] = useState('');
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [mbtiError, setMbtiError] = useState(false);
+  const [methodError, setMethodError] = useState(false);
+  // フォームが送信されたかどうかを追跡する新しい状態変数を追加
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -43,29 +45,24 @@ const MBTIModal = ({ onClose }) => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    // デフォルトのURL
     API_URL = 'http://localhost:3000';
   }
 
-  // MBTIタイプ変更時の処理
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
   };
 
-  // 診断方法変更時の処理
   const handleDiagnosisMethodChange = (event) => {
     setDiagnosisMethod(event.target.value);
   };
 
-  // 利用規約同意チェックボックス変更時の処理
   const handleAgreementChange = (event) => {
     setAgreedToTerms(event.target.checked);
   };
 
-  // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // エラーチェック
+    setFormSubmitted(true); // フォームが送信されたときに true に設定
     if (!selectedMBTI) {
       setMbtiError(true);
     } else {
@@ -76,7 +73,6 @@ const MBTIModal = ({ onClose }) => {
     } else {
       setMethodError(false);
     }
-    // 全ての条件が満たされた場合のみ送信
     if (agreedToTerms && selectedMBTI && diagnosisMethod) {
       const response = await fetch(`${API_URL}/api/v1/mbti`, {
         method: 'POST',
@@ -86,7 +82,7 @@ const MBTIModal = ({ onClose }) => {
         body: JSON.stringify({
           mbti_type: selectedMBTI,
           diagnosis_method: diagnosisMethod,
-          user_id: user.id, // ユーザーIDを追加
+          user_id: user.id,
         }),
       });
 
@@ -94,9 +90,7 @@ const MBTIModal = ({ onClose }) => {
         // エラーハンドリング
       }
 
-      onClose(); // モーダルを閉じる
-    } else {
-      setShowAlert(true); // アラートを表示
+      onClose();
     }
   };
 
@@ -112,59 +106,16 @@ const MBTIModal = ({ onClose }) => {
         <h2 className="text-xl font-semibold mb-4" style={{ color: '#2EA9DF' }}>
           MBTIタイプと診断方法を選択してください。
         </h2>
-        {showAlert && (
-          <div role="alert" className="alert">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-info shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>利用規約とプライバシーポリシーに同意してください。</span>
-          </div>
+        {formSubmitted && agreedToTerms === false && (
+          <Alert severity="error">
+            利用規約とプライバシーポリシーに同意してください。
+          </Alert>
         )}
         {mbtiError && (
-          <div role="alert" className="alert">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-info shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>MBTIタイプを選択してください</span>
-          </div>
+          <Alert severity="error">MBTIタイプを選択してください</Alert>
         )}
         {methodError && (
-          <div role="alert" className="alert">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              className="stroke-info shrink-0 w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
-            <span>タイプ診断の方法を選択してください。</span>
-          </div>
+          <Alert severity="error">タイプ診断の方法を選択してください。</Alert>
         )}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">

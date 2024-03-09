@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { SnackbarProvider, useSnackbar } from 'notistack';
 
 const AllPosts = () => {
   // 状態管理
@@ -8,7 +9,8 @@ const AllPosts = () => {
   const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
   const [mbtiTypes, setMbtiTypes] = useState({}); // MBTIタイプデータ
   const location = useLocation(); // 現在のURL情報
-  const [showAlert, setShowAlert] = useState(false); // アラート表示の状態
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar(); // Snackbarの使用
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -23,14 +25,16 @@ const AllPosts = () => {
     API_URL = 'http://localhost:3000';
   }
 
-  // コンポーネントのマウント時とAPI_URL、locationが変更された時に実行
+  // 投稿成功時にスナックバーを表示するためのuseEffect
   useEffect(() => {
-    // 投稿成功時にアラートを表示
     if (location.state?.postSuccess) {
-      setShowAlert(true);
-      setTimeout(() => setShowAlert(false), 3000);
+      enqueueSnackbar('投稿が成功しました。', { variant: 'success' });
+      navigate('/', { replace: true, state: {} });
     }
+  }, [location, navigate, enqueueSnackbar]);
 
+  // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
+  useEffect(() => {
     // 投稿データを取得
     fetch(`${API_URL}/api/v1/posts/all`)
       .then((response) => response.json())
@@ -86,7 +90,7 @@ const AllPosts = () => {
             );
         });
       });
-  }, [API_URL, location]);
+  }, [API_URL, location.pathname]); // API_URLとlocation.pathnameの変更時にのみ実行
 
   // 画像をレンダリングする関数
   const renderImages = (works) => {
@@ -111,7 +115,7 @@ const AllPosts = () => {
   // ユーザー詳細をレンダリングする関数
   const renderUserDetails = (user, createdAt) => {
     const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleString(
+    const formattedDate = new Date(createdAt).toLocaleDateString(
       'ja-JP',
       dateOptions,
     );
@@ -140,27 +144,6 @@ const AllPosts = () => {
 
   return (
     <div>
-      {/* アラート表示の条件レンダリング */}
-      {showAlert && (
-        <div role="alert" className="alert">
-          {/* アラートアイコン */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            className="stroke-info shrink-0 w-6 h-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
-          {/* アラートメッセージ */}
-          <span>投稿が成功しました。</span>
-        </div>
-      )}
       {/* 投稿データをマップして表示 */}
       {posts.map((post) => (
         <React.Fragment key={post.id}>
@@ -218,4 +201,10 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default function AllPostsWrapper() {
+  return (
+    <SnackbarProvider maxSnack={2}>
+      <AllPosts />
+    </SnackbarProvider>
+  );
+}

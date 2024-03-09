@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from '@mui/material'; // MUIのLinkコンポーネントをインポート
-import { useSnackbar } from 'notistack'; // notistackのuseSnackbarフックをインポート
+import Alert from '@mui/material/Alert'; // MUIのAlertコンポーネントをインポート
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -28,7 +28,8 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const { user } = useUser(); // Clerkからユーザー情報を取得
   const [selectedMBTI, setSelectedMBTI] = useState(''); // 選択されたMBTIタイプの状態
   const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法の状態
-  const { enqueueSnackbar } = useSnackbar(); // notistackのenqueueSnackbarを使用
+  const [mbtiError, setMbtiError] = useState(false); // MBTIタイプ選択エラーの状態
+  const [methodError, setMethodError] = useState(false); // 診断方法選択エラーの状態
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -44,21 +45,30 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     API_URL = 'http://localhost:3000';
   }
 
+  // MBTIタイプ選択時の処理
+  const handleMBTIChange = (event) => {
+    setSelectedMBTI(event.target.value);
+  };
+
+  // 診断方法選択時の処理
+  const handleDiagnosisMethodChange = (event) => {
+    setDiagnosisMethod(event.target.value);
+  };
+
   // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let errorOccurred = false;
     if (!selectedMBTI) {
-      enqueueSnackbar('MBTIタイプを選択してください', { variant: 'error' });
-      errorOccurred = true;
+      setMbtiError(true);
+    } else {
+      setMbtiError(false);
     }
     if (!diagnosisMethod) {
-      enqueueSnackbar('タイプ診断の方法を選択してください。', {
-        variant: 'error',
-      });
-      errorOccurred = true;
+      setMethodError(true);
+    } else {
+      setMethodError(false);
     }
-    if (!errorOccurred) {
+    if (selectedMBTI && diagnosisMethod) {
       const response = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
         method: 'PUT',
         headers: {
@@ -107,6 +117,12 @@ const MBTIModal = ({ onClose, onUpdate }) => {
               </svg>
             </button>
           </div>
+          {mbtiError && (
+            <Alert severity="error">MBTIタイプを選択してください</Alert>
+          )}
+          {methodError && (
+            <Alert severity="error">タイプ診断の方法を選択してください。</Alert>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
@@ -119,7 +135,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
               <select
                 id="mbti-select"
                 value={selectedMBTI}
-                onChange={(e) => setSelectedMBTI(e.target.value)}
+                onChange={handleMBTIChange}
                 className="block w-full border py-2 px-3 shadow-sm focus:outline-none rounded-md"
                 style={{ borderColor: '#2EA9DF', backgroundColor: 'white' }}
               >
@@ -143,7 +159,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   type="radio"
                   value="self_assessment"
                   name="diagnosisMethod"
-                  onChange={(e) => setDiagnosisMethod(e.target.value)}
+                  onChange={handleDiagnosisMethodChange}
                   className="mr-2"
                 />
                 診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
@@ -186,7 +202,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   type="radio"
                   value="official_assessment"
                   name="diagnosisMethod"
-                  onChange={(e) => setDiagnosisMethod(e.target.value)}
+                  onChange={handleDiagnosisMethodChange}
                   className="mr-2"
                 />
                 <Link
