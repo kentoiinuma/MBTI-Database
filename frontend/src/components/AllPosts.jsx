@@ -199,7 +199,7 @@ const AllPosts = () => {
       ))}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={6000}
+        autoHideDuration={2500}
         onClose={() => setOpenSnackbar(false)}
       >
         <Alert
