@@ -122,7 +122,7 @@ function MainContent() {
       </div>
       <Snackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={2500}
         onClose={handleCloseSnackbar}
       >
         <Alert

@@ -195,7 +195,7 @@ const ImageContentPost = () => {
       {artistNotFound && (
         <Snackbar
           open={artistNotFound}
-          autoHideDuration={6000}
+          autoHideDuration={2500}
           onClose={() => setArtistNotFound(false)}
         >
           <Alert
@@ -212,7 +212,7 @@ const ImageContentPost = () => {
       {customAlertVisible && (
         <Snackbar
           open={customAlertVisible}
-          autoHideDuration={6000}
+          autoHideDuration={2500}
           onClose={() => setCustomAlertVisible(false)}
         >
           <Alert
