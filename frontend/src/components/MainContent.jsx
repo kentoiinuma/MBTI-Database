@@ -41,22 +41,40 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // スナックバーを表示
-      setSnackbarMessage('サインインしました！');
-      setSnackbarOpen(true);
-      // バックエンドにユーザーIDを送信
+      // バックエンドにユーザー情報を送信して新規ユーザーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ clerk_user_id: user.id }),
+        body: JSON.stringify({
+          clerk_user_id: user.id,
+        }),
       });
       const data = await response.json();
+
+      // スナックバーを表示（すべてのユーザーのサインイン時）
+      setSnackbarMessage('サインインしました！');
+      setSnackbarOpen(true);
+
+      // 新規ユーザーの場合のみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
-        setShowMBTIModal(true); // 新規ユーザーの場合はMBTIモーダルを表示
+        // 新規ユーザーの場合はMBTIモーダルを表示
+        setShowMBTIModal(true);
+
+        // ユーザーネームとアイコンURLをバックエンドに送信
+        await fetch(`${API_URL}/api/v1/registrations`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            clerk_user_id: user.id,
+            username: user.firstName + " " + user.lastName, // Clerkからユーザーネームを組み立てる
+            profile_image_url: user.profileImageUrl // ClerkからユーザーアイコンのURLを取得
+          }),
+        });
       }
-      // その他のレスポンス処理...
     }
   }, [user, API_URL]);
 
