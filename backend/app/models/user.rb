@@ -12,4 +12,6 @@ class User < ApplicationRecord
 
   # バリデーション
   validates :clerk_id, presence: true
+  validates :username, presence: true
+  validates :avatar_url, presence: true
 end

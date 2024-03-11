@@ -29,8 +29,16 @@ module Api
       # ユーザーを検索または初期化する
       def find_or_initialize_user(clerk_user_id)
         clerk = Clerk::SDK.new
-        clerk.users.find(clerk_user_id)
-        User.find_or_initialize_by(clerk_id: clerk_user_id)
+        clerk_user = clerk.users.find(clerk_user_id)
+        
+        user = User.find_or_initialize_by(clerk_id: clerk_user_id)
+        user.username = clerk_user.username # Clerkから取得したユーザーネームを設定
+        
+        # Clerkから取得したアイコンURLを使用してCloudinaryにアップロードし、URLを取得
+        uploaded_image = Cloudinary::Uploader.upload(clerk_user.profile_image_url)
+        user.avatar_url = uploaded_image['secure_url'] # CloudinaryからのセキュアURLを保存
+        
+        user
       end
 
       # ユーザーを保存する
