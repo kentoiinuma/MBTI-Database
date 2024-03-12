@@ -32,10 +32,10 @@ module Api
         clerk_user = clerk.users.find(clerk_user_id)
         
         user = User.find_or_initialize_by(clerk_id: clerk_user_id)
-        user.username = clerk_user.username # Clerkから取得したユーザーネームを設定
+        user.username = clerk_user['username'] # 修正: ハッシュから値を取得
         
         # Clerkから取得したアイコンURLを使用してCloudinaryにアップロードし、URLを取得
-        uploaded_image = Cloudinary::Uploader.upload(clerk_user.profile_image_url)
+        uploaded_image = Cloudinary::Uploader.upload(clerk_user['profile_image_url']) # 修正: ハッシュから値を取得
         user.avatar_url = uploaded_image['secure_url'] # CloudinaryからのセキュアURLを保存
         
         user

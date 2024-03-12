@@ -70,8 +70,8 @@ function MainContent() {
           },
           body: JSON.stringify({
             clerk_user_id: user.id,
-            username: user.firstName + " " + user.lastName, // Clerkからユーザーネームを組み立てる
-            profile_image_url: user.profileImageUrl // ClerkからユーザーアイコンのURLを取得
+            username: user.firstName + ' ' + user.lastName, // Clerkからユーザーネームを組み立てる
+            profile_image_url: user.profileImageUrl, // ClerkからユーザーアイコンのURLを取得
           }),
         });
       }

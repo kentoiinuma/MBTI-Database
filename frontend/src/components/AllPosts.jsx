@@ -58,8 +58,8 @@ const AllPosts = () => {
                       ...p,
                       user: {
                         ...p.user,
-                        profileImageUrl: userData.profile_image_url,
-                        username: userData.username,
+                        profileImageUrl: userData.avatar_url, // usersテーブルから取得
+                        username: userData.username, // usersテーブルから取得
                       },
                     };
                   }
