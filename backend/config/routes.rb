@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       post '/media_works', to: 'media_works#create'
       get '/media_works', to: 'media_works#index'
       get '/users/:id', to: 'users#show'
+      put '/users/:id', to: 'users#update' # この行を追加
       get '/media_works/statistics', to: 'media_works#statistics'
     end
   end

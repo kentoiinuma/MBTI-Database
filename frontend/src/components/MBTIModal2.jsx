@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from '@mui/material'; // MUIのLinkコンポーネントをインポート
 import Alert from '@mui/material/Alert'; // MUIのAlertコンポーネントをインポート
@@ -30,6 +30,8 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法の状態
   const [mbtiError, setMbtiError] = useState(false); // MBTIタイプ選択エラーの状態
   const [methodError, setMethodError] = useState(false); // 診断方法選択エラーの状態
+  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイル情報
+  const [editableUsername, setEditableUsername] = useState(''); // 編集可能なユーザーネームの状態
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -45,6 +47,50 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     API_URL = 'http://localhost:3000';
   }
 
+  useEffect(() => {
+    if (user) {
+      // ユーザープロファイル情報を取得
+      fetch(`${API_URL}/api/v1/users/${user.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserProfile({
+            username: data.username,
+            avatarUrl: data.avatar_url,
+          });
+          setEditableUsername(data.username); // ユーザーネームを編集可能な状態に設定
+        });
+
+      fetch(`${API_URL}/api/v1/mbti/${user.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // ここで取得したデータを確認
+          if (data.mbti_type) {
+            setSelectedMBTI(data.mbti_type);
+          }
+          if (data.diagnosis_method) {
+            // マッピング処理を削除し、直接値を設定
+            setDiagnosisMethod(data.diagnosis_method);
+          }
+        })
+        .catch((error) =>
+          console.error(
+            "Failed to load user's MBTI type and diagnosis method",
+            error,
+          ),
+        );
+    }
+  }, [user, API_URL]);
+
+  // モーダル外をクリックしたときにモーダルを閉じる処理
+  const handleClose = (event) => {
+    // モーダルのコンテンツ部分をクリックした場合は何もしない
+    if (event.target.id === 'modal-content') {
+      return;
+    }
+    // それ以外の場所をクリックした場合はonCloseを呼び出してモーダルを閉じる
+    onClose();
+  };
+
   // MBTIタイプ選択時の処理
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
@@ -55,21 +101,33 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     setDiagnosisMethod(event.target.value);
   };
 
+  // ユーザーネーム変更時の処理
+  const handleUsernameChange = (event) => {
+    setEditableUsername(event.target.value);
+  };
+
   // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let hasError = false;
+
     if (!selectedMBTI) {
       setMbtiError(true);
+      hasError = true;
     } else {
       setMbtiError(false);
     }
+
     if (!diagnosisMethod) {
       setMethodError(true);
+      hasError = true;
     } else {
       setMethodError(false);
     }
-    if (selectedMBTI && diagnosisMethod) {
-      const response = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
+
+    if (!hasError) {
+      // MBTI情報の更新
+      const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -80,12 +138,36 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         }),
       });
 
-      if (!response.ok) {
+      if (!mbtiResponse.ok) {
         // エラーハンドリング
+        console.error('Failed to update MBTI information');
+        return;
       }
 
-      onUpdate(selectedMBTI); // 親コンポーネントの更新処理を呼び出し
-      onClose(); // モーダルを閉じる
+      // ユーザーネームの更新
+      const userResponse = await fetch(`${API_URL}/api/v1/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            username: editableUsername,
+            avatar_url: userProfile.avatarUrl, // userProfileから現在のavatarUrlを取得して送信
+          },
+        }),
+      });
+
+      if (!userResponse.ok) {
+        // エラーハンドリング
+        console.error('Failed to update user information');
+        return;
+      }
+
+      // 親コンポーネントの更新処理を呼び出し
+      onUpdate(selectedMBTI);
+      // モーダルを閉じる
+      onClose();
     }
   };
 
@@ -94,29 +176,38 @@ const MBTIModal = ({ onClose, onUpdate }) => {
       <div
         className="fixed inset-0 z-50 flex items-center justify-center"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+        onClick={handleClose} // モーダルの背景をクリックしたときにモーダルを閉じる処理を追加
       >
         <div
+          id="modal-content" // モーダルのコンテンツ部分を特定するためのIDを追加
           className="bg-white p-6 rounded-lg shadow-xl max-w-lg mx-auto"
           style={{ borderColor: '#2EA9DF' }}
+          onClick={(e) => e.stopPropagation()} // モーダルのコンテンツ内でのクリックイベントが外側に伝播しないようにする
         >
-          <div style={{ textAlign: 'right' }}>
-            <button onClick={onClose}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
+          {userProfile && (
+            <div className="flex items-center space-x-4 p-4">
+              <img
+                src={userProfile.avatarUrl}
+                alt="User avatar"
+                className="w-20 rounded-full mr-4" // space-x-4を削除し、mr-8を追加して間隔を広げる
+              />
+              <div className="flex flex-col">
+                <label htmlFor="username" className="text-gray-700 mb-1">
+                  名前
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={editableUsername}
+                  onChange={handleUsernameChange}
+                  className="text-xl border py-1 px-3 shadow-sm focus:outline-none rounded-md"
+                  style={{ borderColor: 'lightgray', backgroundColor: 'white' }}
+                  onFocus={(e) => (e.target.style.borderColor = '#2EA9DF')}
+                  onBlur={(e) => (e.target.style.borderColor = 'lightgray')}
                 />
-              </svg>
-            </button>
-          </div>
+              </div>
+            </div>
+          )}
           {mbtiError && (
             <Alert severity="error">MBTIタイプを選択してください</Alert>
           )}
@@ -160,6 +251,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   value="self_assessment"
                   name="diagnosisMethod"
                   onChange={handleDiagnosisMethodChange}
+                  checked={diagnosisMethod === 'self_assessment'}
                   className="mr-2"
                 />
                 診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
@@ -203,6 +295,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   value="official_assessment"
                   name="diagnosisMethod"
                   onChange={handleDiagnosisMethodChange}
+                  checked={diagnosisMethod === 'official_assessment'}
                   className="mr-2"
                 />
                 <Link

@@ -31,6 +31,7 @@ const Profile = () => {
   useEffect(() => {
     const clerkId = user?.id; // Clerkから取得したユーザーID
     if (clerkId) {
+      // ユーザープロファイル情報を取得
       fetch(`${API_URL}/api/v1/users/${clerkId}`)
         .then((response) => response.json())
         .then((data) => {
@@ -45,16 +46,14 @@ const Profile = () => {
         .then((response) => response.json())
         .then((data) => setMbtiType(data.mbti_type));
 
-      // ユーザーの投稿を取得
+      // ユーザーの投稿を取得し、関連するメディア作品の画像を取得
       fetch(`${API_URL}/api/v1/posts?user_id=${clerkId}`)
         .then((response) => response.json())
         .then((posts) => {
-          // 各投稿に対してメディア作品の画像を取得
           posts.forEach((post) => {
             fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
               .then((response) => response.json())
               .then((mediaWorks) => {
-                // mediaWorks から画像の URL を抽出して state に追加
                 const images = mediaWorks.map((work) => work.image);
                 setUserImages((prevImages) => [
                   ...new Set([...prevImages, ...images]),
@@ -65,7 +64,7 @@ const Profile = () => {
     }
   }, [API_URL, user]); // 依存配列にuserを追加
 
-  // 選択されたセクションを管理
+  // 選択されたセクションを管理するための状態
   const [selectedSection, setSelectedSection] = useState('posts');
 
   // セクションを選択する関数

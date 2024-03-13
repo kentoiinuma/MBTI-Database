@@ -24,7 +24,7 @@ module Api
 
         @mbti_type = MbtiType.find_by(user_id: user.id)
         if @mbti_type
-          render json: { mbti_type: @mbti_type.mbti_type }
+          render json: { mbti_type: @mbti_type.mbti_type, diagnosis_method: @mbti_type.diagnosis_method }
         else
           render json: { error: 'MbtiType not found' }, status: 404
         end

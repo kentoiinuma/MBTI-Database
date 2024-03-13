@@ -16,6 +16,17 @@ module Api
         end
       end
 
+      # ユーザー情報を更新するアクション
+      def update
+        user = User.find_by(clerk_id: params[:id])
+        if user.update(user_params)
+          
+          render_user(user)
+        else
+          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       # ユーザーの情報をJSON形式でレンダリングする
@@ -24,6 +35,11 @@ module Api
           username: user.username,
           avatar_url: user.avatar_url # ここをprofile_image_urlからavatar_urlに変更
         }
+      end
+
+      # ストロングパラメーター
+      def user_params
+        params.require(:user).permit(:username, :avatar_url)
       end
     end
   end
