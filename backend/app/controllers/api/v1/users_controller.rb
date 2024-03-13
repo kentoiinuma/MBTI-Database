@@ -8,7 +8,7 @@ module Api
     class UsersController < ApplicationController
       # 特定のユーザーの情報を表示するアクション
       def show
-        user = User.find_by(clerk_id: params[:id]) # idからclerk_idに変更
+        user = User.find_by(clerk_id: params[:id])
         if user
           render_user(user)
         else

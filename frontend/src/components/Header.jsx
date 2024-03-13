@@ -19,6 +19,35 @@ const Header = ({ onSignIn }) => {
   const [anchorEl, setAnchorEl] = useState(null); // メニューのアンカー要素の状態
   const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
   const location = useLocation(); // 現在のパスを取得
+  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
+
+  // APIのURLを設定
+  let API_URL;
+  if (window.location.origin === 'http://localhost:3001') {
+    API_URL = 'http://localhost:3000';
+  } else if (
+    window.location.origin ===
+    'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
+  ) {
+    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
+  } else {
+    // デフォルトのURL
+    API_URL = 'http://localhost:3000';
+  }
+
+  useEffect(() => {
+    const clerkId = user?.id; // Clerkから取得したユーザーID
+    if (clerkId) {
+      fetch(`${API_URL}/api/v1/users/${clerkId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserProfile({
+            username: data.username,
+            avatarUrl: data.avatar_url, // ここをavatarUrlからavatar_urlに変更
+          });
+        });
+    }
+  }, [API_URL, user]);
 
   // サインアウト処理
   const handleSignOut = async () => {
@@ -35,13 +64,6 @@ const Header = ({ onSignIn }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // サインイン状態が変わった時の処理
-  useEffect(() => {
-    if (isSignedIn && user) {
-      onSignIn();
-    }
-  }, [isSignedIn, onSignIn, user]);
 
   // テキストを小さく表示するための関数
   const smallText = (text) => <span style={{ fontSize: '18px' }}>{text}</span>;
@@ -137,7 +159,7 @@ const Header = ({ onSignIn }) => {
                 onClick={handleClick}
               >
                 <img
-                  src={user?.profileImageUrl}
+                  src={userProfile?.avatarUrl}
                   alt="User avatar"
                   className="h-11 w-11 object-cover rounded-full"
                 />
@@ -162,7 +184,7 @@ const Header = ({ onSignIn }) => {
                   <AccountCircleOutlinedIcon
                     style={{ fontSize: '20px', marginRight: '8px' }}
                   />
-                  {user.username}
+                  {userProfile ? userProfile.username : 'Loading...'}
                 </MenuItem>
                 {/* アプリ情報メニューアイテム */}
                 <MenuItem
