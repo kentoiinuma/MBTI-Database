@@ -20,7 +20,6 @@ module Api
       def update
         user = User.find_by(clerk_id: params[:id])
         if user.update(user_params)
-          
           render_user(user)
         else
           render json: { errors: user.errors.full_messages }, status: :unprocessable_entity

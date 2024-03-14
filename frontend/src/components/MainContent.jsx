@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react'; // Clerkを使ったユーザー認証のためのフック
 import Header from './Header';
@@ -20,7 +20,7 @@ import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのイ�
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
-  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
+  const { isSignedIn, user } = useUser(); // ユーザーのサインイン状態、ユーザー情報を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
 
@@ -40,6 +40,7 @@ function MainContent() {
 
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
+    console.log('handleSignIn called'); // デバッグ用のログを追加
     if (user) {
       // バックエンドにユーザー情報を送信して新規ユーザーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
@@ -53,16 +54,9 @@ function MainContent() {
       });
       const data = await response.json();
 
-      // スナックバーを表示（すべてのユーザーのサインイン時）
-      setSnackbarMessage('サインインしました！');
-      setSnackbarOpen(true);
-
-      // 新規ユーザーの場合のみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
-        // 新規ユーザーの場合はMBTIモーダルを表示
         setShowMBTIModal(true);
 
-        // ユーザーネームとアイコンURLをバックエンドに送信
         await fetch(`${API_URL}/api/v1/registrations`, {
           method: 'POST',
           headers: {
@@ -70,45 +64,56 @@ function MainContent() {
           },
           body: JSON.stringify({
             clerk_user_id: user.id,
-            username: user.firstName + ' ' + user.lastName, // Clerkからユーザーネームを組み立てる
-            profile_image_url: user.profileImageUrl, // ClerkからユーザーアイコンのURLを取得
+            username: user.firstName + ' ' + user.lastName,
+            profile_image_url: user.profileImageUrl,
           }),
         });
       }
     }
   }, [user, API_URL]);
 
-  // サインアウト処理を行う関数
-  const handleSignOut = useCallback(() => {
-    // サインアウトのスナックバーを表示
-    setSnackbarMessage('サインアウトしました！');
-    setSnackbarOpen(true);
+  const prevIsSignedInRef = useRef(isSignedIn);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      // URLが手動で更新されたときには何もしない
+    };
+
+    window.addEventListener('popstate', handleRouteChange);
+    window.addEventListener('pushState', handleRouteChange);
+    window.addEventListener('replaceState', handleRouteChange);
+
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener('pushState', handleRouteChange);
+      window.removeEventListener('replaceState', handleRouteChange);
+    };
   }, []);
 
-  // コンポーネントがマウントされた後、サインイン状態が変わるたびにhandleSignInを呼び出す
   useEffect(() => {
-    if (!loading) {
-      if (isSignedIn && user) {
+    console.log('isSignedIn:', isSignedIn); // ステートの値を出力
+    if (prevIsSignedInRef.current !== undefined) {
+      if (isSignedIn && !prevIsSignedInRef.current) {
         handleSignIn();
-      } else if (!isSignedIn) {
-        // サインアウトの処理を行う前に、以前はサインインしていたかどうかを確認
-        const wasSignedIn = localStorage.getItem('wasSignedIn') === 'true';
-        if (wasSignedIn) {
-          handleSignOut();
-        }
+        setSnackbarMessage('サインインしました！');
+        setSnackbarOpen(true);
+      } else if (!isSignedIn && prevIsSignedInRef.current) {
+        setSnackbarMessage('サインアウトしました！');
+        setSnackbarOpen(true);
       }
-      // 現在のサインイン状態をlocalStorageに保存
-      // isSignedInがundefinedの場合はfalseとして扱う
-      localStorage.setItem('wasSignedIn', (isSignedIn ?? false).toString());
     }
-  }, [isSignedIn, user, loading, handleSignIn, handleSignOut]);
+    prevIsSignedInRef.current = isSignedIn;
+    localStorage.setItem('wasSignedIn', (isSignedIn ?? false).toString());
+  }, [isSignedIn, handleSignIn]);
 
-  // MBTIモーダルを閉じる関数
+  useEffect(() => {
+    console.log('Snackbar Open State:', snackbarOpen);
+  }, [snackbarOpen]);
+
   const handleCloseModal = useCallback(() => {
     setShowMBTIModal(false);
   }, []);
 
-  // スナックバーを閉じる関数
   const handleCloseSnackbar = useCallback(() => {
     setSnackbarOpen(false);
   }, []);
