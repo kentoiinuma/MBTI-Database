@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
 import MBTIModal from './MBTIModal2';
 import { useUser } from '@clerk/clerk-react'; // ClerkのuseUserフックをインポート
+import { useUserContext } from '../contexts/UserContext'; // UserContextのuseUserContextフックをインポート
 
 // Profileコンポーネントの定義
 const Profile = () => {
@@ -12,6 +13,7 @@ const Profile = () => {
   const [userImages, setUserImages] = useState([]); // ユーザー画像
 
   const { user } = useUser(); // 現在のユーザー情報を取得
+  const { userUpdated } = useUserContext(); // UserContextからuserUpdatedを取得
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -62,7 +64,7 @@ const Profile = () => {
           });
         });
     }
-  }, [API_URL, user]); // 依存配列にuserを追加
+  }, [API_URL, user, userUpdated]); // 依存配列にuserUpdatedを追加
 
   // 選択されたセクションを管理するための状態
   const [selectedSection, setSelectedSection] = useState('posts');

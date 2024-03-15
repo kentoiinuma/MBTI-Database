@@ -10,6 +10,7 @@ import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'; // ログ�
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'; // アカウントアイコン
 import Menu from '@mui/material/Menu'; // メニューコンポーネント
 import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
+import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -20,6 +21,7 @@ const Header = ({ onSignIn }) => {
   const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
   const location = useLocation(); // 現在のパスを取得
   const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
+  const { userUpdated, setUserUpdated } = useUserContext(); // UserContextから状態を取得
 
   // APIのURLを設定
   let API_URL;
@@ -36,18 +38,20 @@ const Header = ({ onSignIn }) => {
   }
 
   useEffect(() => {
-    const clerkId = user?.id; // Clerkから取得したユーザーID
-    if (clerkId) {
+    const clerkId = user?.id;
+    if (clerkId && userUpdated) {
+      // userUpdatedがtrueの場合にのみフェッチを実行
       fetch(`${API_URL}/api/v1/users/${clerkId}`)
         .then((response) => response.json())
         .then((data) => {
           setUserProfile({
             username: data.username,
-            avatarUrl: data.avatar_url, // ここをavatarUrlからavatar_urlに変更
+            avatarUrl: data.avatar_url,
           });
+          setUserUpdated(false); // フェッチ後に状態をリセット
         });
     }
-  }, [API_URL, user]);
+  }, [API_URL, user, userUpdated, setUserUpdated]); // userUpdatedとsetUserUpdatedを依存配列に追加
 
   // サインアウト処理
   const handleSignOut = async () => {
