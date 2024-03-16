@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useUser, UserProfile } from '@clerk/clerk-react';
 import { Image } from 'cloudinary-react';
 import MBTIModal from './MBTIModal2';
+import { useUser } from '@clerk/clerk-react'; // ClerkのuseUserフックをインポート
+import { useUserContext } from '../contexts/UserContext'; // UserContextのuseUserContextフックをインポート
 
-// Profile コンポーネントの定義
+// Profileコンポーネントの定義
 const Profile = () => {
-  // Clerk からユーザー情報を取得
-  const { user } = useUser();
-  // MBTIタイプ、ユーザープロファイルの表示状態、MBTIモーダルの表示状態、ユーザー画像の状態を管理
-  const [mbtiType, setMbtiType] = useState(null);
-  const [showUserProfile, setShowUserProfile] = useState(false);
-  const [showMBTIModal, setShowMBTIModal] = useState(false);
-  const [userImages, setUserImages] = useState([]);
+  // 状態管理のためのuseStateフック
+  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイル情報
+  const [mbtiType, setMbtiType] = useState(null); // MBTIタイプ
+  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダル表示状態
+  const [userImages, setUserImages] = useState([]); // ユーザー画像
+
+  const { user } = useUser(); // 現在のユーザー情報を取得
+  const { userUpdated } = useUserContext(); // UserContextからuserUpdatedを取得
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -27,24 +29,33 @@ const Profile = () => {
     API_URL = 'http://localhost:3000';
   }
 
-  // ユーザー情報やAPI_URLが変更された時に実行される副作用
+  // コンポーネントがマウントされた後に実行されるuseEffectフック
   useEffect(() => {
-    if (user) {
+    const clerkId = user?.id; // Clerkから取得したユーザーID
+    if (clerkId) {
+      // ユーザープロファイル情報を取得
+      fetch(`${API_URL}/api/v1/users/${clerkId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserProfile({
+            username: data.username,
+            avatarUrl: data.avatar_url,
+          });
+        });
+
       // ユーザーのMBTIタイプを取得
-      fetch(`${API_URL}/api/v1/mbti/${user.id}`)
+      fetch(`${API_URL}/api/v1/mbti/${clerkId}`)
         .then((response) => response.json())
         .then((data) => setMbtiType(data.mbti_type));
 
-      // ユーザーの投稿を取得
-      fetch(`${API_URL}/api/v1/posts?user_id=${user.id}`)
+      // ユーザーの投稿を取得し、関連するメディア作品の画像を取得
+      fetch(`${API_URL}/api/v1/posts?user_id=${clerkId}`)
         .then((response) => response.json())
         .then((posts) => {
-          // 各投稿に対してメディア作品の画像を取得
           posts.forEach((post) => {
             fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
               .then((response) => response.json())
               .then((mediaWorks) => {
-                // mediaWorks から画像の URL を抽出して state に追加
                 const images = mediaWorks.map((work) => work.image);
                 setUserImages((prevImages) => [
                   ...new Set([...prevImages, ...images]),
@@ -53,9 +64,9 @@ const Profile = () => {
           });
         });
     }
-  }, [user, API_URL]);
+  }, [API_URL, user, userUpdated]); // 依存配列にuserUpdatedを追加
 
-  // 選択されたセクションを管理
+  // 選択されたセクションを管理するための状態
   const [selectedSection, setSelectedSection] = useState('posts');
 
   // セクションを選択する関数
@@ -158,80 +169,44 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col items-center mt-8">
-      {user && (
+      {userProfile && (
         <>
           <div className="flex items-center justify-between w-full px-8">
             <div className="avatar">
               <div className="w-24 rounded-full">
-                <img src={user?.profileImageUrl} alt="User profile" />
+                <img src={userProfile?.avatarUrl} alt="User profile" />
               </div>
             </div>
             <div className="ml-8">
               <h1>
-                <span className="text-2xl">{user.username}</span>{' '}
+                <span className="text-2xl">{userProfile.username}</span>{' '}
                 <span className="ml-4">{mbtiType}</span>
               </h1>
             </div>
             <div className="ml-auto mb-12 mr-20">
-              <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                    />
-                  </svg>
-                </div>
-                <ul
-                  tabIndex={0}
-                  className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
-                >
-                  <li>
-                    <button onClick={() => setShowUserProfile(true)}>
-                      アイコン/アバターetc.
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => setShowMBTIModal(true)}>
-                      MBTIタイプ/診断方法
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          {showUserProfile && (
-            <div style={{ textAlign: 'right' }}>
-              <button
-                style={{ marginRight: '32px' }}
-                onClick={() => setShowUserProfile(false)}
+              <div
+                tabIndex={0}
+                role="button"
+                onClick={() => setShowMBTIModal(true)}
+                className="p-2 rounded-full hover:bg-gray-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-9 w-9"
                   fill="none"
                   viewBox="0 0 24 24"
+                  strokeWidth={1.5}
                   stroke="currentColor"
+                  className="w-6 h-6"
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M6 18L18 6M6 6l12 12"
+                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
                   />
                 </svg>
-              </button>
-              <UserProfile />
+              </div>
             </div>
-          )}
+          </div>
           <div className="flex justify-between items-center mt-16 w-full">
             <div
               className="flex-1 text-center cursor-pointer"

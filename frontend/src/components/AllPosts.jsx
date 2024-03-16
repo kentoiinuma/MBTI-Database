@@ -7,7 +7,6 @@ const AllPosts = () => {
   // 状態管理
   const [posts, setPosts] = useState([]); // 投稿データ
   const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
-  const [mbtiTypes, setMbtiTypes] = useState({}); // MBTIタイプデータ
   const location = useLocation(); // 現在のURL情報
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
@@ -42,7 +41,7 @@ const AllPosts = () => {
         setPosts(
           data.map((post) => ({
             ...post,
-            user: { ...post.user, profileImageUrl: null, username: null },
+            user: { ...post.user, avatarUrl: null, username: null },
             createdAt: post.created_at, // 投稿日時
           })),
         );
@@ -58,8 +57,8 @@ const AllPosts = () => {
                       ...p,
                       user: {
                         ...p.user,
-                        profileImageUrl: userData.profile_image_url,
-                        username: userData.username,
+                        avatarUrl: userData.avatar_url, // usersテーブルから取得
+                        username: userData.username, // usersテーブルから取得
                       },
                     };
                   }
@@ -76,18 +75,6 @@ const AllPosts = () => {
                 [post.id]: media,
               }));
             });
-          // MBTIタイプデータを取得
-          fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`)
-            .then((response) => response.json())
-            .then((mbtiData) => {
-              setMbtiTypes((prevMbtiTypes) => ({
-                ...prevMbtiTypes,
-                [post.user.clerk_id]: mbtiData.mbti_type,
-              }));
-            })
-            .catch((error) =>
-              console.error('Error fetching MBTI data:', error),
-            );
         });
       });
   }, [API_URL, location.pathname]); // API_URLとlocation.pathnameの変更時にのみ実行
@@ -125,7 +112,7 @@ const AllPosts = () => {
         <div className="avatar">
           <div className="w-20 rounded-full">
             <img
-              src={user.profileImageUrl}
+              src={user.avatarUrl}
               alt={`profileImage`}
               className="w-full h-full object-cover"
             />
@@ -134,7 +121,6 @@ const AllPosts = () => {
         <div className="ml-4">
           <h1>
             <span className="text-2xl">{user.username}</span>{' '}
-            <span className="ml-4">{mbtiTypes[user.clerk_id]}</span>{' '}
             <span className="ml-4">{formattedDate}</span>
           </h1>
         </div>

@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from '@mui/material'; // MUIのLinkコンポーネントをインポート
 import Alert from '@mui/material/Alert'; // MUIのAlertコンポーネントをインポート
+import Box from '@mui/material/Box';
+import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import { useUserContext } from '../contexts/UserContext'; // useUserContextをインポート
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -30,6 +33,10 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const [diagnosisMethod, setDiagnosisMethod] = useState(''); // 診断方法の状態
   const [mbtiError, setMbtiError] = useState(false); // MBTIタイプ選択エラーの状態
   const [methodError, setMethodError] = useState(false); // 診断方法選択エラーの状態
+  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイル情報
+  const [editableUsername, setEditableUsername] = useState(''); // 編集可能なユーザーネームの状態
+  const [avatarFile, setAvatarFile] = useState(null); // アバターファイルの状態
+  const { updateUserProfile } = useUserContext();
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -45,6 +52,50 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     API_URL = 'http://localhost:3000';
   }
 
+  useEffect(() => {
+    if (user) {
+      // ユーザープロファイル情報を取得
+      fetch(`${API_URL}/api/v1/users/${user.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUserProfile({
+            username: data.username,
+            avatarUrl: data.avatar_url,
+          });
+          setEditableUsername(data.username); // ユーザーネームを編集可能な状態に設定
+        });
+
+      fetch(`${API_URL}/api/v1/mbti/${user.id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data); // ここで取得したデータを確認
+          if (data.mbti_type) {
+            setSelectedMBTI(data.mbti_type);
+          }
+          if (data.diagnosis_method) {
+            // マッピング処理を削除し、直接値を設定
+            setDiagnosisMethod(data.diagnosis_method);
+          }
+        })
+        .catch((error) =>
+          console.error(
+            "Failed to load user's MBTI type and diagnosis method",
+            error,
+          ),
+        );
+    }
+  }, [user, API_URL]);
+
+  // モーダル外をクリックしたときにモーダルを閉じる処理
+  const handleClose = (event) => {
+    // モーダルのコンテンツ部分をクリックした場合は何もしない
+    if (event.target.id === 'modal-content') {
+      return;
+    }
+    // それ以外の場所をクリックした場合はonCloseを呼び出してモーダルを閉じる
+    onClose();
+  };
+
   // MBTIタイプ選択時の処理
   const handleMBTIChange = (event) => {
     setSelectedMBTI(event.target.value);
@@ -55,21 +106,87 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     setDiagnosisMethod(event.target.value);
   };
 
+  // ユーザーネーム変更時の処理
+  const handleUsernameChange = (event) => {
+    setEditableUsername(event.target.value);
+  };
+
+  // アバター画像クリック時にファイル選択をトリガーする
+  const triggerFileSelect = () =>
+    document.getElementById('avatarUpload').click();
+
+  // ファイルが選択された時の処理
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // FileReaderを使用してファイルを読み込む
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // 読み込んだ画像をuserProfileに反映
+        setUserProfile({
+          ...userProfile,
+          avatarUrl: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+      setAvatarFile(file); // 後でバックエンドにアップロードするためにファイルを状態に保存
+    }
+  };
+
+  // アバターをアップロードする関数
+  const uploadAvatar = async (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${user.id}/upload_avatar`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setUserProfile({
+          ...userProfile,
+          avatarUrl: data.avatar_url,
+        });
+      } else {
+        console.error('Failed to upload avatar:', data.error);
+      }
+    } catch (error) {
+      console.error('Failed to upload avatar:', error);
+    }
+  };
+
   // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
+    let hasError = false;
+
     if (!selectedMBTI) {
       setMbtiError(true);
+      hasError = true;
     } else {
       setMbtiError(false);
     }
+
     if (!diagnosisMethod) {
       setMethodError(true);
+      hasError = true;
     } else {
       setMethodError(false);
     }
-    if (selectedMBTI && diagnosisMethod) {
-      const response = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
+
+    if (!hasError) {
+      // アバターが選択されていればアップロード
+      if (avatarFile) {
+        await uploadAvatar(avatarFile);
+      }
+
+      // MBTI情報の更新
+      const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -80,12 +197,38 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         }),
       });
 
-      if (!response.ok) {
+      if (!mbtiResponse.ok) {
         // エラーハンドリング
+        console.error('Failed to update MBTI information');
+        return;
       }
 
-      onUpdate(selectedMBTI); // 親コンポーネントの更新処理を呼び出し
-      onClose(); // モーダルを閉じる
+      // ユーザーネームの更新
+      const userResponse = await fetch(`${API_URL}/api/v1/users/${user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user: {
+            username: editableUsername,
+          },
+        }),
+      });
+
+      if (!userResponse.ok) {
+        // エラーハンドリング
+        console.error('Failed to update user information');
+        return;
+      } else {
+        // UserContextを通じてアプリケーション全体にユーザー情報の更新を伝播
+        updateUserProfile(editableUsername, userProfile.avatarUrl);
+      }
+
+      // 親コンポーネントの更新処理を呼び出し
+      onUpdate(selectedMBTI);
+      // モーダルを閉じる
+      onClose();
     }
   };
 
@@ -94,29 +237,80 @@ const MBTIModal = ({ onClose, onUpdate }) => {
       <div
         className="fixed inset-0 z-50 flex items-center justify-center"
         style={{ backgroundColor: 'rgba(0, 0, 0, 0.75)' }}
+        onClick={handleClose} // モーダルの背景をクリックしたときにモーダルを閉じる処理を追加
       >
         <div
+          id="modal-content" // モーダルのコンテンツ部分を特定するためのIDを追加
           className="bg-white p-6 rounded-lg shadow-xl max-w-lg mx-auto"
           style={{ borderColor: '#2EA9DF' }}
+          onClick={(e) => e.stopPropagation()} // モーダルのコンテンツ内でのクリックイベントが外側に伝播しないようにする
         >
-          <div style={{ textAlign: 'right' }}>
-            <button onClick={onClose}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
+          {userProfile && (
+            <Box
+              position="relative"
+              className="flex items-center space-x-4 p-4"
+            >
+              <div className="avatar" onClick={triggerFileSelect}>
+                <div className="w-24 rounded-full mr-4 cursor-pointer overflow-hidden">
+                  <img
+                    src={userProfile.avatarUrl}
+                    alt="User avatar"
+                    className="w-full h-auto" // 画像の幅をdivに合わせ、高さを自動調整するように変更
+                    onClick={(e) => e.stopPropagation()} // この行を追加: 画像クリック時のイベント伝播を停止
+                    style={{ filter: 'brightness(80%)' }} // 画像の明るさを80%に設定
+                  />
+                  <Box
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    right="0"
+                    bottom="0"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <AddAPhotoOutlinedIcon
+                      style={{
+                        fontSize: 40,
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-70%)',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation(); // アイコンクリック時のイベント伝播を停止
+                        triggerFileSelect(); // 明示的にファイル選択をトリガー
+                      }}
+                    />
+                  </Box>
+                </div>
+              </div>
+              <input
+                type="file"
+                id="avatarUpload"
+                style={{ display: 'none' }} // 隠しinput
+                onChange={handleFileChange}
+              />
+              <div className="flex flex-col">
+                <label htmlFor="username" className="text-gray-700 mb-1">
+                  名前
+                </label>
+                <input
+                  id="username"
+                  type="text"
+                  value={editableUsername}
+                  onChange={handleUsernameChange}
+                  className="text-xl border py-1 px-3 shadow-sm focus:outline-none rounded-md"
+                  style={{ borderColor: 'lightgray', backgroundColor: 'white' }}
+                  onFocus={(e) => (e.target.style.borderColor = '#2EA9DF')}
+                  onBlur={(e) => (e.target.style.borderColor = 'lightgray')}
                 />
-              </svg>
-            </button>
-          </div>
+              </div>
+            </Box>
+          )}
           {mbtiError && (
             <Alert severity="error">MBTIタイプを選択してください</Alert>
           )}
@@ -160,6 +354,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   value="self_assessment"
                   name="diagnosisMethod"
                   onChange={handleDiagnosisMethodChange}
+                  checked={diagnosisMethod === 'self_assessment'}
                   className="mr-2"
                 />
                 診断サイトでの診断を参考にしたり、書籍やWebサイトなどでMBTIに関する情報を集めて、自らの判断で決定した
@@ -203,6 +398,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   value="official_assessment"
                   name="diagnosisMethod"
                   onChange={handleDiagnosisMethodChange}
+                  checked={diagnosisMethod === 'official_assessment'}
                   className="mr-2"
                 />
                 <Link

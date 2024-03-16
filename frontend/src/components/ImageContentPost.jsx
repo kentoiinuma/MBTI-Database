@@ -201,7 +201,6 @@ const ImageContentPost = () => {
           <Alert
             onClose={() => setArtistNotFound(false)}
             severity="error"
-            variant="filled"
             sx={{ width: '100%' }}
           >
             正しいアーティスト名を入力してください。
@@ -218,7 +217,6 @@ const ImageContentPost = () => {
           <Alert
             onClose={() => setCustomAlertVisible(false)}
             severity="error"
-            variant="filled"
             sx={{ width: '100%' }}
           >
             音楽アーティストの投稿は1回のみです。

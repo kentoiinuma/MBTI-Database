@@ -17,12 +17,14 @@ import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
 import Contact from './Contact';
 import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
+import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
   const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
+  const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
 
   let API_URL; // APIのURLを格納する変数
   // 環境に応じてAPIのURLを設定
@@ -70,13 +72,16 @@ function MainContent() {
           },
           body: JSON.stringify({
             clerk_user_id: user.id,
-            username: user.firstName + " " + user.lastName, // Clerkからユーザーネームを組み立てる
-            profile_image_url: user.profileImageUrl // ClerkからユーザーアイコンのURLを取得
+            username: user.firstName + ' ' + user.lastName, // Clerkからユーザーネームを組み立てる
+            profile_image_url: user.profileImageUrl, // ClerkからユーザーアイコンのURLを取得
           }),
         });
+
+        // 新規ユーザー登録後にUserContextの状態を更新
+        setUserUpdated(true);
       }
     }
-  }, [user, API_URL]);
+  }, [user, API_URL, setUserUpdated]);
 
   // サインアウト処理を行う関数
   const handleSignOut = useCallback(() => {

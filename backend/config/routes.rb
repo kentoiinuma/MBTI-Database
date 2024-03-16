@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  # Routing to the create action of the RegistrationsController
   namespace :api do
     namespace :v1 do
       post '/registrations', to: 'registrations#create'
@@ -18,7 +17,9 @@ Rails.application.routes.draw do
       post '/media_works', to: 'media_works#create'
       get '/media_works', to: 'media_works#index'
       get '/users/:id', to: 'users#show'
+      put '/users/:id', to: 'users#update_name'
       get '/media_works/statistics', to: 'media_works#statistics'
+      post '/users/:id/upload_avatar', to: 'users#upload_avatar'
     end
   end
 end
