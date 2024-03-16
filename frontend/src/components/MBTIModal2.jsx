@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import { Link } from '@mui/material'; // MUIのLinkコンポーネントをインポート
 import Alert from '@mui/material/Alert'; // MUIのAlertコンポーネントをインポート
+import Box from '@mui/material/Box';
+import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import { useUserContext } from '../contexts/UserContext'; // useUserContextをインポート
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
@@ -32,6 +35,8 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   const [methodError, setMethodError] = useState(false); // 診断方法選択エラーの状態
   const [userProfile, setUserProfile] = useState(null); // ユーザープロファイル情報
   const [editableUsername, setEditableUsername] = useState(''); // 編集可能なユーザーネームの状態
+  const [avatarFile, setAvatarFile] = useState(null); // アバターファイルの状態
+  const { updateUserProfile } = useUserContext();
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -106,6 +111,55 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     setEditableUsername(event.target.value);
   };
 
+  // アバター画像クリック時にファイル選択をトリガーする
+  const triggerFileSelect = () =>
+    document.getElementById('avatarUpload').click();
+
+  // ファイルが選択された時の処理
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      // FileReaderを使用してファイルを読み込む
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // 読み込んだ画像をuserProfileに反映
+        setUserProfile({
+          ...userProfile,
+          avatarUrl: reader.result,
+        });
+      };
+      reader.readAsDataURL(file);
+      setAvatarFile(file); // 後でバックエンドにアップロードするためにファイルを状態に保存
+    }
+  };
+
+  // アバターをアップロードする関数
+  const uploadAvatar = async (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      const response = await fetch(
+        `${API_URL}/api/v1/users/${user.id}/upload_avatar`,
+        {
+          method: 'POST',
+          body: formData,
+        },
+      );
+      const data = await response.json();
+      if (response.ok) {
+        setUserProfile({
+          ...userProfile,
+          avatarUrl: data.avatar_url,
+        });
+      } else {
+        console.error('Failed to upload avatar:', data.error);
+      }
+    } catch (error) {
+      console.error('Failed to upload avatar:', error);
+    }
+  };
+
   // フォーム送信時の処理
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -126,6 +180,11 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     }
 
     if (!hasError) {
+      // アバターが選択されていればアップロード
+      if (avatarFile) {
+        await uploadAvatar(avatarFile);
+      }
+
       // MBTI情報の更新
       const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${user.id}`, {
         method: 'PUT',
@@ -153,7 +212,6 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         body: JSON.stringify({
           user: {
             username: editableUsername,
-            avatar_url: userProfile.avatarUrl, // userProfileから現在のavatarUrlを取得して送信
           },
         }),
       });
@@ -162,6 +220,9 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         // エラーハンドリング
         console.error('Failed to update user information');
         return;
+      } else {
+        // UserContextを通じてアプリケーション全体にユーザー情報の更新を伝播
+        updateUserProfile(editableUsername, userProfile.avatarUrl);
       }
 
       // 親コンポーネントの更新処理を呼び出し
@@ -185,11 +246,53 @@ const MBTIModal = ({ onClose, onUpdate }) => {
           onClick={(e) => e.stopPropagation()} // モーダルのコンテンツ内でのクリックイベントが外側に伝播しないようにする
         >
           {userProfile && (
-            <div className="flex items-center space-x-4 p-4">
-              <img
-                src={userProfile.avatarUrl}
-                alt="User avatar"
-                className="w-20 rounded-full mr-4" // space-x-4を削除し、mr-8を追加して間隔を広げる
+            <Box
+              position="relative"
+              className="flex items-center space-x-4 p-4"
+            >
+              <div className="avatar" onClick={triggerFileSelect}>
+                <div className="w-24 rounded-full mr-4 cursor-pointer overflow-hidden">
+                  <img
+                    src={userProfile.avatarUrl}
+                    alt="User avatar"
+                    className="w-full h-auto" // 画像の幅をdivに合わせ、高さを自動調整するように変更
+                    onClick={(e) => e.stopPropagation()} // この行を追加: 画像クリック時のイベント伝播を停止
+                    style={{ filter: 'brightness(80%)' }} // 画像の明るさを80%に設定
+                  />
+                  <Box
+                    position="absolute"
+                    top="0"
+                    left="0"
+                    right="0"
+                    bottom="0"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    style={{
+                      cursor: 'pointer',
+                    }}
+                  >
+                    <AddAPhotoOutlinedIcon
+                      style={{
+                        fontSize: 40,
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        position: 'absolute',
+                        left: '50%',
+                        transform: 'translateX(-70%)',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation(); // アイコンクリック時のイベント伝播を停止
+                        triggerFileSelect(); // 明示的にファイル選択をトリガー
+                      }}
+                    />
+                  </Box>
+                </div>
+              </div>
+              <input
+                type="file"
+                id="avatarUpload"
+                style={{ display: 'none' }} // 隠しinput
+                onChange={handleFileChange}
               />
               <div className="flex flex-col">
                 <label htmlFor="username" className="text-gray-700 mb-1">
@@ -206,7 +309,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   onBlur={(e) => (e.target.style.borderColor = 'lightgray')}
                 />
               </div>
-            </div>
+            </Box>
           )}
           {mbtiError && (
             <Alert severity="error">MBTIタイプを選択してください</Alert>

@@ -16,13 +16,31 @@ module Api
         end
       end
 
-      # ユーザー情報を更新するアクション
-      def update
+      # ユーザーネームを更新するアクション
+      def update_name
         user = User.find_by(clerk_id: params[:id])
         if user.update(user_params)
           render_user(user)
         else
           render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      # ユーザーのアバター画像をアップロードするアクション
+      def upload_avatar
+        user = User.find_by(clerk_id: params[:id])
+        if user
+          # Cloudinaryに画像をアップロードし、URLを取得
+          uploaded_image = Cloudinary::Uploader.upload(params[:avatar].tempfile.path) # 修正箇所
+          if uploaded_image['url']
+            # アップロードされた画像のURLでユーザーのavatar_urlを更新
+            user.update(avatar_url: uploaded_image['url'])
+            render_user(user)
+          else
+            render json: { error: 'Failed to upload image' }, status: :unprocessable_entity
+          end
+        else
+          render json: { error: 'User not found' }, status: :not_found
         end
       end
 

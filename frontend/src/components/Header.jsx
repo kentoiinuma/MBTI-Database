@@ -39,7 +39,7 @@ const Header = ({ onSignIn }) => {
 
   useEffect(() => {
     const clerkId = user?.id;
-    if (clerkId && userUpdated) {
+    if (clerkId) {
       // userUpdatedがtrueの場合にのみフェッチを実行
       fetch(`${API_URL}/api/v1/users/${clerkId}`)
         .then((response) => response.json())
@@ -51,7 +51,7 @@ const Header = ({ onSignIn }) => {
           setUserUpdated(false); // フェッチ後に状態をリセット
         });
     }
-  }, [API_URL, user, userUpdated, setUserUpdated]); // userUpdatedとsetUserUpdatedを依存配列に追加
+  }, [API_URL, user, userUpdated]); // userUpdatedとsetUserUpdatedを依存配列に追加
 
   // サインアウト処理
   const handleSignOut = async () => {
