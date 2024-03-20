@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       put '/users/:id', to: 'users#update_name'
       get '/media_works/statistics', to: 'media_works#statistics'
       post '/users/:id/upload_avatar', to: 'users#upload_avatar'
+      delete '/posts/:id', to: 'posts#destroy'
     end
   end
 end

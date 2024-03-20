@@ -1,7 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Snackbar, Alert } from '@mui/material'; // MUIのSnackbarとAlertをインポート
+import {
+  Snackbar,
+  Alert,
+  Menu,
+  MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Button,
+} from '@mui/material'; // 必要なコンポーネントをインポート
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const AllPosts = () => {
   // 状態管理
@@ -10,6 +24,56 @@ const AllPosts = () => {
   const location = useLocation(); // 現在のURL情報
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
+  const [anchorEl, setAnchorEl] = useState(null); // ドロップダウンメニューのアンカー要素
+  const [openDialog, setOpenDialog] = useState(false); // ダイアログの開閉状態を管理
+  const [deletePostId, setDeletePostId] = useState(null); // 削除する投稿のID
+  const open = Boolean(anchorEl); // ドロップダウンメニューが開いているかどうか
+  // ドロップダウンメニューを開く
+  const handleClick = (event, postId) => {
+    setAnchorEl(event.currentTarget);
+    setDeletePostId(postId); // 追加: クリックされた投稿のIDを状態に保存
+  };
+
+  // ドロップダウンメニューを閉じる
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  // ダイアログを開く関数
+  const handleOpenDialog = (postId) => {
+    console.log('Opening dialog for post ID:', postId); // この行を追加
+    setDeletePostId(postId); // 削除する投稿のIDを設定
+    setOpenDialog(true);
+  };
+
+  // ダイアログを閉じる関数
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにする
+  };
+
+  // 投稿を削除する関数
+  const handleDeletePost = () => {
+    console.log('Deleting post with ID:', deletePostId); // この行を追加
+    if (deletePostId) {
+      fetch(`${API_URL}/api/v1/posts/${deletePostId}`, {
+        method: 'DELETE',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // 投稿が正常に削除された場合、投稿リストからその投稿を削除
+            setPosts(posts.filter((post) => post.id !== deletePostId));
+            setOpenDialog(false); // ダイアログを閉じる
+          } else {
+            // エラーハンドリング
+            console.error('Failed to delete the post');
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+  };
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -100,7 +164,7 @@ const AllPosts = () => {
   };
 
   // ユーザー詳細をレンダリングする関数
-  const renderUserDetails = (user, createdAt) => {
+  const renderUserDetails = (user, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString(
       'ja-JP',
@@ -108,21 +172,119 @@ const AllPosts = () => {
     );
 
     return (
-      <div className="user-details flex items-center">
-        <div className="avatar">
-          <div className="w-20 rounded-full">
-            <img
-              src={user.avatarUrl}
-              alt={`profileImage`}
-              className="w-full h-full object-cover"
-            />
+      <div className="user-details flex items-center justify-between">
+        <div className="flex items-center">
+          <div className="avatar">
+            <div className="w-20 rounded-full">
+              <img
+                src={user.avatarUrl}
+                alt={`profileImage`}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+          <div className="ml-4">
+            <h1>
+              <span className="text-2xl">{user.username}</span>{' '}
+              <span className="ml-4">{formattedDate}</span>
+            </h1>
           </div>
         </div>
-        <div className="ml-4">
-          <h1>
-            <span className="text-2xl">{user.username}</span>{' '}
-            <span className="ml-4">{formattedDate}</span>
-          </h1>
+        <div className="mr-8" style={{ position: 'relative' }}>
+          <div
+            className="hover:bg-gray-200 p-2 rounded-full"
+            style={{ display: 'inline-block', cursor: 'pointer' }}
+            onClick={(event) => handleClick(event, postId)} // 正しい変数名を使用
+          >
+            <MoreVertIcon style={{ fontSize: 30 }} />
+          </div>
+          <Menu
+            id="long-menu"
+            MenuListProps={{
+              'aria-labelledby': 'long-button',
+            }}
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+            PaperProps={{
+              style: {
+                maxHeight: 48 * 4.5,
+                width: '20ch',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // 影のスタイルを薄く調整
+              },
+            }}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem onClick={() => handleOpenDialog(postId)}>
+              <DeleteOutlineOutlinedIcon
+                fontSize="small"
+                style={{ marginRight: '8px' }}
+              />
+              削除
+            </MenuItem>
+            <Dialog
+              open={openDialog}
+              onClose={handleCloseDialog}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+              BackdropProps={{ invisible: true }}
+              PaperProps={{
+                style: {
+                  boxShadow:
+                    '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
+                  borderRadius: '16px', // ダイアログの角を丸くする
+                },
+              }}
+            >
+              <DialogTitle id="alert-dialog-title">
+                {'ポストの削除'}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  ポストを完全に削除しますか？
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  onClick={handleCloseDialog}
+                  sx={{
+                    borderRadius: '20px', // ボタンの角を丸くする
+                    ':hover': {
+                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                    },
+                  }}
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={handleDeletePost}
+                  autoFocus
+                  sx={{
+                    borderRadius: '20px', // ボタンの角を丸くする
+                    ':hover': {
+                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                    },
+                  }}
+                >
+                  削除
+                </Button>
+              </DialogActions>
+            </Dialog>
+            <MenuItem onClick={handleClose}>
+              <EditOutlinedIcon
+                fontSize="small"
+                style={{ marginRight: '8px' }}
+              />
+              編集（本リリース時）
+            </MenuItem>
+          </Menu>
         </div>
       </div>
     );
@@ -135,7 +297,7 @@ const AllPosts = () => {
         <React.Fragment key={post.id}>
           {/* ユーザー詳細表示 */}
           <div style={{ margin: '20px 0 0 30px' }}>
-            {post.user && renderUserDetails(post.user, post.createdAt)}
+            {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
           </div>
           {/* 好きな音楽アーティストの表示 */}
           <div className="mb-5 text-center">
