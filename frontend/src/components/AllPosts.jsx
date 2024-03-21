@@ -16,6 +16,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import XIcon from '@mui/icons-material/X';
 
 const AllPosts = () => {
   // 状態管理
@@ -24,6 +25,7 @@ const AllPosts = () => {
   const location = useLocation(); // 現在のURL情報
   const navigate = useNavigate();
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
+  const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
   const [anchorEl, setAnchorEl] = useState(null); // ドロップダウンメニューのアンカー要素
   const [openDialog, setOpenDialog] = useState(false); // ダイアログの開閉状態を管理
   const [deletePostId, setDeletePostId] = useState(null); // 削除する投稿のID
@@ -31,7 +33,7 @@ const AllPosts = () => {
   // ドロップダウンメニューを開く
   const handleClick = (event, postId) => {
     setAnchorEl(event.currentTarget);
-    setDeletePostId(postId); // 追加: クリックされた投稿のIDを状態に保存
+    setDeletePostId(postId); // ここで削除する投稿のIDを設定
   };
 
   // ドロップダウンメニューを閉じる
@@ -40,9 +42,8 @@ const AllPosts = () => {
   };
 
   // ダイアログを開く関数
-  const handleOpenDialog = (postId) => {
-    console.log('Opening dialog for post ID:', postId); // この行を追加
-    setDeletePostId(postId); // 削除する投稿のIDを設定
+  const handleOpenDialog = () => {
+    console.log('Opening dialog for post ID:', deletePostId); // 既に設定されているdeletePostIdを使用
     setOpenDialog(true);
   };
 
@@ -64,6 +65,9 @@ const AllPosts = () => {
             // 投稿が正常に削除された場合、投稿リストからその投稿を削除
             setPosts(posts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイアログを閉じる
+            setOpenSnackbar(true); // スナックバーを表示する
+            // スナックバーのメッセージを設定する
+            setSnackbarMessage('ポストを削除しました！');
           } else {
             // エラーハンドリング
             console.error('Failed to delete the post');
@@ -87,14 +91,6 @@ const AllPosts = () => {
   } else {
     API_URL = 'http://localhost:3000';
   }
-
-  // 投稿成功時にスナックバーを表示するためのuseEffect
-  useEffect(() => {
-    if (location.state?.postSuccess) {
-      setOpenSnackbar(true); // Snackbarを開く
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state?.postSuccess]); // 依存配列にlocation.state.postSuccessのみを含める
 
   // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
   useEffect(() => {
@@ -194,9 +190,9 @@ const AllPosts = () => {
           <div
             className="hover:bg-gray-200 p-2 rounded-full"
             style={{ display: 'inline-block', cursor: 'pointer' }}
-            onClick={(event) => handleClick(event, postId)} // 正しい変数名を使用
+            onClick={(event) => handleClick(event, postId)} // ここでpostIdを渡す
           >
-            <MoreVertIcon style={{ fontSize: 30 }} />
+            <MoreVertIcon style={{ fontSize: 35 }} />
           </div>
           <Menu
             id="long-menu"
@@ -222,7 +218,7 @@ const AllPosts = () => {
               horizontal: 'right',
             }}
           >
-            <MenuItem onClick={() => handleOpenDialog(postId)}>
+            <MenuItem onClick={() => handleOpenDialog()}>
               <DeleteOutlineOutlinedIcon
                 fontSize="small"
                 style={{ marginRight: '8px' }}
@@ -290,13 +286,34 @@ const AllPosts = () => {
     );
   };
 
+  // XIconをクリックしたときの処理を追加
+  const shareToX = (post) => {
+    const artistText = mediaWorks[post.id]
+      ? `私が好きな音楽アーティストは${mediaWorks[post.id]
+          .map(
+            (work, index, array) =>
+              `${work.title}${index < array.length - 1 ? '、' : ''}`,
+          )
+          .join('')}です！`
+      : '';
+    const imageUrl =
+      mediaWorks[post.id] && mediaWorks[post.id].length > 0
+        ? `https://res.cloudinary.com/dputyeqso/image/upload/${mediaWorks[post.id][0].image}`
+        : '';
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(imageUrl)}`;
+    window.open(shareUrl, '_blank');
+  };
+
   return (
     <div>
       {/* 投稿データをマップして表示 */}
       {posts.map((post) => (
         <React.Fragment key={post.id}>
           {/* ユーザー詳細表示 */}
-          <div style={{ margin: '20px 0 0 30px' }}>
+          <div
+            style={{ margin: '20px 0 0 30px' }}
+            onClick={() => navigate(`/post/${post.id}`)}
+          >
             {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
           </div>
           {/* 好きな音楽アーティストの表示 */}
@@ -317,11 +334,12 @@ const AllPosts = () => {
           <div
             style={{
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginBottom: '20px',
+              justifyContent: 'flex-start', // 中央揃えから開始位置揃えに変更
+              alignItems: 'flex-start', // 縦方向の開始位置揃えに変更
+              marginBottom: '5px',
             }}
           >
+            {/* メディア作品の画像をレンダリング */}
             <div
               style={
                 mediaWorks[post.id] && mediaWorks[post.id].length === 2
@@ -329,19 +347,31 @@ const AllPosts = () => {
                       width: '500px',
                       height: '247.5px',
                       backgroundColor: 'black',
+                      marginLeft: '345px', // 左マージンを40pxに増やす
                     }
                   : {
                       width: '500px',
                       height: '500px',
                       backgroundColor: 'black',
+                      marginLeft: '345px', // 左マージンを40pxに増やす
                     }
               }
             >
-              {/* メディア作品の画像をレンダリング */}
               {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
             </div>
+            {/* 画像をレンダリングする関数の直後にXIconを配置するコード */}
+            <div
+              style={{
+                textAlign: 'right',
+                marginTop: '450px',
+                marginLeft: '200px',
+              }}
+              className="p-3 rounded-full hover:bg-gray-200"
+              onClick={() => shareToX(post)} // ここに追加
+            >
+              <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+            </div>
           </div>
-          {/* 投稿間の区切り線 */}
           <hr className="border-t border-[#2EA9DF] w-full" />
         </React.Fragment>
       ))}
@@ -355,7 +385,7 @@ const AllPosts = () => {
           severity="success"
           sx={{ width: '100%' }}
         >
-          投稿が成功しました。
+          {snackbarMessage}
         </Alert>
       </Snackbar>
     </div>

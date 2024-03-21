@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       post '/posts', to: 'posts#create'
       get '/posts', to: 'posts#index'
       get '/posts/all', to: 'posts#all'
+      get '/posts/:id', to: 'posts#show'
       post '/media_works', to: 'media_works#create'
       get '/media_works', to: 'media_works#index'
       get '/users/:id', to: 'users#show'
