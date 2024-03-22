@@ -12,7 +12,35 @@ function AboutApp() {
   return (
     <div style={{ margin: '40px', fontSize: '1.1em' }}>
       <p>
-        MBTIタイプ診断をしたことのあるユーザーが、音楽やアニメなどのメディアごとに好きな作品やアーティストを投稿することにより、MBTIタイプごとの好みをデータベース化するWebアプリケーションです！
+        MBTIタイプ診断をしたことのあるユーザーが、音楽やアニメなどのメディアごとに好きな作品やアーティストを投稿することにより、MBTIタイプごとの好みをデータベース化するWebアプリケーションです🙌
+      </p>
+
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
+        なぜMBTIタイプごとの好みをデータベース化するのか？
+      </h2>
+      <p>
+        Xや掲示板などでMBTIタイプごとの具体的な好みについて考えたり、予想したりしている人はたくさんいるのですが、あくまでその人たちの直観や肌感覚に依存するため、説得力が発信者の信用に基づいてしまうことに課題を見い出し、実際にデータを取って確かめたいという思いからこのサービスを作ろうと考えました。
+      </p>
+
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
+        なぜ作品なのか？
+      </h2>
+      <p>
+        MBTIは個人の指向によってタイプを分類する類型論なので、何かをデータベースに投稿・Xに共有するとしたら多種多様な表現方法を持つ作品が個人の指向を最も反映でき、タイプごとに好きな作品の傾向が表れるのではないかと考えたからです！
       </p>
 
       <h2
@@ -30,7 +58,7 @@ function AboutApp() {
       >
         <div style={{ flex: 1 }}>
           <p>
-            MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視されていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました。
+            MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視されていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました！
           </p>
           <ul>
             <li style={{ marginTop: '20px' }}>
@@ -104,11 +132,14 @@ function AboutApp() {
             elevation={8}
             style={{ width: '550px', height: 'auto', marginLeft: '20px' }}
           >
-            <img
-              src="https://i.gyazo.com/ce36080ef1129f38491cda509fa16dc6.png"
+            <video
+              src="https://i.gyazo.com/dba4e9981c3d8da5d0d1c2782ede6463.mp4"
               alt="公式セッション画像"
-              style={{ width: '100%', height: 'auto' }} // 画像の大きさと左マージンを指定
-            />
+              style={{ width: '100%', height: 'auto' }}
+              controls
+            >
+              お使いのブラウザはvideoタグをサポートしていません。
+            </video>
           </Paper>
         </div>
       </div>
@@ -128,13 +159,16 @@ function AboutApp() {
           elevation={8}
           style={{ width: '550px', height: 'auto', marginRight: '20px' }}
         >
-          <img
-            src="https://i.gyazo.com/a6a96ad4aa2c5d4dad2675963f7d3886.png"
+          <video
+            src="https://i.gyazo.com/99db8bc5f73a4ccf2e81d85317632a1f.mp4"
             alt="イメージ画像投稿例"
             style={{ width: '100%', height: 'auto' }} // 画像の大きさを指定し、右マージンを追加
-          />
+            controls
+          >
+            お使いのブラウザはvideoタグをサポートしていません。
+          </video>
         </Paper>
-        1~4枚のイメージ画像を投稿できます。
+        1~4枚のイメージ画像を投稿できます！
       </p>
 
       <h2
@@ -145,29 +179,64 @@ function AboutApp() {
           marginBottom: '10px',
         }}
       >
-        Step3 気になるMBTIタイプの好きな作品やアーティストを見てみよう！
+        Step3 Xに共有してみよう！
+      </h2>
+      <p
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'row-reverse',
+        }}
+      >
+        <Paper
+          elevation={8}
+          style={{ width: '550px', height: 'auto', marginLeft: '20px' }}
+        >
+          <img
+            src="https://i.gyazo.com/71ea70c914f372f656fcaa4e139292a0.jpg"
+            alt="イメージ画像投稿例"
+            style={{ width: '100%', height: 'auto' }}
+          />
+        </Paper>
+        自分の好きな作品やアーティストをXに共有できます！
+      </p>
+      <h2
+        style={{
+          fontWeight: 'bold',
+          fontSize: 'larger',
+          marginTop: '40px',
+          marginBottom: '10px',
+        }}
+      >
+        Step4 気になるMBTIタイプの好きな作品やアーティストを見てみよう！
       </h2>
       <p
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          flexDirection: 'row-reverse',
+          flexDirection: 'row',
         }}
       >
         <Paper
           elevation={8}
-          style={{ minWidth: '550px', height: 'auto', marginLeft: '20px' }}
+          style={{ minWidth: '550px', height: 'auto', marginRight: '20px' }}
         >
-          <img
-            src="https://i.gyazo.com/ca4cafdaa7e67f40eccc3683c6b86826.png"
+          <video
+            src="https://i.gyazo.com/cc5004bd2682567293c4bad9b534e682.mp4"
             alt="データベース詳細画面"
-            style={{ width: '100%', height: 'auto' }} // 画像の大きさと左マージンを指定
-          />
+            style={{ width: '100%', height: 'auto' }}
+            controls
+          >
+            お使いのブラウザはvideoタグをサポートしていません。
+          </video>
         </Paper>
         <ul>
           <li>
-            データベース詳細画面ではユーザーがメディアごとに投稿した作品やアーティスト名の情報をもとに作成されたデータベースを見ることができます。データベース詳細画面はMBTI16タイプを知覚機能（Ni/Ne/Si/Se）ごとに分けられていて、ボタンを選択・選択解除することで任意のタイプや診断方法のデータベースをフィルタリングすることができます。
+            サイドバー（Se
+            ESFP/ESTP/ISFP/ISTPなど）ではユーザーがメディアごとに投稿した作品やアーティスト名の情報をもとに作成されたデータベースを見ることができます！
+            <br />
+            サイドバーの選択肢は知覚機能（Ni/Ne/Si/Se）ごとに分けられていて、ボタンを選択・選択解除することで任意のタイプや診断方法のデータベースをフィルタリングすることができます。
           </li>
           <li style={{ marginTop: '20px' }}>
             知覚機能でグループを分ける理由

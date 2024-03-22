@@ -29,6 +29,22 @@ module Api
         render_user_posts(user)
       end
 
+      # 投稿を取得する
+      def show
+        post = Post.find(params[:id])
+        render json: post.as_json(include: { user: { only: [:clerk_id, :avatar_url, :username] }, media_works: { only: [:title, :image] } })
+      end
+
+      # 投稿を削除する
+      def destroy
+        post = Post.find(params[:id])
+        if post.destroy
+          render json: { message: 'Post deleted successfully' }, status: :ok
+        else
+          render json: { error: 'Failed to delete the post' }, status: :unprocessable_entity
+        end
+      end
+
       private
 
       # clerk_idによってユーザーを検索する

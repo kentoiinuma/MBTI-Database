@@ -4,7 +4,7 @@
 class Post < ApplicationRecord
   # 関連付け
   belongs_to :user
-  has_many :media_works
-  has_many :post_likes
-  has_many :notifications
+  has_many :media_works, dependent: :destroy
+  has_many :post_likes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 end

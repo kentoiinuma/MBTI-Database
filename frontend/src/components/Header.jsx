@@ -177,6 +177,11 @@ const Header = ({ onSignIn }) => {
                 MenuListProps={{
                   'aria-labelledby': 'basic-button',
                 }}
+                PaperProps={{
+                  style: {
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)', // 影のスタイルを薄く調整
+                  },
+                }}
               >
                 {/* プロフィールメニューアイテム */}
                 <MenuItem

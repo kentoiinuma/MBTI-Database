@@ -14,12 +14,14 @@ Rails.application.routes.draw do
       post '/posts', to: 'posts#create'
       get '/posts', to: 'posts#index'
       get '/posts/all', to: 'posts#all'
+      get '/posts/:id', to: 'posts#show'
       post '/media_works', to: 'media_works#create'
       get '/media_works', to: 'media_works#index'
       get '/users/:id', to: 'users#show'
       put '/users/:id', to: 'users#update_name'
       get '/media_works/statistics', to: 'media_works#statistics'
       post '/users/:id/upload_avatar', to: 'users#upload_avatar'
+      delete '/posts/:id', to: 'posts#destroy'
     end
   end
 end
