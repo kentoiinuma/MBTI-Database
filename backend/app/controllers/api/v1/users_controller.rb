@@ -50,7 +50,8 @@ module Api
       def render_user(user)
         render json: {
           username: user.username,
-          avatar_url: user.avatar_url # ここをprofile_image_urlからavatar_urlに変更
+          avatar_url: user.avatar_url,
+          clerk_id: user.clerk_id # 追加: clerk_idをJSONレスポンスに含める
         }
       end
 

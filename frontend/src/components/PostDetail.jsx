@@ -17,6 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
+import { useUser } from '@clerk/clerk-react'; // useUserをインポート
 
 let API_URL;
 if (window.location.origin === 'http://localhost:3001') {
@@ -40,6 +41,7 @@ const PostDetail = () => {
   const [deletePostId, setDeletePostId] = useState(null);
   const open = Boolean(anchorEl);
   const { postId } = useParams();
+  const { user: currentUser } = useUser(); // useUserからcurrentUserを取得
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/posts/${postId}`)
@@ -51,6 +53,7 @@ const PostDetail = () => {
             ...data.user,
             avatarUrl: data.user.avatar_url, // usersテーブルから取得
             username: data.user.username, // usersテーブルから取得
+            clerkId: data.user.clerk_id, // usersテーブルから取得
           },
           createdAt: data.created_at,
         });
@@ -148,106 +151,109 @@ const PostDetail = () => {
             </h1>
           </div>
         </div>
-        <div className="mr-8" style={{ position: 'relative' }}>
-          <div
-            className="hover:bg-gray-200 p-2 rounded-full"
-            style={{ display: 'inline-block', cursor: 'pointer' }}
-            onClick={(event) => handleClick(event, postId)}
-          >
-            <MoreVertIcon style={{ fontSize: 35 }} />
-          </div>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              'aria-labelledby': 'long-button',
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: 48 * 4.5,
-                width: '20ch',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-              },
-            }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <MenuItem onClick={() => handleOpenDialog()}>
-              <DeleteOutlineOutlinedIcon
-                fontSize="small"
-                style={{ marginRight: '8px' }}
-              />
-              削除
-            </MenuItem>
-            <Dialog
-              open={openDialog}
-              onClose={handleCloseDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              BackdropProps={{ invisible: true }}
+        {currentUser?.id === user.clerkId && (
+          <div className="mr-8" style={{ position: 'relative' }}>
+            <div
+              className="hover:bg-gray-200 p-2 rounded-full"
+              style={{ display: 'inline-block', cursor: 'pointer' }}
+              onClick={(event) => handleClick(event, postId)}
+            >
+              <MoreVertIcon style={{ fontSize: 35 }} />
+            </div>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
               PaperProps={{
                 style: {
-                  boxShadow:
-                    '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
-                  borderRadius: '16px',
+                  maxHeight: 48 * 4.5,
+                  width: '20ch',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
                 },
               }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
             >
-              <DialogTitle id="alert-dialog-title">
-                {'ポストの削除'}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  ポストを完全に削除しますか？
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleCloseDialog}
-                  sx={{
-                    borderRadius: '20px',
-                    ':hover': {
-                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
-                    },
-                  }}
-                >
-                  キャンセル
-                </Button>
-                <Button
-                  onClick={handleDeletePost}
-                  autoFocus
-                  sx={{
-                    borderRadius: '20px',
-                    ':hover': {
-                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
-                    },
-                  }}
-                >
-                  削除
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <MenuItem onClick={handleClose}>
-              <EditOutlinedIcon
-                fontSize="small"
-                style={{ marginRight: '8px' }}
-              />
-              編集（本リリース時）
-            </MenuItem>
-          </Menu>
-        </div>
+              <MenuItem onClick={() => handleOpenDialog()}>
+                <DeleteOutlineOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: '8px' }}
+                />
+                削除
+              </MenuItem>
+              <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                BackdropProps={{ invisible: true }}
+                PaperProps={{
+                  style: {
+                    boxShadow:
+                      '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
+                    borderRadius: '16px',
+                  },
+                }}
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {'ポストの削除'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    ポストを完全に削除しますか？
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleCloseDialog}
+                    sx={{
+                      borderRadius: '20px',
+                      ':hover': {
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
+                      },
+                    }}
+                  >
+                    キャンセル
+                  </Button>
+                  <Button
+                    onClick={handleDeletePost}
+                    autoFocus
+                    sx={{
+                      borderRadius: '20px',
+                      ':hover': {
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
+                      },
+                    }}
+                  >
+                    削除
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <MenuItem onClick={handleClose}>
+                <EditOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: '8px' }}
+                />
+                編集（本リリース時）
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
       </div>
     );
   };
 
+  // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const artistText = mediaWorks[post.id]
       ? `私が好きな音楽アーティストは${mediaWorks[post.id]
@@ -257,11 +263,8 @@ const PostDetail = () => {
           )
           .join('')}です！`
       : '';
-    const imageUrl =
-      mediaWorks[post.id] && mediaWorks[post.id].length > 0
-        ? `https://res.cloudinary.com/dputyeqso/image/upload/${mediaWorks[post.id][0].image}`
-        : '';
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(imageUrl)}`;
+    const postUrl = `${window.location.origin}/post/${post.id}`;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(postUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
@@ -312,17 +315,19 @@ const PostDetail = () => {
             >
               {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
             </div>
-            <div
-              style={{
-                textAlign: 'right',
-                marginTop: '450px',
-                marginLeft: '200px',
-              }}
-              className="p-3 rounded-full hover:bg-gray-200"
-              onClick={() => shareToX(post)}
-            >
-              <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
-            </div>
+            {currentUser?.id === post.user.clerkId && (
+              <div
+                style={{
+                  textAlign: 'right',
+                  marginTop: '450px',
+                  marginLeft: '200px',
+                }}
+                className="p-3 rounded-full hover:bg-gray-200"
+                onClick={() => shareToX(post)}
+              >
+                <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+              </div>
+            )}
           </div>
           <hr className="border-t border-[#2EA9DF] w-full" />
         </React.Fragment>

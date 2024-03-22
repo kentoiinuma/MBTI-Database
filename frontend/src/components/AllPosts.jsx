@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react';
 import {
   Snackbar,
   Alert,
@@ -19,7 +20,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
 
 const AllPosts = () => {
-  // 状態管理
   const [posts, setPosts] = useState([]); // 投稿データ
   const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
   const location = useLocation(); // 現在のURL情報
@@ -30,8 +30,12 @@ const AllPosts = () => {
   const [openDialog, setOpenDialog] = useState(false); // ダイアログの開閉状態を管理
   const [deletePostId, setDeletePostId] = useState(null); // 削除する投稿のID
   const open = Boolean(anchorEl); // ドロップダウンメニューが開いているかどうか
+  const { user: currentUser } = useUser(); // useUserからuserを取得
+  const [isLoading, setIsLoading] = useState(true); // ローディング状態の管理
+
   // ドロップダウンメニューを開く
   const handleClick = (event, postId) => {
+    event.stopPropagation(); // この行を追加
     setAnchorEl(event.currentTarget);
     setDeletePostId(postId); // ここで削除する投稿のIDを設定
   };
@@ -101,10 +105,16 @@ const AllPosts = () => {
         setPosts(
           data.map((post) => ({
             ...post,
-            user: { ...post.user, avatarUrl: null, username: null },
+            user: {
+              ...post.user,
+              avatarUrl: null,
+              username: null,
+              clerkId: null,
+            }, // clerkIdをnullで初期化
             createdAt: post.created_at, // 投稿日時
           })),
         );
+        setIsLoading(false); // ローディング状態をfalseに更新
         data.forEach((post) => {
           // ユーザーデータを取得
           fetch(`${API_URL}/api/v1/users/${post.user.clerk_id}`)
@@ -119,6 +129,7 @@ const AllPosts = () => {
                         ...p.user,
                         avatarUrl: userData.avatar_url, // usersテーブルから取得
                         username: userData.username, // usersテーブルから取得
+                        clerkId: userData.clerk_id, // usersテーブルから取得
                       },
                     };
                   }
@@ -160,7 +171,7 @@ const AllPosts = () => {
   };
 
   // ユーザー詳細をレンダリングする関数
-  const renderUserDetails = (user, createdAt, postId) => {
+  const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString(
       'ja-JP',
@@ -173,7 +184,7 @@ const AllPosts = () => {
           <div className="avatar">
             <div className="w-20 rounded-full">
               <img
-                src={user.avatarUrl}
+                src={postUser.avatarUrl}
                 alt={`profileImage`}
                 className="w-full h-full object-cover"
               />
@@ -181,107 +192,109 @@ const AllPosts = () => {
           </div>
           <div className="ml-4">
             <h1>
-              <span className="text-2xl">{user.username}</span>{' '}
+              <span className="text-2xl">{postUser.username}</span>{' '}
               <span className="ml-4">{formattedDate}</span>
             </h1>
           </div>
         </div>
-        <div className="mr-8" style={{ position: 'relative' }}>
-          <div
-            className="hover:bg-gray-200 p-2 rounded-full"
-            style={{ display: 'inline-block', cursor: 'pointer' }}
-            onClick={(event) => handleClick(event, postId)} // ここでpostIdを渡す
-          >
-            <MoreVertIcon style={{ fontSize: 35 }} />
-          </div>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              'aria-labelledby': 'long-button',
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: 48 * 4.5,
-                width: '20ch',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // 影のスタイルを薄く調整
-              },
-            }}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'right',
-            }}
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-          >
-            <MenuItem onClick={() => handleOpenDialog()}>
-              <DeleteOutlineOutlinedIcon
-                fontSize="small"
-                style={{ marginRight: '8px' }}
-              />
-              削除
-            </MenuItem>
-            <Dialog
-              open={openDialog}
-              onClose={handleCloseDialog}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
-              BackdropProps={{ invisible: true }}
+        {currentUser?.id === postUser.clerkId && (
+          <div className="mr-8" style={{ position: 'relative' }}>
+            <div
+              className="hover:bg-gray-200 p-2 rounded-full"
+              style={{ display: 'inline-block', cursor: 'pointer' }}
+              onClick={(event) => handleClick(event, postId)} // ここでpostIdを渡す
+            >
+              <MoreVertIcon style={{ fontSize: 35 }} />
+            </div>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                'aria-labelledby': 'long-button',
+              }}
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
               PaperProps={{
                 style: {
-                  boxShadow:
-                    '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
-                  borderRadius: '16px', // ダイアログの角を丸くする
+                  maxHeight: 48 * 4.5,
+                  width: '20ch',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // 影のスタイルを薄く調整
                 },
               }}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
             >
-              <DialogTitle id="alert-dialog-title">
-                {'ポストの削除'}
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  ポストを完全に削除しますか？
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button
-                  onClick={handleCloseDialog}
-                  sx={{
-                    borderRadius: '20px', // ボタンの角を丸くする
-                    ':hover': {
-                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
-                    },
-                  }}
-                >
-                  キャンセル
-                </Button>
-                <Button
-                  onClick={handleDeletePost}
-                  autoFocus
-                  sx={{
-                    borderRadius: '20px', // ボタンの角を丸くする
-                    ':hover': {
-                      boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
-                    },
-                  }}
-                >
-                  削除
-                </Button>
-              </DialogActions>
-            </Dialog>
-            <MenuItem onClick={handleClose}>
-              <EditOutlinedIcon
-                fontSize="small"
-                style={{ marginRight: '8px' }}
-              />
-              編集（本リリース時）
-            </MenuItem>
-          </Menu>
-        </div>
+              <MenuItem onClick={() => handleOpenDialog()}>
+                <DeleteOutlineOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: '8px' }}
+                />
+                削除
+              </MenuItem>
+              <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+                BackdropProps={{ invisible: true }}
+                PaperProps={{
+                  style: {
+                    boxShadow:
+                      '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
+                    borderRadius: '16px', // ダイアログの角を丸くする
+                  },
+                }}
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {'ポストの削除'}
+                </DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    ポストを完全に削除しますか？
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button
+                    onClick={handleCloseDialog}
+                    sx={{
+                      borderRadius: '20px', // ボタンの角を丸くする
+                      ':hover': {
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                      },
+                    }}
+                  >
+                    キャンセル
+                  </Button>
+                  <Button
+                    onClick={handleDeletePost}
+                    autoFocus
+                    sx={{
+                      borderRadius: '20px', // ボタンの角を丸くする
+                      ':hover': {
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                      },
+                    }}
+                  >
+                    削除
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <MenuItem onClick={handleClose}>
+                <EditOutlinedIcon
+                  fontSize="small"
+                  style={{ marginRight: '8px' }}
+                />
+                編集（本リリース時）
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
       </div>
     );
   };
@@ -296,85 +309,98 @@ const AllPosts = () => {
           )
           .join('')}です！`
       : '';
-    const imageUrl =
-      mediaWorks[post.id] && mediaWorks[post.id].length > 0
-        ? `https://res.cloudinary.com/dputyeqso/image/upload/${mediaWorks[post.id][0].image}`
-        : '';
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(imageUrl)}`;
+    const postUrl = `${window.location.origin}/post/${post.id}`;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(postUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
   return (
-    <div>
-      {/* 投稿データをマップして表示 */}
-      {posts.map((post) => (
-        <React.Fragment key={post.id}>
-          {/* ユーザー詳細表示 */}
-          <div
-            style={{ margin: '20px 0 0 30px' }}
-            onClick={() => navigate(`/post/${post.id}`)}
-          >
-            {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
-          </div>
-          {/* 好きな音楽アーティストの表示 */}
-          <div className="mb-5 text-center">
-            <span className="text-xl">
-              私が好きな音楽アーティストは
-              {mediaWorks[post.id] &&
-                mediaWorks[post.id]
-                  .map(
-                    (work, index, array) =>
-                      `${work.title}${index < array.length - 1 ? '、' : ''}`,
-                  )
-                  .join('')}
-              です！
-            </span>
-          </div>
-          {/* メディア作品表示エリア */}
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start', // 中央揃えから開始位置揃えに変更
-              alignItems: 'flex-start', // 縦方向の開始位置揃えに変更
-              marginBottom: '5px',
-            }}
-          >
-            {/* メディア作品の画像をレンダリング */}
+    <div style={{ cursor: 'pointer' }}>
+      {isLoading ? (
+        <p>Loading...</p> // ローディング中の表示
+      ) : (
+        posts.map((post) => (
+          <React.Fragment key={post.id}>
+            {/* 投稿全体をクリック可能にするためのdivを追加 */}
             <div
-              style={
-                mediaWorks[post.id] && mediaWorks[post.id].length === 2
-                  ? {
-                      width: '500px',
-                      height: '247.5px',
-                      backgroundColor: 'black',
-                      marginLeft: '345px', // 左マージンを40pxに増やす
-                    }
-                  : {
-                      width: '500px',
-                      height: '500px',
-                      backgroundColor: 'black',
-                      marginLeft: '345px', // 左マージンを40pxに増やす
-                    }
-              }
-            >
-              {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
-            </div>
-            {/* 画像をレンダリングする関数の直後にXIconを配置するコード */}
-            <div
-              style={{
-                textAlign: 'right',
-                marginTop: '450px',
-                marginLeft: '200px',
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!anchorEl) {
+                  navigate(`/post/${post.id}`);
+                }
               }}
-              className="p-3 rounded-full hover:bg-gray-200"
-              onClick={() => shareToX(post)} // ここに追加
             >
-              <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+              {/* ユーザー詳細表示 */}
+              <div style={{ margin: '20px 0 0 30px' }}>
+                {post.user &&
+                  renderUserDetails(post.user, post.createdAt, post.id)}
+              </div>
+              {/* 好きな音楽アーティストの表示 */}
+              <div className="mb-5 text-center">
+                <span className="text-xl">
+                  私が好きな音楽アーティストは
+                  {mediaWorks[post.id] &&
+                    mediaWorks[post.id]
+                      .map(
+                        (work, index, array) =>
+                          `${work.title}${index < array.length - 1 ? '、' : ''}`,
+                      )
+                      .join('')}
+                  です！
+                </span>
+              </div>
+              {/* メディア作品表示エリア */}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-start',
+                  alignItems: 'flex-start',
+                  marginBottom: '5px',
+                }}
+              >
+                {/* メディア作品の画像をレンダリング */}
+                <div
+                  style={
+                    mediaWorks[post.id] && mediaWorks[post.id].length === 2
+                      ? {
+                          width: '500px',
+                          height: '247.5px',
+                          backgroundColor: 'black',
+                          marginLeft: '345px',
+                        }
+                      : {
+                          width: '500px',
+                          height: '500px',
+                          backgroundColor: 'black',
+                          marginLeft: '345px',
+                        }
+                  }
+                >
+                  {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
+                </div>
+                {/* 画像をレンダリングする関数の直後にXIconを配置するコード */}
+                {currentUser?.id === post.user.clerkId && (
+                  <div
+                    style={{
+                      textAlign: 'right',
+                      marginTop: '450px',
+                      marginLeft: '200px',
+                    }}
+                    className="p-3 rounded-full hover:bg-gray-200"
+                    onClick={(e) => {
+                      e.stopPropagation(); // 親要素のonClickイベントが発火するのを防ぐ
+                      shareToX(post);
+                    }}
+                  >
+                    <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-          <hr className="border-t border-[#2EA9DF] w-full" />
-        </React.Fragment>
-      ))}
+            <hr className="border-t border-[#2EA9DF] w-full" />
+          </React.Fragment>
+        ))
+      )}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={2500}
