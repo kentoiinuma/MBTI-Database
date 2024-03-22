@@ -251,7 +251,9 @@ const ImageContentPost = () => {
         </div>
       </div>
       <span style={{ color: '#2EA9DF' }}>
-        ※音楽アーティストの投稿は1回のみです。
+        ※1 現在、音楽アーティストの投稿のみ行えます。
+        <br />
+        ※2 音楽アーティストの投稿は1回のみです。
       </span>
       <div className="bg-black">
         {renderImages()} {/* ここで選択された画像をレンダリング */}
