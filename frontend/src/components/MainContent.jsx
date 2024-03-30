@@ -24,7 +24,7 @@ function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
   const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
+  // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
   const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
 
   let API_URL; // APIのURLを格納する変数
@@ -57,8 +57,8 @@ function MainContent() {
       const data = await response.json();
 
       // スナックバーを表示（すべてのユーザーのサインイン時）
-      setSnackbarMessage('サインインしました！');
-      setSnackbarOpen(true);
+      // setSnackbarMessage('サインインしました！');
+      // setSnackbarOpen(true);
 
       // 新規ユーザーの場合のみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
@@ -87,8 +87,8 @@ function MainContent() {
   // サインアウト処理を行う関数
   const handleSignOut = useCallback(() => {
     // サインアウトのスナックバーを表示
-    setSnackbarMessage('サインアウトしました！');
-    setSnackbarOpen(true);
+    // setSnackbarMessage('サインアウトしました！');
+    // setSnackbarOpen(true);
   }, []);
 
   // コンポーネントがマウントされた後、サインイン状態が変わるたびにhandleSignInを呼び出す
@@ -156,7 +156,7 @@ function MainContent() {
           severity="success"
           sx={{ width: '100%' }}
         >
-          {snackbarMessage}
+          {/* {snackbarMessage} */}
         </Alert>
       </Snackbar>
     </div>

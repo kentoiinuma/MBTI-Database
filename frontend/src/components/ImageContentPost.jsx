@@ -15,6 +15,7 @@ const ImageContentPost = () => {
   const navigate = useNavigate(); // ナビゲーション関数を取得
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // カスタムアラートの表示状態
   const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
+  const [postSuccess, setPostSuccess] = useState(false); // ポスト成功時の状態
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -152,14 +153,14 @@ const ImageContentPost = () => {
   // ポストするボタンのonClickイベントを変更します
   const handlePostAndRedirect = async () => {
     if (selectedImages.length === 0) {
-      // 選択された画像がない場合は何もしない
-      console.error('No images selected'); // 選択された画像がない場合のエラーメッセージ
+      console.error('No images selected');
       return;
     }
-    const postResult = await handlePost(); // 元のポスト処理を実行し、結果を受け取ります
-    if (postResult && !customAlertVisible) {
-      // ポストが成功し、カスタムアラートが表示されていない場合のみリダイレクトを実行
-      navigate('/', { state: { postSuccess: true } }); // ルートURLにリダイレクト
+    const postResult = await handlePost();
+    if (postResult) {
+      // ポスト成功時にSnackbarを表示するために状態をtrueに設定
+      setPostSuccess(true);
+      navigate('/', { state: { postSuccess: true } });
     }
   };
 
@@ -221,6 +222,21 @@ const ImageContentPost = () => {
           >
             音楽アーティストの投稿は1回のみです。
             {/* 既にポストが存在する場合のメッセージ */}
+          </Alert>
+        </Snackbar>
+      )}
+      {postSuccess && (
+        <Snackbar
+          open={postSuccess}
+          autoHideDuration={2500}
+          onClose={() => setPostSuccess(false)}
+        >
+          <Alert
+            onClose={() => setPostSuccess(false)}
+            severity="success"
+            sx={{ width: '100%' }}
+          >
+            ポストを送信しました！
           </Alert>
         </Snackbar>
       )}

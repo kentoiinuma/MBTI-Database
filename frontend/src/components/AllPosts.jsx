@@ -13,6 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  CircularProgress,
 } from '@mui/material'; // 必要なコンポーネントをインポート
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -317,7 +318,16 @@ const AllPosts = () => {
   return (
     <div style={{ cursor: 'pointer' }}>
       {isLoading ? (
-        <p>Loading...</p> // ローディング中の表示
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <CircularProgress />
+        </div>
       ) : (
         posts.map((post) => (
           <React.Fragment key={post.id}>
