@@ -162,7 +162,7 @@ const ImageContentPost = () => {
       setPostSuccess(true);
       console.log('Post success state set to true'); // 状態がtrueに設定されたことを確認するログ
       // 一時的にコメントアウトしてページ遷移が影響しているか確認
-      // navigate('/', { state: { postSuccess: true } });
+      //navigate('/', { state: { postSuccess: true } });
     }
   };
 
