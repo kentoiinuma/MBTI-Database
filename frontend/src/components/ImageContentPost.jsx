@@ -231,7 +231,10 @@ const ImageContentPost = () => {
         <Snackbar
           open={postSuccess}
           autoHideDuration={2500}
-          onClose={() => setPostSuccess(false)}
+          onClose={() => {
+            setPostSuccess(false);
+            navigate('/', { state: { postSuccess: true } }); // Snackbarが閉じるときにページ遷移
+          }}
         >
           <Alert
             onClose={() => setPostSuccess(false)}
