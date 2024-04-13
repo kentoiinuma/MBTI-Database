@@ -15,7 +15,6 @@ const ImageContentPost = () => {
   const navigate = useNavigate(); // ナビゲーション関数を取得
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // カスタムアラートの表示状態
   const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
-  const [postSuccess, setPostSuccess] = useState(false); // ポスト成功時の状態
 
   // APIのURLを環境に応じて設定
   let API_URL;
