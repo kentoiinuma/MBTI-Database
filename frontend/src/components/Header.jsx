@@ -11,6 +11,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import Menu from '@mui/material/Menu'; // メニューコンポーネント
 import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
+import { usePostUsername } from './PostDetail'; // usePostUsernameカスタムフックをインポート
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -22,6 +23,7 @@ const Header = ({ onSignIn }) => {
   const location = useLocation(); // 現在のパスを取得
   const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
   const { userUpdated, setUserUpdated } = useUserContext(); // UserContextから状態を取得
+  const { postUsername } = usePostUsername(); // usePostUsernameを使用してコンテキストからユーザー名を取得
 
   // APIのURLを設定
   let API_URL;
@@ -74,7 +76,14 @@ const Header = ({ onSignIn }) => {
 
   // 現在のパスに応じたタイトルを取得する関数
   const getTitle = () => {
-    switch (window.location.pathname) {
+    const path = location.pathname;
+    const postIdMatch = path.match(/\/post\/(\d+)/);
+    if (postIdMatch && postUsername) {
+      // コンテキストから取得したユーザー名を使用
+      return `${postUsername}のポスト`;
+    }
+    // その他のパスに対する既存のタイトルロジック...
+    switch (path) {
       case '/profile':
         return 'プロフィール';
       case '/post':

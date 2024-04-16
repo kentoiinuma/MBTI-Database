@@ -152,14 +152,15 @@ const ImageContentPost = () => {
   // ポストするボタンのonClickイベントを変更します
   const handlePostAndRedirect = async () => {
     if (selectedImages.length === 0) {
-      // 選択された画像がない場合は何もしない
-      console.error('No images selected'); // 選択された画像がない場合のエラーメッセージ
+      console.error('No images selected');
       return;
     }
-    const postResult = await handlePost(); // 元のポスト処理を実行し、結果を受け取ります
-    if (postResult && !customAlertVisible) {
-      // ポストが成功し、カスタムアラートが表示されていない場合のみリダイレクトを実行
-      navigate('/', { state: { postSuccess: true } }); // ルートURLにリダイレクト
+    const postResult = await handlePost();
+    if (postResult) {
+      // ポスト成功時にSnackbarを表示するために状態をtrueに設定
+      console.log('Post success state set to true'); // 状態がtrueに設定されたことを確認するログ
+      // 一時的にコメントアウトしてページ遷移が影響しているか確認
+      navigate('/', { state: { postSuccess: true } });
     }
   };
 

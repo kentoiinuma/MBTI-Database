@@ -13,6 +13,7 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
+  CircularProgress,
 } from '@mui/material'; // 必要なコンポーネントをインポート
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -314,10 +315,29 @@ const AllPosts = () => {
     window.open(shareUrl, '_blank');
   };
 
+  useEffect(() => {
+    // ページ遷移時に渡されたstateを確認し、ポスト成功の状態に基づいてSnackbarを表示
+    if (location.state?.postSuccess) {
+      setOpenSnackbar(true);
+      setSnackbarMessage('ポストを送信しました！');
+      // 遷移後にstateをクリアする（ブラウザの戻る操作で再表示されないように）
+      history.replaceState({}, '');
+    }
+  }, [location]);
+
   return (
     <div style={{ cursor: 'pointer' }}>
       {isLoading ? (
-        <p>Loading...</p> // ローディング中の表示
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <CircularProgress />
+        </div>
       ) : (
         posts.map((post) => (
           <React.Fragment key={post.id}>
