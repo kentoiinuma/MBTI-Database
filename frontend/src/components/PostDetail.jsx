@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
 import {
@@ -18,6 +18,23 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
 import { useUser } from '@clerk/clerk-react'; // useUserをインポート
+
+// PostUsernameContextの作成
+const PostUsernameContext = createContext();
+
+// PostUsernameProviderコンポーネントの定義
+export const PostUsernameProvider = ({ children }) => {
+  const [postUsername, setPostUsername] = useState('');
+
+  return (
+    <PostUsernameContext.Provider value={{ postUsername, setPostUsername }}>
+      {children}
+    </PostUsernameContext.Provider>
+  );
+};
+
+// usePostUsernameカスタムフックのエクスポート
+export const usePostUsername = () => useContext(PostUsernameContext);
 
 let API_URL;
 if (window.location.origin === 'http://localhost:3001') {
@@ -42,6 +59,7 @@ const PostDetail = () => {
   const open = Boolean(anchorEl);
   const { postId } = useParams();
   const { user: currentUser } = useUser(); // useUserからcurrentUserを取得
+  const { setPostUsername } = usePostUsername(); // コンテキストからsetPostUsernameを取得
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/posts/${postId}`)
@@ -61,8 +79,10 @@ const PostDetail = () => {
           ...mediaWorks,
           [data.id]: data.media_works,
         });
+        // ユーザー名をコンテキストにセット
+        setPostUsername(data.user.username);
       });
-  }, [API_URL, postId, mediaWorks]);
+  }, [API_URL, postId, mediaWorks, setPostUsername]);
 
   const handleClick = (event, postId) => {
     setAnchorEl(event.currentTarget);

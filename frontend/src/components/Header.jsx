@@ -11,6 +11,7 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import Menu from '@mui/material/Menu'; // メニューコンポーネント
 import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
+import { usePostUsername } from './PostDetail'; // usePostUsernameカスタムフックをインポート
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -22,6 +23,7 @@ const Header = ({ onSignIn }) => {
   const location = useLocation(); // 現在のパスを取得
   const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
   const { userUpdated, setUserUpdated } = useUserContext(); // UserContextから状態を取得
+  const { postUsername } = usePostUsername(); // usePostUsernameを使用してコンテキストからユーザー名を取得
 
   // APIのURLを設定
   let API_URL;
@@ -74,45 +76,13 @@ const Header = ({ onSignIn }) => {
 
   // 現在のパスに応じたタイトルを取得する関数
   const getTitle = () => {
-    const path = window.location.pathname;
-    const postIdMatch = path.match(/\/post\/(\d+)/); // postIdをURLから抽出
-    if (postIdMatch) {
-      const postId = postIdMatch[1];
-      // postIdに基づいてユーザー名を取得するための状態とエフェクト
-      const [postUsername, setPostUsername] = useState('');
-
-      useEffect(() => {
-        // PostDetail.jsxでのAPI_URLの定義を参考にして、APIのURLを設定
-        let API_URL;
-        if (window.location.origin === 'http://localhost:3001') {
-          API_URL = 'http://localhost:3000';
-        } else if (
-          window.location.origin ===
-          'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
-        ) {
-          API_URL =
-            'https://favorite-database-16type-5020d6339517.herokuapp.com';
-        } else {
-          API_URL = 'http://localhost:3000';
-        }
-
-        // postIdを使用してポストの詳細を取得し、関連するユーザー名を設定
-        fetch(`${API_URL}/api/v1/posts/${postId}`)
-          .then((response) => response.json())
-          .then((data) => {
-            // ユーザー情報を取得するために、再度APIを呼び出す
-            fetch(`${API_URL}/api/v1/users/${data.user_id}`)
-              .then((response) => response.json())
-              .then((userData) => {
-                setPostUsername(userData.username); // ユーザー名を設定
-              });
-          });
-      }, [postId]); // postIdが変更された場合のみエフェクトを再実行
-
-      return `${postUsername}のポスト`; // ユーザー名を含むタイトルを返す
+    const path = location.pathname;
+    const postIdMatch = path.match(/\/post\/(\d+)/);
+    if (postIdMatch && postUsername) {
+      // コンテキストから取得したユーザー名を使用
+      return `${postUsername}のポスト`;
     }
-
-    // その他のパスに対する既存の処理
+    // その他のパスに対する既存のタイトルロジック...
     switch (path) {
       case '/profile':
         return 'プロフィール';

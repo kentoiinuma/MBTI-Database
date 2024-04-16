@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ClerkProvider } from '@clerk/clerk-react';
 import { UserProvider } from './contexts/UserContext'; // UserProviderをインポート
+import { PostUsernameProvider } from './components/PostDetail';
 import MainContent from './components/MainContent';
 import './App.css';
 
@@ -11,11 +12,11 @@ function App() {
   return (
     <Router>
       <ClerkProvider publishableKey={clerk_pub_key}>
-        <UserProvider>
-          {' '}
-          {/* UserProviderを追加 */}
-          <MainContent />
-        </UserProvider>
+        <PostUsernameProvider>
+          <UserProvider>
+            <MainContent />
+          </UserProvider>
+        </PostUsernameProvider>
       </ClerkProvider>
     </Router>
   );
