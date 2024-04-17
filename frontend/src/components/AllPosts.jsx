@@ -310,8 +310,10 @@ const AllPosts = () => {
           )
           .join('')}です！`
       : '';
+    const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
     const postUrl = `${window.location.origin}/post/${post.id}`;
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(postUrl)}`;
+    // artistTextの後に改行を追加してhashtagが表示されるように変更し、さらにhashtagとpostUrlの間にも改行を1つ入れる
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(postUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
