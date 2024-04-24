@@ -303,7 +303,7 @@ const AllPosts = () => {
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const artistText = mediaWorks[post.id]
-      ? `私が好きな音楽アーティストは${mediaWorks[post.id]
+      ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
           .map(
             (work, index, array) =>
               `${work.title}${index < array.length - 1 ? '、' : ''}`,
@@ -360,7 +360,7 @@ const AllPosts = () => {
               {/* 好きな音楽アーティストの表示 */}
               <div className="mb-5 text-center">
                 <span className="text-xl">
-                  私が好きな音楽アーティストは
+                  {post.user.username}の好きな音楽アーティストは
                   {mediaWorks[post.id] &&
                     mediaWorks[post.id]
                       .map(
