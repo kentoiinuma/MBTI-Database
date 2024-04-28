@@ -276,15 +276,17 @@ const PostDetail = () => {
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const artistText = mediaWorks[post.id]
-      ? `私が好きな音楽アーティストは${mediaWorks[post.id]
+      ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
           .map(
             (work, index, array) =>
               `${work.title}${index < array.length - 1 ? '、' : ''}`,
           )
           .join('')}です！`
       : '';
+    const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
     const postUrl = `${window.location.origin}/post/${post.id}`;
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(postUrl)}`;
+    // artistTextの後に改行を追加してhashtagが表示されるように変更し、さらにhashtagとpostUrlの間にも改行を1つ入れる
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(postUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
@@ -297,7 +299,7 @@ const PostDetail = () => {
           </div>
           <div className="mb-5 text-center">
             <span className="text-xl">
-              私が好きな音楽アーティストは
+              {post.user.username}の好きな音楽アーティストは
               {mediaWorks[post.id] &&
                 mediaWorks[post.id]
                   .map(
