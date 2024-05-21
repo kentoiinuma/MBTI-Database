@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body {
+      width: 1200px;
+      height: 630px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      width: 100%;
+      height: 100%;
+      background-color: #f8f9fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .username {
+      font-size: 48px;
+      font-weight: bold;
+    }
+    .media-works {
+      font-size: 36px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="username"><%= @user.username %>の好きな音楽アーティスト</div>
+    <div class="media-works">
+      <%= @media_works.map(&:title).join('、') %>
+    </div>
+  </div>
+</body>
+</html>

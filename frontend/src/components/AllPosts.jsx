@@ -55,10 +55,10 @@ const AllPosts = () => {
   // ダイアログを閉じる関数
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにする
+    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにす
   };
 
-  // 投稿を削除する関数
+  // 投稿を削���する関数
   const handleDeletePost = () => {
     console.log('Deleting post with ID:', deletePostId); // この行を追加
     if (deletePostId) {
@@ -94,7 +94,7 @@ const AllPosts = () => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    API_URL = 'http://localhost:3000';
+    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   }
 
   // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
@@ -129,7 +129,7 @@ const AllPosts = () => {
                       user: {
                         ...p.user,
                         avatarUrl: userData.avatar_url, // usersテーブルから取得
-                        username: userData.username, // usersテーブルから取得
+                        username: userData.username, // usersテーブルから取��
                         clerkId: userData.clerk_id, // usersテーブルから取得
                       },
                     };
@@ -171,7 +171,7 @@ const AllPosts = () => {
     );
   };
 
-  // ユーザー詳細をレンダリングする関数
+  // ユーザー詳細をレンダリングする関
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString(
@@ -302,6 +302,7 @@ const AllPosts = () => {
 
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
+    const ogImageUrl = `${API_URL}/api/v1/ogp/${post.id}`;
     const artistText = mediaWorks[post.id]
       ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
           .map(
@@ -313,7 +314,7 @@ const AllPosts = () => {
     const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
     const postUrl = `${window.location.origin}/post/${post.id}`;
     // artistTextの後に改行を追加してhashtagが表示されるように変更し、さらにhashtagとpostUrlの間にも改行を1つ入れる
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(postUrl)}`;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(postUrl)}&image=${encodeURIComponent(ogImageUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
