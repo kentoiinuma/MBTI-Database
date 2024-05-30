@@ -94,7 +94,7 @@ const AllPosts = () => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
+    API_URL = 'http://localhost:3000';
   }
 
   // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
@@ -128,7 +128,7 @@ const AllPosts = () => {
                       ...p,
                       user: {
                         ...p.user,
-                        avatarUrl: userData.avatar_url, // usersテ��ブルから取得
+                        avatarUrl: userData.avatar_url, // usersテルから取得
                         username: userData.username, // usersテーブルから取
                         clerkId: userData.clerk_id, // usersテーブルから取得
                       },
@@ -312,7 +312,6 @@ const AllPosts = () => {
           .join('')}です！`
       : '';
     const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
-    // artistTextの後に改行を追加してhashtagが表示されるように変更し、さらにhashtagとpostUrlの間にも改行を1つ入れる
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
