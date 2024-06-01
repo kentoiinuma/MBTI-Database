@@ -26,8 +26,9 @@
       font-weight: bold;
     }
     .media-works {
-      font-size: 36px;
-      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(247.5px, 1fr));
+      gap: 5px;
     }
   </style>
 </head>
@@ -35,8 +36,11 @@
   <div class="container">
     <div class="username"><%= @user.username %>の好きな音楽アーティスト</div>
     <div class="media-works">
-      <%= @media_works.map(&:title).join('、') %>
+      <% @media_works.each do |work| %>
+        <img src="<%= work.image_url %>" alt="Media Work" style="width: 247.5px; height: 247.5px;">
+      <% end %>
     </div>
   </div>
 </body>
+</html>
 </html>
