@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title><%= @user.username %>の好きな音楽アーティスト</title>
+  <% image_url = url_for(controller: 'api/v1/ogp', action: 'show', id: @post.id, format: :png) %>
   <meta property="og:title" content="<%= @user.username %>の好きな音楽アーティスト" />
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="<%= request.original_url %>" />
-  <meta property="og:image" content="<%= url_for(controller: 'api/v1/ogp', action: 'show', id: @post.id, format: :png) %>" />
+  <meta property="og:image" content="<%= image_url %>" />
   <meta property="og:description" content="<%= @user.username %>の好きな音楽アーティストは<%= @media_works.map(&:title).join('、') %>です！" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="<%= @user.username %>の好きな音楽アーティスト" />
-  <meta name="twitter:description" content="<%= @user.username %>の好きな音楽アーティストは<%= @media_works.map(&:title).join('、') %>です！" />
-  <meta name="twitter:image" content="<%= url_for(controller: 'api/v1/ogp', action: 'show', id: @post.id, format: :png) %>" />
+  <meta name="twitter:image" content="<%= image_url %>" />
 </head>
 <body>
   <h1><%= @user.username %>の好きな音楽アーティスト</h1>
