@@ -7,16 +7,26 @@ module Api
         @post = Post.find(params[:id])
         @user = @post.user
         @media_works = @post.media_works
-    
+
         html = render_to_string(template: 'ogp/show', layout: false)
         kit = IMGKit.new(html, quality: 100)
-        send_data(kit.to_img(:png), type: 'image/png', disposition: 'inline', filename: "#{@user.username}_favorite_artists.png")
+        image = kit.to_img(:png)
+
+        # Cloudinaryにアップロード
+        response = Cloudinary::Uploader.upload(image, public_id: "#{@user.username}_favorite_artists")
+
+        # OGP画像のURLを保存
+        OgpImage.create(post: @post, image_url: response['secure_url'])
+
+        send_data(image, type: 'image/png', disposition: 'inline', filename: "#{@user.username}_favorite_artists.png")
       end
 
       def page
         @post = Post.find(params[:id])
         @user = @post.user
         @media_works = @post.media_works
+        @ogp_image = @post.ogp_image
+
         Rails.logger.info "Rendering OGP page for post: #{@post.id}, user: #{@user.username}"
         render layout: false
       end
