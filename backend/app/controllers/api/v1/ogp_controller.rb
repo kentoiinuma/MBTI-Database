@@ -8,6 +8,7 @@ module Api
         @user = @post.user
         @media_works = @post.media_works
 
+        # OGP画像の生成
         html = render_to_string(template: 'ogp/show', layout: false)
         kit = IMGKit.new(html, quality: 100)
         image = kit.to_img(:png)
@@ -16,7 +17,8 @@ module Api
         response = Cloudinary::Uploader.upload(image, public_id: "#{@user.username}_favorite_artists")
 
         # OGP画像のURLを保存
-        OgpImage.create(post: @post, image_url: response['secure_url'])
+        ogp_image = OgpImage.find_or_initialize_by(post: @post)
+        ogp_image.update(image_url: response['secure_url'])
 
         send_data(image, type: 'image/png', disposition: 'inline', filename: "#{@user.username}_favorite_artists.png")
       end
