@@ -55,10 +55,10 @@ const AllPosts = () => {
   // ダイアログを閉じる関数
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにする
+    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにす
   };
 
-  // 投稿を削除する関数
+  // 投稿を削する関数
   const handleDeletePost = () => {
     console.log('Deleting post with ID:', deletePostId); // この行を追加
     if (deletePostId) {
@@ -128,8 +128,8 @@ const AllPosts = () => {
                       ...p,
                       user: {
                         ...p.user,
-                        avatarUrl: userData.avatar_url, // usersテーブルから取得
-                        username: userData.username, // usersテーブルから取得
+                        avatarUrl: userData.avatar_url, // usersテルから取得
+                        username: userData.username, // usersテーブルから取
                         clerkId: userData.clerk_id, // usersテーブルから取得
                       },
                     };
@@ -171,7 +171,7 @@ const AllPosts = () => {
     );
   };
 
-  // ユーザー詳細をレンダリングする関数
+  // ユーザー詳細をレンダリングする関
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString(
@@ -302,16 +302,17 @@ const AllPosts = () => {
 
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
+    const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     const artistText = mediaWorks[post.id]
-      ? `私が好きな音楽アーティストは${mediaWorks[post.id]
+      ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
           .map(
             (work, index, array) =>
               `${work.title}${index < array.length - 1 ? '、' : ''}`,
           )
           .join('')}です！`
       : '';
-    const postUrl = `${window.location.origin}/post/${post.id}`;
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText)}&url=${encodeURIComponent(postUrl)}`;
+    const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
@@ -358,7 +359,7 @@ const AllPosts = () => {
               {/* 好きな音楽アーティストの表示 */}
               <div className="mb-5 text-center">
                 <span className="text-xl">
-                  私が好きな音楽アーティストは
+                  {post.user.username}の好きな音楽アーティストは
                   {mediaWorks[post.id] &&
                     mediaWorks[post.id]
                       .map(

@@ -22,6 +22,9 @@ Rails.application.routes.draw do
       get '/media_works/statistics', to: 'media_works#statistics'
       post '/users/:id/upload_avatar', to: 'users#upload_avatar'
       delete '/posts/:id', to: 'posts#destroy'
+      get '/ogp/:id', to: 'ogp#show'
+      get '/ogp_page/:id', to: 'ogp#page'
     end
   end
 end
+

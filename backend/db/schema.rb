@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_11_032314) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_06_103331) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_11_032314) do
     t.index ["user_id"], name: "index_notifications_on_user_id"
   end
 
+  create_table "ogp_images", force: :cascade do |t|
+    t.bigint "post_id", null: false
+    t.string "image_url", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_ogp_images_on_post_id"
+  end
+
   create_table "perception_groups", force: :cascade do |t|
     t.integer "perception_group", null: false
     t.datetime "created_at", null: false
@@ -105,6 +113,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_11_032314) do
   add_foreign_key "notifications", "comments"
   add_foreign_key "notifications", "posts"
   add_foreign_key "notifications", "users"
+  add_foreign_key "ogp_images", "posts"
   add_foreign_key "post_likes", "posts"
   add_foreign_key "post_likes", "users"
   add_foreign_key "posts", "users"
