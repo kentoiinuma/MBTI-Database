@@ -123,10 +123,10 @@ const ImageContentPost = () => {
       const postId = postData.id;
 
       // OGP画像の生成とアップロードをトリガー
-      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`);
-      if (!ogpResponse.ok) {
-        console.error('Failed to generate OGP image');
-      }
+      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
+        method: 'GET',
+      });
+      console.log('OGP Response:', await ogpResponse.text());
 
       // 選択された画像とアーティスト名をmedia_worksに保存
       for (let i = 0; i < selectedImages.length; i++) {

@@ -4,22 +4,32 @@ module Api
       rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
       def show
-        @post = Post.find(params[:id])
-        @media_works = @post.media_works
+        begin
+          @post = Post.find(params[:id])
+          @media_works = @post.media_works
+          @user = @post.user
 
-        # OGP画像の生成
-        html = render_to_string(template: 'ogp/show', layout: false)
-        kit = IMGKit.new(html, quality: 100)
-        image = kit.to_img(:png)
+          Rails.logger.info "Post: #{@post.inspect}"
+          Rails.logger.info "Media Works: #{@media_works.inspect}"
+          Rails.logger.info "User: #{@user.inspect}"
 
-        # Cloudinaryにアップロード
-        response = Cloudinary::Uploader.upload(image, public_id: "ogp_image_#{@post.id}")
+          html = render_to_string(template: 'ogp/show', layout: false)
+          Rails.logger.info "Generated HTML: #{html}"
 
-        # OGP画像のURLを保存
-        OgpImage.create(post: @post, image_url: response['secure_url'])
+          kit = IMGKit.new(html, quality: 100)
+          image = kit.to_img(:png)
 
-        # 画像データをレスポンスとして返す
-        send_data(image, type: 'image/png', disposition: 'inline')
+          response = Cloudinary::Uploader.upload(image, public_id: "ogp_image_#{@post.id}")
+          Rails.logger.info "Cloudinary upload response: #{response.inspect}"
+
+          ogp_image = OgpImage.create(post: @post, image_url: response['secure_url'])
+          Rails.logger.info "OgpImage creation response: #{ogp_image.inspect}"
+
+          send_data(image, type: 'image/png', disposition: 'inline')
+        rescue => e
+          Rails.logger.error "Error generating OGP image: #{e.message}"
+          render json: { error: 'Failed to generate OGP image' }, status: :internal_server_error
+        end
       end
 
       def page
