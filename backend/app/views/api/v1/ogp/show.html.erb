@@ -21,10 +21,6 @@
       justify-content: center;
       align-items: center;
     }
-    .username {
-      font-size: 48px;
-      font-weight: bold;
-    }
     .media-works {
       display: grid;
       gap: 5px;
@@ -35,9 +31,11 @@
       align-items: center;
     }
     .image-container-2 {
+      display: grid;
       grid-template-columns: 1fr 1fr;
     }
     .image-container-3 {
+      display: grid;
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: auto auto;
       place-items: center;
@@ -51,6 +49,7 @@
       grid-column: 1 / span 2;
     }
     .image-container-4 {
+      display: grid;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
     }
@@ -58,13 +57,16 @@
 </head>
 <body>
   <div class="container">
-    <div class="username"><%= @user.username %>の好きな音楽アーティスト</div>
-    <div class="media-works image-container-<%= @media_works.size %>">
-      <% @media_works.each do |work| %>
-        <% image_size = @media_works.size == 1 ? 500 : 247.5 %>
-        <img src="<%= work.image_url %>" alt="Media Work" style="width: <%= image_size %>px; height: <%= image_size %>px;">
-      <% end %>
-    </div>
+    <% if media_works.empty? %>
+      <p>No media works available.</p>
+    <% else %>
+      <div class="media-works image-container-<%= media_works.size %>">
+        <% media_works.each do |work| %>
+          <% image_size = media_works.size == 1 ? 500 : 247.5 %>
+          <img src="<%= work.image %>" alt="Media Work" style="width: <%= image_size %>px; height: <%= image_size %>px;">
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </body>
 </html>

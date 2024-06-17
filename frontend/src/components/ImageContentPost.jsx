@@ -122,12 +122,6 @@ const ImageContentPost = () => {
       const postData = await postResponse.json();
       const postId = postData.id;
 
-      // OGP画像の生成とアップロードをトリガー
-      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
-        method: 'GET',
-      });
-      console.log('OGP Response:', await ogpResponse.text());
-
       // 選択された画像とアーティスト名をmedia_worksに保存
       for (let i = 0; i < selectedImages.length; i++) {
         const imagePair = selectedImages[i];
@@ -148,6 +142,12 @@ const ImageContentPost = () => {
           break;
         }
       }
+      // OGP画像の生成とアップロードをトリガー
+      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
+        method: 'GET',
+      });
+      console.log('OGP Response:', await ogpResponse.text());
+
       // ここでselectedImagesを空の配列にリセット
       setSelectedImages([]);
       return true;
@@ -228,7 +228,7 @@ const ImageContentPost = () => {
             sx={{ width: '100%' }}
           >
             音楽アーティストの投稿は1回のみです。
-            {/* 既にポストが存在する場合のメッセージ */}
+            {/* 既にポストが���在する場合のメッセージ */}
           </Alert>
         </Snackbar>
       )}
