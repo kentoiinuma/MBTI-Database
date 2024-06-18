@@ -58,7 +58,7 @@ const AllPosts = () => {
     handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにす
   };
 
-  // 投稿を削する関数
+  // 投稿を削除する関数
   const handleDeletePost = () => {
     console.log('Deleting post with ID:', deletePostId); // この行を追加
     if (deletePostId) {
