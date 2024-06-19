@@ -102,24 +102,26 @@ const ImageContentPost = () => {
       if (existingPosts.length > 0) {
         // 既にポストが存在する場合はカスタムアラートを表示して処理を中断
         setCustomAlertVisible(true);
-        return false; // ポストが失敗したことを示すためにfalseを返します
+        return false;
       }
     } else {
-      console.error('Failed to check existing posts'); // 既存のポストの確認に失敗した場合
-      return false; // ポストが失敗したことを示すためにfalseを返します
+      console.error('Failed to check existing posts');
+      return false;
     }
+
     // ポストを作成
-    console.log(user); // ユーザー情報をログに出力
     const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clerk_id: user.id }), // clerk_idをリクエストボディに含める
+      body: JSON.stringify({ clerk_id: user.id }),
     });
+
     if (postResponse.ok) {
       const postData = await postResponse.json();
       const postId = postData.id;
+
       // 選択された画像とアーティスト名をmedia_worksに保存
       for (let i = 0; i < selectedImages.length; i++) {
         const imagePair = selectedImages[i];
@@ -133,19 +135,25 @@ const ImageContentPost = () => {
             title: imagePair.artist,
             image: imagePair.url,
             media_type: 5,
-          }), // リクエストボディに含める
+          }),
         });
         if (!mediaWorkResponse.ok) {
-          console.error('Media work creation failed'); // メディア作品の作成に失敗した場合
+          console.error('Media work creation failed');
           break;
         }
       }
+      // OGP画像の生成とアップロードをトリガー
+      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
+        method: 'GET',
+      });
+      console.log('OGP Response:', await ogpResponse.text());
+
       // ここでselectedImagesを空の配列にリセット
       setSelectedImages([]);
-      return true; // ポストが成功したことを示すためにtrueを返します
+      return true;
     } else {
-      console.error('Post creation failed'); // ポストの作成に失敗した場合
-      return false; // ポストが失敗したことを示すためにfalseを返します
+      console.error('Post creation failed');
+      return false;
     }
   };
 
@@ -158,8 +166,7 @@ const ImageContentPost = () => {
     const postResult = await handlePost();
     if (postResult) {
       // ポスト成功時にSnackbarを表示するために状態をtrueに設定
-      console.log('Post success state set to true'); // 状態がtrueに設定されたことを確認するログ
-      // 一時的にコメントアウトしてページ遷移が影響しているか確認
+      console.log('Post success state set to true');
       navigate('/', { state: { postSuccess: true } });
     }
   };
@@ -221,7 +228,7 @@ const ImageContentPost = () => {
             sx={{ width: '100%' }}
           >
             音楽アーティストの投稿は1回のみです。
-            {/* 既にポストが存在する場合のメッセージ */}
+            {/* 既にポストが���在する場合のメッセージ */}
           </Alert>
         </Snackbar>
       )}
@@ -246,8 +253,8 @@ const ImageContentPost = () => {
             placeholder="好きな音楽アーティスト"
             className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
             onKeyPress={handleSearch}
-            value={inputValue} // 入力フィールドの値
-            onChange={(e) => setInputValue(e.target.value)} // 入力値の更新処理
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
           />
         </div>
       </div>
@@ -278,7 +285,7 @@ const ImageContentPost = () => {
         searchQuery={searchQuery}
         artist={artist}
         onImageSelect={handleImageSelect}
-        onClose={() => setModalOpen(false)} // モーダルを閉じる処理
+        onClose={() => setModalOpen(false)}
       />
     </div>
   );
