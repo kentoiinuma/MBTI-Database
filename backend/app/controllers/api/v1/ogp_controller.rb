@@ -1,61 +1,69 @@
 module Api
   module V1
-    class OgpController < ApplicationController
+    class OgpController < ActionController::Base
+      include ActionView::Layouts
+      include ActionView::Rendering
+
       rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
       def show
+        @post = Post.find(params[:id])
+        @media_works = @post.media_works
+
+        Rails.logger.info "Post: #{@post.inspect}"
+        Rails.logger.info "Media Works: #{@media_works.inspect}"
+
+        @media_works.each do |work|
+          Rails.logger.info "Original Image URL: #{work.image}"
+          work.image = clean_image_url(work.image)
+          Rails.logger.info "Cleaned Image URL: #{work.image}"
+        end
+
         begin
-          @post = Post.find(params[:id])
-          @media_works = @post.media_works
+          html = render_to_string(
+            template: 'api/v1/ogp/show',
+            layout: false,
+            locals: { media_works: @media_works, post: @post }
+          )
+          Rails.logger.info "Generated HTML: #{html.inspect}"
+        rescue => e
+          Rails.logger.error "Error rendering template: #{e.message}"
+          Rails.logger.error e.backtrace.join("\n")
+          render json: { error: 'Failed to render template', details: e.message }, status: :internal_server_error
+          return
+        end
 
-          Rails.logger.info "Post: #{@post.inspect}"
-          Rails.logger.info "Media Works: #{@media_works.inspect}"
+        if html.blank?
+          Rails.logger.error "Generated HTML is blank"
+          render json: { error: 'Failed to generate OGP image' }, status: :internal_server_error
+          return
+        end
 
-          if @media_works.empty?
-            Rails.logger.warn "Media Works is empty"
-          end
+        begin
+          kit = IMGKit.new(html, height: 630, width: 1200, quality: 100)
+          Rails.logger.info "IMGKit options: #{kit.options}"
+          img = kit.to_img(:png)
+          Rails.logger.info "Generated image size: #{img.bytesize} bytes"
 
-          # 画像URLをクリーニング
-          @media_works.each do |work|
-            Rails.logger.info "Original Image URL: #{work.image}"
-            work.image = clean_image_url(work.image)
-            Rails.logger.info "Cleaned Image URL: #{work.image}"
-          end
+          file = Tempfile.new(['ogp', '.png'])
+          file.binmode
+          file.write(img)
+          file.rewind
 
-          # テンプレートに渡される変数の内容をログに出力
-          Rails.logger.info "Locals for template: { media_works: #{@media_works.inspect} }"
+          response = Cloudinary::Uploader.upload(file.path, public_id: "ogp_image_#{@post.id}")
+          Rails.logger.info "Cloudinary response: #{response.inspect}"
 
-          # テンプレートに変数を渡してHTMLを生成
-          html = render_to_string(template: 'api/v1/ogp/show', layout: false, locals: { media_works: @media_works })
-          Rails.logger.info "Generated HTML: #{html}"
+          ogp_image = OgpImage.find_or_initialize_by(post: @post)
+          ogp_image.update!(image_url: response['secure_url'])
 
-          if html.blank?
-            Rails.logger.error "Generated HTML is blank"
-            render json: { error: 'Failed to generate OGP image' }, status: :internal_server_error
-            return
-          end
-
-          kit = IMGKit.new(html, width: 1200, height: 630, quality: 100)
-          Rails.logger.info "IMGKit options: #{kit.options.inspect}"
-          image = kit.to_img(:png)
-
-          if image.blank?
-            Rails.logger.error "Generated image is blank"
-            render json: { error: 'Failed to generate OGP image' }, status: :internal_server_error
-            return
-          end
-
-          response = Cloudinary::Uploader.upload(image, public_id: "ogp_image_#{@post.id}")
-          Rails.logger.info "Cloudinary upload response: #{response.inspect}"
-
-          ogp_image = OgpImage.create(post: @post, image_url: response['secure_url'])
-          Rails.logger.info "OgpImage creation response: #{ogp_image.inspect}"
-
-          send_data(image, type: 'image/png', disposition: 'inline')
+          render json: { ogp_image_url: ogp_image.image_url }, status: :ok
         rescue => e
           Rails.logger.error "Error generating OGP image: #{e.message}"
           Rails.logger.error e.backtrace.join("\n")
-          render json: { error: 'Failed to generate OGP image' }, status: :internal_server_error
+          render json: { error: 'Failed to generate OGP image', details: e.message }, status: :internal_server_error
+        ensure
+          file.close
+          file.unlink
         end
       end
 
@@ -76,7 +84,7 @@ module Api
       end
 
       def clean_image_url(url)
-        cleaned_url = url.gsub("\u0000", "")
+        cleaned_url = url.to_s.gsub(/[^\x20-\x7E]/, '')
         Rails.logger.info "Cleaned URL: #{cleaned_url}"
         cleaned_url
       end

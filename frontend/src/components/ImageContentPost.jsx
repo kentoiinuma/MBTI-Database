@@ -44,7 +44,7 @@ const ImageContentPost = () => {
           // レスポンスが正常な場合
           const data = await response.json();
           if (data.artist) {
-            // アーティスト情報が存在する場合
+            // アーティスト情���が存在する場合
             setArtist(data.artist); // アーティスト情報を設定
             setModalOpen(true); // モーダルを開く
             setArtistNotFound(false); // アーティストが見つかったためエラーをリセット
@@ -228,7 +228,7 @@ const ImageContentPost = () => {
             sx={{ width: '100%' }}
           >
             音楽アーティストの投稿は1回のみです。
-            {/* 既にポストが���在する場合のメッセージ */}
+            {/* 既にポストが在する場合のメッセージ */}
           </Alert>
         </Snackbar>
       )}
