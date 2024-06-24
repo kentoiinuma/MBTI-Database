@@ -148,18 +148,18 @@ const ImageContentPost = () => {
         const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
           method: 'GET',
         });
-        
+
         if (!ogpResponse.ok) {
           throw new Error(`HTTP error! status: ${ogpResponse.status}`);
         }
-        
+
         const ogpText = await ogpResponse.text();
         console.log('OGP Response:', ogpText);
-        
+
         // レスポンスの内容を解析して処理
         // 例: const ogpData = JSON.parse(ogpText);
         // console.log('OGP Data:', ogpData);
-        
+
         console.log('OGP生成完了:', postId);
       } catch (error) {
         console.error('OGP生成中にエラーが発生しました:', error);
@@ -309,3 +309,4 @@ const ImageContentPost = () => {
 };
 
 export default ImageContentPost;
+
