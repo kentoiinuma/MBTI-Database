@@ -49,7 +49,7 @@ module Api
           img = kit.to_img(:png)
           Rails.logger.info "生成された画像サイズ: #{img.bytesize} bytes"
 
-          file = Tempfile.new(['ogp', '.png'])
+          file = Tempfile.new(['ogp', '.png'], '/tmp')
           file.binmode
           file.write(img)
           file.rewind
@@ -69,7 +69,7 @@ module Api
           Rails.logger.error e.backtrace.join("\n")
           render json: { error: 'Failed to generate OGP image', details: e.message }, status: :internal_server_error
         ensure
-          file.close
+          file.close if file
           file.unlink if file
           Rails.logger.info "OGP生成処理完了: post_id=#{params[:id]}"
         end
