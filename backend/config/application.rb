@@ -37,5 +37,9 @@ module Api
 
     # Add this line to enable HTML rendering in API mode
     config.debug_exception_response_format = :default
+
+    # Add middleware for session cookies
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_your_app_session', same_site: :none, secure: Rails.env.production?
   end
 end
