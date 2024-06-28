@@ -44,7 +44,7 @@ const ImageContentPost = () => {
           // レスポンスが正常な場合
           const data = await response.json();
           if (data.artist) {
-            // アーティスト情報が存在する場合
+            // アーティスト情が存在する場合
             setArtist(data.artist); // アーティスト情報を設定
             setModalOpen(true); // モーダルを開く
             setArtistNotFound(false); // アーティストが見つかったためエラーをリセット
@@ -143,11 +143,28 @@ const ImageContentPost = () => {
         }
       }
       // OGP画像の生成とアップロードをトリガー
-      const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
-        method: 'GET',
-      });
-      console.log('OGP Response:', await ogpResponse.text());
+      try {
+        console.log('OGP生成開始:', postId);
+        const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
+          method: 'GET',
+        });
 
+        if (!ogpResponse.ok) {
+          throw new Error(`HTTP error! status: ${ogpResponse.status}`);
+        }
+
+        const ogpText = await ogpResponse.text();
+        console.log('OGP Response:', ogpText);
+
+        // レスポンスの内容を解析して処理
+        // 例: const ogpData = JSON.parse(ogpText);
+        // console.log('OGP Data:', ogpData);
+
+        console.log('OGP生成完了:', postId);
+      } catch (error) {
+        console.error('OGP生成中にエラーが発生しました:', error);
+        // エラーハンドリング（ユーザーへの通知など）
+      }
       // ここでselectedImagesを空の配列にリセット
       setSelectedImages([]);
       return true;
@@ -228,7 +245,7 @@ const ImageContentPost = () => {
             sx={{ width: '100%' }}
           >
             音楽アーティストの投稿は1回のみです。
-            {/* 既にポストが���在する場合のメッセージ */}
+            {/* 既にポストが在する場合のメッセージ */}
           </Alert>
         </Snackbar>
       )}
@@ -259,7 +276,7 @@ const ImageContentPost = () => {
         </div>
       </div>
       <span style={{ color: '#2EA9DF' }}>
-        ※1 現在、音楽アーティストの投稿のみ行えます。
+        ※1 現在、音楽ア��ティストの投稿のみ行えます。
         <br />
         ※2 音楽アーティストの投稿は1回のみです。
       </span>
