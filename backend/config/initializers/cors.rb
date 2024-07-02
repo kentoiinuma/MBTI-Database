@@ -11,8 +11,8 @@ Rails.application.config.middleware.insert_before 0, Rack::Cors do
   allow do
     origins 'https://favorite-database-16type-f-5f78fa224595.herokuapp.com', 'http://localhost:3001'
     resource '*',
-      headers: :any,
-      methods: [:get, :post, :put, :patch, :delete, :options, :head],
-      credentials: true
+             headers: :any,
+             methods: %i[get post put patch delete options head],
+             credentials: true
   end
 end
