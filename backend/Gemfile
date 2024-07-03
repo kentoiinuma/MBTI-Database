@@ -15,26 +15,10 @@ gem 'pg', '~> 1.1'
 # Use the Puma web server [https://github.com/puma/puma]
 gem 'puma', '~> 5.0'
 
-# Googleログイン
-gem 'devise'
-gem 'omniauth'
-
 # 画像加工
 gem 'cloudinary'
-# gem 'wkhtmltoimage-binary'  # この行を削除
-gem 'wkhtmltopdf-binary'
-
-# 通知
-# WebSocket通信・ActionCable is included in Rails
-
-# キューとバックグラウンド処理
-# ActiveJob is included in Rails
-gem 'redis'
-gem 'sidekiq'
 
 # その他
-gem 'pundit'
-gem 'rspec-rails', group: %i[development test]
 gem 'rubocop', require: false, group: :development
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
@@ -65,6 +49,7 @@ gem 'clerk-sdk-ruby', require: 'clerk'
 
 # Added for dynamic OGP image generation
 gem 'imgkit'
+gem 'wkhtmltoimage-binary'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
