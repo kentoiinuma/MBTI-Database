@@ -35,3 +35,4 @@ production:
   database: api_production
   username: api
   password: <%= ENV["API_DATABASE_PASSWORD"] %>
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>

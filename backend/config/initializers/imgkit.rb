@@ -1,5 +1,12 @@
+# frozen_string_literal: true
+
 IMGKit.configure do |config|
-  config.wkhtmltoimage = Rails.env.production? ? Gem.bin_path('wkhtmltoimage-binary', 'wkhtmltoimage') : '/usr/local/bin/wkhtmltoimage'
+  if Rails.env.production?
+    config.wkhtmltoimage = `which wkhtmltoimage`.strip
+  else
+    config.wkhtmltoimage = '/usr/local/bin/wkhtmltoimage'
+  end
+  
   config.default_options = {
     quality: 100,
     width: 1200,
