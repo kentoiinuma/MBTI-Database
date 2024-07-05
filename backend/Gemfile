@@ -21,6 +21,9 @@ gem 'cloudinary'
 # その他
 gem 'rubocop', require: false, group: :development
 
+# REXMLライブラリを追加
+gem 'rexml'
+
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
 

@@ -241,6 +241,7 @@ DEPENDENCIES
   puma (~> 5.0)
   rack-cors
   rails (~> 7.0.8)
+  rexml
   rubocop
   tzinfo-data
   wkhtmltoimage-binary
