@@ -309,4 +309,3 @@ const ImageContentPost = () => {
 };
 
 export default ImageContentPost;
-

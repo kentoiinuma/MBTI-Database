@@ -89,3 +89,4 @@ Rails.application.configure do
   # Compile assets in production
   # config.assets.compile = true
 end
+

@@ -2,7 +2,7 @@
 
 IMGKit.configure do |config|
   if Rails.env.production?
-    config.wkhtmltoimage = `which wkhtmltoimage`.strip
+    config.wkhtmltoimage = '/usr/local/bin/wkhtmltoimage'
   else
     config.wkhtmltoimage = '/usr/local/bin/wkhtmltoimage'
   end

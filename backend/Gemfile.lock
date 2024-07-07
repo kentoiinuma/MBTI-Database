@@ -222,7 +222,7 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    wkhtmltoimage-binary (0.12.5)
+    wkhtmltopdf-heroku (2.12.6.1.pre.jammy)
     zeitwerk (2.6.12)
 
 PLATFORMS
@@ -244,7 +244,7 @@ DEPENDENCIES
   rexml
   rubocop
   tzinfo-data
-  wkhtmltoimage-binary
+  wkhtmltopdf-heroku (= 2.12.6.1.pre.jammy)
 
 RUBY VERSION
    ruby 3.2.2p53
