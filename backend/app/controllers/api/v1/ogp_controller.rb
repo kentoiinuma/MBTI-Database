@@ -9,6 +9,10 @@ module Api
       rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
       def show
+        # ここに新しいログ出力を追加
+        Rails.logger.info "wkhtmltoimage path: #{IMGKit.configuration.wkhtmltoimage}"
+        Rails.logger.info "wkhtmltoimage exists: #{File.exist?(IMGKit.configuration.wkhtmltoimage)}"
+
         Rails.logger.info "OGP生成開始: post_id=#{params[:id]}"
         @post = Post.find(params[:id])
         @media_works = @post.media_works
@@ -29,7 +33,7 @@ module Api
             layout: false,
             locals: { media_works: @media_works, post: @post }
           )
-          Rails.logger.info 'テンプレートのレンダリン���完了'
+          Rails.logger.info 'テンプレートのレンダリン完了'
           Rails.logger.debug "Generated HTML: #{html.truncate(500)}"
         rescue StandardError => e
           Rails.logger.error "テンプレートのレンダリングエラー: #{e.message}"
@@ -102,4 +106,3 @@ module Api
     end
   end
 end
-
