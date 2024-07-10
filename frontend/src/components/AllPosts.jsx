@@ -302,6 +302,7 @@ const AllPosts = () => {
 
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
+    const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     const artistText = mediaWorks[post.id]
       ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
           .map(
@@ -311,9 +312,9 @@ const AllPosts = () => {
           .join('')}です！`
       : '';
     const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
-    const postUrl = `${window.location.origin}/post/${post.id}`;
-    // artistTextの後に改行を追加してhashtagが表示されるように変更し、さらにhashtagとpostUrlの間にも改行を1つ入れる
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(artistText + '\n' + hashtag + '\n')}&url=${encodeURIComponent(postUrl)}`;
+    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      artistText + '\n' + hashtag + '\n',
+    )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
 
