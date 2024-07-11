@@ -5,14 +5,16 @@
   <title><%= @user.username %>の好きな音楽アーティスト</title>
   <meta property="og:title" content="<%= @user.username %>の好きな音楽アーティスト" />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://favorite-database-16type-f-5f78fa224595.herokuapp.com/post/<%= @post.id %>" />
   <meta property="og:image" content="<%= @ogp_image.image_url %>" />
-  <meta property="og:description" content="<%= @user.username %>の好きな音楽アーティストは<%= @media_works.map(&:title).join('、') %>です！" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="<%= @ogp_image.image_url %>" />
+  <script>
+    window.onload = function() {
+      window.location.href = "https://favorite-database-16type-f-5f78fa224595.herokuapp.com/post/<%= @post.id %>";
+    }
+  </script>
 </head>
 <body>
-  <h1><%= @user.username %>の好きな音楽アーティスト</h1>
-  <p><%= @media_works.map(&:title).join('、') %></p>
+  <p>リダイレクトしています...</p>
 </body>
 </html>
