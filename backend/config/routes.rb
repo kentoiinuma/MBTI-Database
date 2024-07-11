@@ -24,6 +24,7 @@ Rails.application.routes.draw do
       delete '/posts/:id', to: 'posts#destroy'
       get '/ogp/:id', to: 'ogp#show'
       get '/ogp_page/:id', to: 'ogp#page'
+      get '/post/:id', to: 'posts#show'
     end
   end
 end
