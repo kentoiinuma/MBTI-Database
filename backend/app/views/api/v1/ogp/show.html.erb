@@ -16,7 +16,7 @@
     .container {
       width: 100%;
       height: 100%;
-      background-color: #f8f9fa;
+      background-color: #000000;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -63,24 +63,12 @@
 </head>
 <body>
   <div class="container">
-    <% begin %>
-      <% Rails.logger.info "Rendering template. Media works: #{media_works.inspect}" %>
-      <% if media_works.nil? || media_works.empty? %>
-        <p>No media works found</p>
-      <% else %>
-        <div class="media-works image-container-<%= media_works.size %>">
-          <% media_works.each do |work| %>
-            <% image_size = media_works.size == 1 ? 500 : 247.5 %>
-            <% Rails.logger.info "Rendering image for work: #{work.inspect}" %>
-            <img src="<%= work.image %>" alt="Media Work" style="width: <%= image_size %>px; height: <%= image_size %>px;">
-          <% end %>
-        </div>
+    <div class="media-works image-container-<%= media_works.size %>">
+      <% media_works.each do |work| %>
+        <% image_size = media_works.size == 1 ? 500 : 247.5 %>
+        <img src="<%= work.image %>" alt="Media Work" style="width: <%= image_size %>px; height: <%= image_size %>px;">
       <% end %>
-    <% rescue => e %>
-      <% Rails.logger.error "Error in show.html.erb: #{e.message}" %>
-      <% Rails.logger.error e.backtrace.join("\n") %>
-      <p>Error: <%= e.message %></p>
-    <% end %>
+    </div>
   </div>
 </body>
 </html>

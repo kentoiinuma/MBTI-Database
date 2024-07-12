@@ -6,8 +6,6 @@ module Api
       include ActionView::Layouts
       include ActionView::Rendering
 
-      rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
-
       def show
         @post = Post.find(params[:id])
         @media_works = @post.media_works
@@ -36,11 +34,6 @@ module Api
         ogp_image.update!(image_url: response['secure_url'])
 
         render json: { ogp_image_url: ogp_image.image_url }, status: :ok
-      rescue StandardError => e
-        render json: { error: 'Failed to generate OGP image', details: e.message }, status: :internal_server_error
-      ensure
-        file&.close
-        file&.unlink
       end
 
       def page
@@ -53,10 +46,6 @@ module Api
       end
 
       private
-
-      def record_not_found
-        render json: { error: 'Record not found' }, status: :not_found
-      end
 
       def clean_image_url(url)
         url.to_s.gsub(/[^\x20-\x7E]/, '')
