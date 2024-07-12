@@ -15,6 +15,7 @@ const ImageContentPost = () => {
   const navigate = useNavigate(); // ナビゲーション関数を取得
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // カスタムアラートの表示状態
   const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
+  const [isLoading, setIsLoading] = useState(false); // ローディング状態を追加
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -47,7 +48,7 @@ const ImageContentPost = () => {
             // アーティスト情が存在する場合
             setArtist(data.artist); // アーティスト情報を設定
             setModalOpen(true); // モーダルを開く
-            setArtistNotFound(false); // アーティストが見つかったためエラーをリセット
+            setArtistNotFound(false); // アーティストが見��かったためエラーをリセット
           } else {
             setArtistNotFound(true); // アーティストが見つからなかった場合エラーを設定
           }
@@ -180,7 +181,9 @@ const ImageContentPost = () => {
       console.error('No images selected');
       return;
     }
+    setIsLoading(true); // ポスト処理開始時にローディングを表示
     const postResult = await handlePost();
+    setIsLoading(false); // ポスト処理終了時にローディングを非表示
     if (postResult) {
       // ポスト成功時にSnackbarを表示するために状態をtrueに設定
       console.log('Post success state set to true');
@@ -217,93 +220,103 @@ const ImageContentPost = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-4 space-y-4">
-      {artistNotFound && (
-        <Snackbar
-          open={artistNotFound}
-          autoHideDuration={2500}
-          onClose={() => setArtistNotFound(false)}
-        >
-          <Alert
-            onClose={() => setArtistNotFound(false)}
-            severity="error"
-            sx={{ width: '100%' }}
-          >
-            正しいアーティスト名を入力してください。
-            {/* アーティストが見つからなかった場合のメッセージ */}
-          </Alert>
-        </Snackbar>
-      )}
-      {customAlertVisible && (
-        <Snackbar
-          open={customAlertVisible}
-          autoHideDuration={2500}
-          onClose={() => setCustomAlertVisible(false)}
-        >
-          <Alert
-            onClose={() => setCustomAlertVisible(false)}
-            severity="error"
-            sx={{ width: '100%' }}
-          >
-            音楽アーティストの投稿は1回のみです。
-            {/* 既にポストが在する場合のメッセージ */}
-          </Alert>
-        </Snackbar>
-      )}
-      <div className="flex items-center space-x-2">
-        <div className="relative w-full max-w-xs">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-          <input
-            type="text"
-            placeholder="好きな音楽アーティスト"
-            className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
-            onKeyPress={handleSearch}
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-custom"></div>
+          </div>
         </div>
-      </div>
-      <span style={{ color: '#2EA9DF' }}>
-        ※1 現在、音楽ア��ティストの投稿のみ行えます。
-        <br />
-        ※2 音楽アーティストの投稿は1回のみです。
-      </span>
-      <div className="bg-black">
-        {renderImages()} {/* ここで選択された画像をレンダリング */}
-      </div>
-      <div className="flex justify-center gap-4">
-        <button
-          type="submit"
-          onClick={handlePostAndRedirect}
-          className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50"
-          style={{
-            backgroundColor: '#2EA9DF',
-            color: 'white',
-            borderRadius: '50px',
-          }}
-        >
-          ポストする
-        </button>
-      </div>
-      <SearchModal
-        isOpen={isModalOpen}
-        searchQuery={searchQuery}
-        artist={artist}
-        onImageSelect={handleImageSelect}
-        onClose={() => setModalOpen(false)}
-      />
+      ) : (
+        <>
+          {artistNotFound && (
+            <Snackbar
+              open={artistNotFound}
+              autoHideDuration={2500}
+              onClose={() => setArtistNotFound(false)}
+            >
+              <Alert
+                onClose={() => setArtistNotFound(false)}
+                severity="error"
+                sx={{ width: '100%' }}
+              >
+                正しいアーティスト名を入力してください。
+                {/* アーティストが見つからなかった場合のメッセージ */}
+              </Alert>
+            </Snackbar>
+          )}
+          {customAlertVisible && (
+            <Snackbar
+              open={customAlertVisible}
+              autoHideDuration={2500}
+              onClose={() => setCustomAlertVisible(false)}
+            >
+              <Alert
+                onClose={() => setCustomAlertVisible(false)}
+                severity="error"
+                sx={{ width: '100%' }}
+              >
+                音楽アーティストの投稿は1回のみです。
+                {/* 既にポストが在する場合のメッセージ */}
+              </Alert>
+            </Snackbar>
+          )}
+          <div className="flex items-center space-x-2">
+            <div className="relative w-full max-w-xs">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                />
+              </svg>
+              <input
+                type="text"
+                placeholder="好きな音楽アーティスト"
+                className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
+                onKeyPress={handleSearch}
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
+            </div>
+          </div>
+          <span style={{ color: '#2EA9DF' }}>
+            ※1 現在、音楽アティストの投稿のみ行えます。
+            <br />
+            ※2 音楽アーティストの投稿は1回のみです。
+          </span>
+          <div className="bg-black">
+            {renderImages()} {/* ここで選択された画像をレンダリング */}
+          </div>
+          <div className="flex justify-center gap-4">
+            <button
+              type="submit"
+              onClick={handlePostAndRedirect}
+              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50"
+              style={{
+                backgroundColor: '#2EA9DF',
+                color: 'white',
+                borderRadius: '50px',
+              }}
+            >
+              ポストする
+            </button>
+          </div>
+          <SearchModal
+            isOpen={isModalOpen}
+            searchQuery={searchQuery}
+            artist={artist}
+            onImageSelect={handleImageSelect}
+            onClose={() => setModalOpen(false)}
+          />
+        </>
+      )}
     </div>
   );
 };

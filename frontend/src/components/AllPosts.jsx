@@ -13,7 +13,6 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  CircularProgress,
 } from '@mui/material'; // 必要なコンポーネントをインポート
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -331,15 +330,10 @@ const AllPosts = () => {
   return (
     <div style={{ cursor: 'pointer' }}>
       {isLoading ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <CircularProgress />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-custom"></div>
+          </div>
         </div>
       ) : (
         posts.map((post) => (
