@@ -10,10 +10,6 @@ module Api
         @post = Post.find(params[:id])
         @media_works = @post.media_works
 
-        @media_works.each do |work|
-          work.image = clean_image_url(work.image)
-        end
-
         html = render_to_string(
           template: 'api/v1/ogp/show',
           layout: false,
@@ -43,12 +39,6 @@ module Api
         @ogp_image = @post.ogp_image
 
         render layout: false
-      end
-
-      private
-
-      def clean_image_url(url)
-        url.to_s.gsub(/[^\x20-\x7E]/, '')
       end
     end
   end
