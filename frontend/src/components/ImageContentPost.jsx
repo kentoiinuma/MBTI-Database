@@ -13,7 +13,7 @@ const ImageContentPost = () => {
   const [selectedImages, setSelectedImages] = useState([]); // 選択された画像のリスト
   const [inputValue, setInputValue] = useState(''); // 入力フィールドの値
   const navigate = useNavigate(); // ナビゲーション関数を取得
-  const [customAlertVisible, setCustomAlertVisible] = useState(false); // カスタムアラートの表示状態
+  const [customAlertVisible, setCustomAlertVisible] = useState(false); // スタムアラートの表示状態
   const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
   const [isLoading, setIsLoading] = useState(false); // ローディング状態を追加
 
@@ -48,7 +48,7 @@ const ImageContentPost = () => {
             // アーティスト情が存在する場合
             setArtist(data.artist); // アーティスト情報を設定
             setModalOpen(true); // モーダルを開く
-            setArtistNotFound(false); // アーティストが見��かったためエラーをリセット
+            setArtistNotFound(false); // アーティストが見かったためエラーをリセット
           } else {
             setArtistNotFound(true); // アーティストが見つからなかった場合エラーを設定
           }
@@ -75,7 +75,7 @@ const ImageContentPost = () => {
       const data = await response.json();
       console.log(data); // レスポンスをログに出力
       const uploadedImageUrl = data.url;
-      // 既存のアーティスト名と同じでない場合のみ追加
+      // 既存のアティスト名と同じでない場合のみ追加
       if (!selectedImages.some((image) => image.artist === artistName)) {
         console.log(selectedImages); // selectedImages配列をログに出力
         setSelectedImages((prevImages) =>
@@ -143,31 +143,6 @@ const ImageContentPost = () => {
           break;
         }
       }
-      // OGP画像の生成とアップロードをトリガー
-      try {
-        console.log('OGP生成開始:', postId);
-        const ogpResponse = await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
-          method: 'GET',
-        });
-
-        if (!ogpResponse.ok) {
-          throw new Error(`HTTP error! status: ${ogpResponse.status}`);
-        }
-
-        const ogpText = await ogpResponse.text();
-        console.log('OGP Response:', ogpText);
-
-        // レスポンスの内容を解析して処理
-        // 例: const ogpData = JSON.parse(ogpText);
-        // console.log('OGP Data:', ogpData);
-
-        console.log('OGP生成完了:', postId);
-      } catch (error) {
-        console.error('OGP生成中にエラーが発生しました:', error);
-        // エラーハンドリング（ユーザーへの通知など）
-      }
-      // ここでselectedImagesを空の配列にリセット
-      setSelectedImages([]);
       return true;
     } else {
       console.error('Post creation failed');

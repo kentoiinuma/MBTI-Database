@@ -16,7 +16,7 @@ module Api
           locals: { media_works: @media_works, post: @post }
         )
 
-        kit = IMGKit.new(html, height: 630, width: 1200, quality: 100)
+        kit = IMGKit.new(html, width: 1200, height: 630, quality: 100)
         img = kit.to_img(:png)
 
         file = Tempfile.new(['ogp', '.png'], '/tmp')
