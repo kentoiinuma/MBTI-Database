@@ -29,13 +29,11 @@ module Api
         ogp_image = OgpImage.find_or_initialize_by(post: @post)
         ogp_image.update!(image_url: response['secure_url'])
 
-        render json: { ogp_image_url: ogp_image.image_url }, status: :ok
+        render json: { ogp_image_url: ogp_image.image_url }
       end
 
       def page
         @post = Post.find(params[:id])
-        @user = @post.user
-        @media_works = @post.media_works
         @ogp_image = @post.ogp_image
 
         render layout: false
@@ -43,3 +41,4 @@ module Api
     end
   end
 end
+

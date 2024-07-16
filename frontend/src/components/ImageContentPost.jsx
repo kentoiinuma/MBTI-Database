@@ -143,6 +143,10 @@ const ImageContentPost = () => {
           break;
         }
       }
+      // OGP画像の生成とアップロードをトリガー
+      await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
+        method: 'GET',
+      });
       return true;
     } else {
       console.error('Post creation failed');

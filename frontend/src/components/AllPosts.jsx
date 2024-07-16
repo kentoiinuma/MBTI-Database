@@ -128,7 +128,7 @@ const AllPosts = () => {
                       user: {
                         ...p.user,
                         avatarUrl: userData.avatar_url, // usersテルから取得
-                        username: userData.username, // usersテ���ブルから取
+                        username: userData.username, // usersテーブルから取
                         clerkId: userData.clerk_id, // usersテーブルから取得
                       },
                     };
@@ -300,12 +300,7 @@ const AllPosts = () => {
   };
 
   // XIconをクリックしたときの処理を追加
-  const shareToX = async (post) => {
-    // OGP画像の生成とアップロードをトリガー
-    await fetch(`${API_URL}/api/v1/ogp/${post.id}`, {
-      method: 'GET',
-    });
-
+  const shareToX = (post) => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     const artistText = mediaWorks[post.id]
       ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
