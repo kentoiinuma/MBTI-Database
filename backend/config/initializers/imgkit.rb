@@ -6,8 +6,4 @@ IMGKit.configure do |config|
   else
     config.wkhtmltoimage = '/usr/local/bin/wkhtmltoimage'
   end
-  
-  config.default_options = {
-    quality: 100,
-  }
 end

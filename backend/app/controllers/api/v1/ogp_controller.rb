@@ -10,17 +10,13 @@ module Api
         @post = Post.find(params[:id])
         @media_works = @post.media_works
 
-        @media_works.each do |work|
-          work.image = clean_image_url(work.image)
-        end
-
         html = render_to_string(
           template: 'api/v1/ogp/show',
           layout: false,
           locals: { media_works: @media_works, post: @post }
         )
 
-        kit = IMGKit.new(html, height: 630, width: 1200, quality: 100)
+        kit = IMGKit.new(html, width: 1200, height: 630, quality: 100)
         img = kit.to_img(:png)
 
         file = Tempfile.new(['ogp', '.png'], '/tmp')
@@ -33,23 +29,16 @@ module Api
         ogp_image = OgpImage.find_or_initialize_by(post: @post)
         ogp_image.update!(image_url: response['secure_url'])
 
-        render json: { ogp_image_url: ogp_image.image_url }, status: :ok
+        render json: { ogp_image_url: ogp_image.image_url }
       end
 
       def page
         @post = Post.find(params[:id])
-        @user = @post.user
-        @media_works = @post.media_works
         @ogp_image = @post.ogp_image
 
         render layout: false
       end
-
-      private
-
-      def clean_image_url(url)
-        url.to_s.gsub(/[^\x20-\x7E]/, '')
-      end
     end
   end
 end
+

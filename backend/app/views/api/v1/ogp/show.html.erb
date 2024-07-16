@@ -3,61 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    body {
+    body, html {
+      margin: 0;
+      padding: 0;
       width: 1200px;
       height: 630px;
       display: flex;
       justify-content: center;
       align-items: center;
-      text-align: center;
-      font-family: Arial, sans-serif;
+      background-color: #FFFFFF; 
     }
 
     .container {
       width: 100%;
       height: 100%;
-      background-color: #000000;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      text-align: center;
     }
 
     .media-works {
-      display: grid;
-      gap: 5px;
-    }
-
-    .image-container-1 {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-    }
-
-    .image-container-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .image-container-3 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: auto auto; 
-      place-items: center; 
-    }
-    .image-container-3 img:first-child,
-    .image-container-3 img:nth-child(2) {
-      grid-row: 1;
-    }
-    .image-container-3 img:last-child {
-      grid-row: 2;
-      grid-column: 1 / span 2;
+      align-content: center; 
+      gap: 10px;
+      max-width: 1200px;
+      max-height: 630px;
     }
     
+    .image-container-1 img {
+      width: 630px;
+      height: 630px;
+    }
+
+    .image-container-2 img {
+      width: 595px;
+      height: 595px;
+      padding-top: 17.5px;
+    }
+    
+    .image-container-3 {
+      width: 630px;
+      height: 630px;
+      padding-left: 285px;
+    }
+
+    .image-container-3 img:nth-child(1),
+    .image-container-3 img:nth-child(2) {
+      width: 310px;
+      height: 310px;
+    }
+
+    .image-container-3 img:nth-child(3) {
+      width: 310px;
+      height: 310px;
+    }
+
     .image-container-4 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
+      width: 630px;
+      height: 630px;
+      padding-left: 285px;
+    }
+
+    .image-container-4 img:nth-child(1),
+    .image-container-4 img:nth-child(2) {
+      width: 310px;
+      height: 310px;
+    }
+    .image-container-4 img:nth-child(3),
+    .image-container-4 img:nth-child(4) {
+      width: 310px;
+      height: 310px;
     }
   </style>
 </head>
@@ -65,8 +84,7 @@
   <div class="container">
     <div class="media-works image-container-<%= media_works.size %>">
       <% media_works.each do |work| %>
-        <% image_size = media_works.size == 1 ? 500 : 247.5 %>
-        <img src="<%= work.image %>" alt="Media Work" style="width: <%= image_size %>px; height: <%= image_size %>px;">
+        <img src="<%= work.image %>" alt="Media Work">
       <% end %>
     </div>
   </div>
