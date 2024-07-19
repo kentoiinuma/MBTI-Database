@@ -3,12 +3,13 @@ import { useUser } from '@clerk/clerk-react'; // Clerkを使用してユーザ�
 import SearchModal from './SearchModal'; // 検索モーダルコンポーネント
 import { Image } from 'cloudinary-react'; // Cloudinaryを使用して画像を表示
 import { useNavigate } from 'react-router-dom'; // ページ遷移を扱うためのフック
-import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
+import { Snackbar, Alert, ToggleButtonGroup, ToggleButton } from '@mui/material'; // MUI Snackbar、Alert、ToggleButtonのインポート
 
 const ImageContentPost = () => {
   const { user } = useUser(); // 現在のユーザー情報を取得
   const [isModalOpen, setModalOpen] = useState(false); // モーダルの開閉状態
   const [artist, setArtist] = useState(null); // 選択されたアーティスト情報
+  const [anime, setAnime] = useState(null); // 選択されたアニメ情報
   const [searchQuery, setSearchQuery] = useState(''); // 検索クエリ
   const [selectedImages, setSelectedImages] = useState([]); // 選択された画像のリスト
   const [inputValue, setInputValue] = useState(''); // 入力フィールドの値
@@ -16,6 +17,7 @@ const ImageContentPost = () => {
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // スタムアラートの表示状態
   const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
   const [isLoading, setIsLoading] = useState(false); // ローディング状態を追加
+  const [contentType, setContentType] = useState('music'); // 'music' または 'anime'
 
   // APIのURLを環境に応じて設定
   let API_URL;
@@ -38,15 +40,20 @@ const ImageContentPost = () => {
       if (trimmedValue !== '') {
         // 入力値が空でない場合
         setSearchQuery(trimmedValue); // 検索クエリを設定
-        const response = await fetch(
-          `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
-        ); // Spotify検索APIにリクエストを送信
+        let response;
+        if (contentType === 'music') {
+          response = await fetch(`${API_URL}/api/v1/spotify/search/${trimmedValue}`);
+        } else {
+          response = await fetch(`${API_URL}/api/v1/annict/search/${trimmedValue}`);
+        }
         if (response.ok) {
-          // レスポンスが正常な場合
           const data = await response.json();
-          if (data.artist) {
-            // アーティスト情が存在する場合
+          if (contentType === 'music' && data.artist) {
             setArtist(data.artist); // アーティスト情報を設定
+            setModalOpen(true); // モーダルを開く
+            setArtistNotFound(false); // アーティストが見かったためエラーをリセット
+          } else if (contentType === 'anime' && data.anime) {
+            setAnime(data.anime); // アニメ情報を設定
             setModalOpen(true); // モーダルを開く
             setArtistNotFound(false); // アーティストが見かったためエラーをリセット
           } else {
@@ -61,7 +68,7 @@ const ImageContentPost = () => {
   };
 
   // 画像選択処理
-  const handleImageSelect = async (imageUrl, artistName) => {
+  const handleImageSelect = async (imageUrl, title) => {
     // 画像をアップロードするためのAPIエンドポイントにリクエストを送信
     const response = await fetch(`${API_URL}/api/v1/upload_image`, {
       method: 'POST',
@@ -75,11 +82,11 @@ const ImageContentPost = () => {
       const data = await response.json();
       console.log(data); // レスポンスをログに出力
       const uploadedImageUrl = data.url;
-      // 既存のアティスト名と同じでない場合のみ追加
-      if (!selectedImages.some((image) => image.artist === artistName)) {
+      // 既存のタイトルと同じでない場合のみ追加
+      if (!selectedImages.some((image) => image.title === title)) {
         console.log(selectedImages); // selectedImages配列をログに出力
         setSelectedImages((prevImages) =>
-          [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(
+          [...prevImages, { url: uploadedImageUrl, title: title }].slice(
             0,
             4,
           ),
@@ -123,7 +130,7 @@ const ImageContentPost = () => {
       const postData = await postResponse.json();
       const postId = postData.id;
 
-      // 選択された画像とアーティスト名をmedia_worksに保存
+      // 選択された画像とタイトルをmedia_worksに保存
       for (let i = 0; i < selectedImages.length; i++) {
         const imagePair = selectedImages[i];
         const mediaWorkResponse = await fetch(`${API_URL}/api/v1/media_works`, {
@@ -133,9 +140,9 @@ const ImageContentPost = () => {
           },
           body: JSON.stringify({
             post_id: postId,
-            title: imagePair.artist,
+            title: imagePair.title,
             image: imagePair.url,
-            media_type: 5,
+            media_type: contentType === 'music' ? 5 : 0,
           }),
         });
         if (!mediaWorkResponse.ok) {
@@ -239,6 +246,25 @@ const ImageContentPost = () => {
               </Alert>
             </Snackbar>
           )}
+          <ToggleButtonGroup
+            value={contentType}
+            exclusive
+            onChange={(event, newContentType) => {
+              if (newContentType !== null) {
+                setContentType(newContentType);
+                setInputValue('');
+                setSelectedImages([]);
+              }
+            }}
+            aria-label="content type"
+          >
+            <ToggleButton value="music" aria-label="music">
+              音楽アーティスト
+            </ToggleButton>
+            <ToggleButton value="anime" aria-label="anime">
+              アニメ
+            </ToggleButton>
+          </ToggleButtonGroup>
           <div className="flex items-center space-x-2">
             <div className="relative w-full max-w-xs">
               <svg
@@ -257,7 +283,7 @@ const ImageContentPost = () => {
               </svg>
               <input
                 type="text"
-                placeholder="好きな音楽アーティスト"
+                placeholder={contentType === 'music' ? "好きな音楽アーティスト" : "好きなアニメ"}
                 className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}
@@ -290,9 +316,10 @@ const ImageContentPost = () => {
           <SearchModal
             isOpen={isModalOpen}
             searchQuery={searchQuery}
-            artist={artist}
+            content={contentType === 'music' ? artist : anime}
             onImageSelect={handleImageSelect}
             onClose={() => setModalOpen(false)}
+            contentType={contentType}
           />
         </>
       )}
