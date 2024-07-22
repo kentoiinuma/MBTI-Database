@@ -1,3 +1,7 @@
+require 'http'
+require 'open-uri'
+require 'base64'
+
 class Api::V1::AnnictController < ApplicationController
   def search
     query = params[:query]
@@ -11,13 +15,21 @@ class Api::V1::AnnictController < ApplicationController
       anime = data['works'].first
       
       if anime
-        render json: { 
-          anime: {
-            id: anime['id'],
-            title: anime['title'],
-            image: anime['images']['recommended_url']
+        image_url = anime['images']['recommended_url'] || anime['images']['facebook']['og_image_url']
+        
+        begin
+          image_data = URI.open(image_url).read
+          image_base64 = Base64.strict_encode64(image_data)
+          render json: { 
+            anime: {
+              id: anime['id'],
+              title: anime['title'],
+              image: "data:image/png;base64,#{image_base64}"
+            }
           }
-        }
+        rescue OpenURI::HTTPError => e
+          render json: { error: "Failed to fetch image: #{e.message}" }, status: :bad_request
+        end
       else
         render json: { error: 'Anime not found' }, status: :not_found
       end

@@ -3,7 +3,12 @@ import { useUser } from '@clerk/clerk-react'; // Clerkを使用してユーザ�
 import SearchModal from './SearchModal'; // 検索モーダルコンポーネント
 import { Image } from 'cloudinary-react'; // Cloudinaryを使用して画像を表示
 import { useNavigate } from 'react-router-dom'; // ページ遷移を扱うためのフック
-import { Snackbar, Alert, ToggleButtonGroup, ToggleButton } from '@mui/material'; // MUI Snackbar、Alert、ToggleButtonのインポート
+import {
+  Snackbar,
+  Alert,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
 
 const ImageContentPost = () => {
   const { user } = useUser(); // 現在のユーザー情報を取得
@@ -15,7 +20,8 @@ const ImageContentPost = () => {
   const [inputValue, setInputValue] = useState(''); // 入力フィールドの値
   const navigate = useNavigate(); // ナビゲーション関数を取得
   const [customAlertVisible, setCustomAlertVisible] = useState(false); // スタムアラートの表示状態
-  const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
+  const [contentNotFound, setContentNotFound] = useState(false); // コンテンツが見つからなかった場合の状態
+  const [errorMessage, setErrorMessage] = useState(''); // エラーメッセージ
   const [isLoading, setIsLoading] = useState(false); // ローディング状態を追加
   const [contentType, setContentType] = useState('music'); // 'music' または 'anime'
 
@@ -42,26 +48,33 @@ const ImageContentPost = () => {
         setSearchQuery(trimmedValue); // 検索クエリを設定
         let response;
         if (contentType === 'music') {
-          response = await fetch(`${API_URL}/api/v1/spotify/search/${trimmedValue}`);
+          response = await fetch(
+            `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
+          );
         } else {
-          response = await fetch(`${API_URL}/api/v1/annict/search/${trimmedValue}`);
+          response = await fetch(
+            `${API_URL}/api/v1/annict/search/${trimmedValue}`,
+          );
         }
         if (response.ok) {
           const data = await response.json();
+          console.log('Debug: API response:', data); // デバッグ用出力
           if (contentType === 'music' && data.artist) {
             setArtist(data.artist); // アーティスト情報を設定
             setModalOpen(true); // モーダルを開く
-            setArtistNotFound(false); // アーティストが見かったためエラーをリセット
+            setContentNotFound(false); // コンテンツが見つかったためエラーをリセット
           } else if (contentType === 'anime' && data.anime) {
             setAnime(data.anime); // アニメ情報を設定
             setModalOpen(true); // モーダルを開く
-            setArtistNotFound(false); // アーティストが見かったためエラーをリセット
-          } else {
-            setArtistNotFound(true); // アーティストが見つからなかった場合エラーを設定
+            setContentNotFound(false); // コンテンツが見つかったためエラーをリセット
           }
         } else {
-          console.error('API request failed'); // APIリクエストが失敗した場合
-          setArtistNotFound(true); // エラーを設定
+          setContentNotFound(true); // コンテンツが見つからなかった場合エラーを設定
+          setErrorMessage(
+            contentType === 'music'
+              ? '正しいアーティスト名を入力してください。'
+              : '正しいアニメ名を入力してください。',
+          );
         }
       }
     }
@@ -86,10 +99,7 @@ const ImageContentPost = () => {
       if (!selectedImages.some((image) => image.title === title)) {
         console.log(selectedImages); // selectedImages配列をログに出力
         setSelectedImages((prevImages) =>
-          [...prevImages, { url: uploadedImageUrl, title: title }].slice(
-            0,
-            4,
-          ),
+          [...prevImages, { url: uploadedImageUrl, title }].slice(0, 4),
         ); // 最大4枚まで画像を追加
       }
     } else {
@@ -179,7 +189,7 @@ const ImageContentPost = () => {
 
   // ImageContentPost.jsxのrenderImages関数内
   const renderImages = () => {
-    const containerClass = `image-container-${selectedImages.length}`; // コンテナのクラス名を設定
+    const containerClass = `image-container-${selectedImages.length}`; // コンナのクラス名定
     const imageSize = selectedImages.length === 1 ? 600 : 297.5; // 画像の数に応じて適切な画像サイズを設定
     if (selectedImages.length === 0) {
       return (
@@ -214,19 +224,18 @@ const ImageContentPost = () => {
         </div>
       ) : (
         <>
-          {artistNotFound && (
+          {contentNotFound && (
             <Snackbar
-              open={artistNotFound}
+              open={contentNotFound}
               autoHideDuration={2500}
-              onClose={() => setArtistNotFound(false)}
+              onClose={() => setContentNotFound(false)}
             >
               <Alert
-                onClose={() => setArtistNotFound(false)}
+                onClose={() => setContentNotFound(false)}
                 severity="error"
                 sx={{ width: '100%' }}
               >
-                正しいアーティスト名を入力してください。
-                {/* アーティストが見つからなかった場合のメッセージ */}
+                {errorMessage}
               </Alert>
             </Snackbar>
           )}
@@ -283,7 +292,11 @@ const ImageContentPost = () => {
               </svg>
               <input
                 type="text"
-                placeholder={contentType === 'music' ? "好きな音楽アーティスト" : "好きなアニメ"}
+                placeholder={
+                  contentType === 'music'
+                    ? '好きな音楽アーティスト'
+                    : '好きなアニメ'
+                }
                 className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}
