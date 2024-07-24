@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // SearchModalコンポーネントの定義。検索モーダルのUIを担当。
 const SearchModal = ({
   isOpen, // モーダルが開いているかどうかの状態
@@ -8,19 +8,20 @@ const SearchModal = ({
   onClose, // モーダルを閉じる際のコールバック関数
   contentType, // コンテンツタイプ ('music' または 'anime')
 }) => {
+  const [selectedImageUrl, setSelectedImageUrl] = useState(null);
+
   // モーダルが開いていない、またはコンテンツ情報がない場合は何も表示しない
   if (!isOpen || !content) return null;
 
   // 画像クリック時のハンドラー。選択された画像のURLとタイトルを親コンポーネントに通知する。
-  const handleImageClick = () => {
-    onImageSelect(
-      contentType === 'music' ? content.images[0].url : content.image,
-      content.name || content.title,
-    );
+  const handleImageClick = (imageUrl) => {
+    setSelectedImageUrl(imageUrl);
+    onImageSelect(imageUrl, content.name || content.title);
   };
 
-  const imageUrl =
-    contentType === 'music' ? content.images[0].url : content.image;
+  const imageUrls = contentType === 'music' 
+    ? (content.images || []).map(img => img.url)
+    : Object.values(content.images || {});
 
   // モーダルのUI部分
   return (
@@ -55,16 +56,17 @@ const SearchModal = ({
           </h2>{' '}
           {/* タイトルを表示 */}
         </div>
-        <div className="px-8 pb-8 flex justify-center">
-          {imageUrl ? (
-            <img
-              src={imageUrl} // 画像を表示
-              alt={`${
-                contentType === 'music' ? 'Artist' : 'Anime'
-              } ${content.name || content.title}`}
-              className="max-w-full h-auto cursor-pointer"
-              onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し
-            />
+        <div className="px-8 pb-8 flex flex-wrap justify-center">
+          {imageUrls.length > 0 ? (
+            imageUrls.map((url, index) => (
+              <img
+                key={index}
+                src={url}
+                alt={`${contentType === 'music' ? 'Artist' : 'Anime'} ${content.name || content.title} ${index + 1}`}
+                className={`max-w-full h-auto cursor-pointer m-2 ${selectedImageUrl === url ? 'border-4 border-blue-500' : ''}`}
+                onClick={() => handleImageClick(url)}
+              />
+            ))
           ) : (
             <div className="text-center">画像が見つかりません</div>
           )}
