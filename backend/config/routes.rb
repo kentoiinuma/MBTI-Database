@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  if Rails.env.development?
+    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/api/v1/graphql"
+  end
+
   namespace :api do
     namespace :v1 do
+      post '/graphql', to: 'graphql#execute'
       post '/registrations', to: 'registrations#create'
       post '/mbti', to: 'mbti#create'
       get '/mbti/:user_id', to: 'mbti#show'
@@ -25,7 +30,6 @@ Rails.application.routes.draw do
       get '/ogp/:id', to: 'ogp#show'
       get '/ogp_page/:id', to: 'ogp#page'
       get '/post/:id', to: 'posts#show'
-      get '/annict/search/:query', to: 'annict#search'
     end
   end
 end

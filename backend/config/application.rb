@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'graphql'
+
 require_relative 'boot'
 
 require 'rails/all'
@@ -44,5 +46,10 @@ module Api
 
     # Add this line to enable HTML rendering in API mode
     config.debug_exception_response_format = :default
+
+    # Add this line to autoload GraphQL files
+    config.autoload_paths << Rails.root.join('app', 'graphql')
+    config.autoload_paths << Rails.root.join('app', 'graphql', 'types')
+    config.eager_load_paths << Rails.root.join('app', 'graphql', 'types')
   end
 end

@@ -41,35 +41,69 @@ const ImageContentPost = () => {
   // 検索処理
   const handleSearch = async (event) => {
     if (event.key === 'Enter') {
-      // Enterキーが押された場合
-      const trimmedValue = event.target.value.trim(); // 入力値の前後の空白を削除
+      const trimmedValue = event.target.value.trim();
       if (trimmedValue !== '') {
-        // 入力値が空でない場合
-        setSearchQuery(trimmedValue); // 検索クエリを設定
+        setSearchQuery(trimmedValue);
         let response;
         if (contentType === 'music') {
           response = await fetch(
             `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
           );
         } else {
-          response = await fetch(
-            `${API_URL}/api/v1/annict/search/${trimmedValue}`,
-          );
+          const query = `
+            query SearchWorks($title: String!) {
+              searchWorks(titles: [$title], first: 1) {
+                nodes {
+                  id
+                  title
+                  image {
+                    recommendedImageUrl
+                    facebookOgImageUrl
+                    twitterImageUrl
+                  }
+                }
+              }
+            }
+          `;
+          response = await fetch(`${API_URL}/api/v1/graphql`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              query,
+              variables: { title: trimmedValue },
+            }),
+          });
         }
         if (response.ok) {
           const data = await response.json();
-          console.log('Debug: API response:', data); // デバッグ用出力
+          console.log('Debug: API response:', data);
           if (contentType === 'music' && data.artist) {
-            setArtist(data.artist); // アーティスト情報を設定
-            setModalOpen(true); // モーダルを開く
-            setContentNotFound(false); // コンテンツが見つかったためエラーをリセット
-          } else if (contentType === 'anime' && data.anime) {
-            setAnime(data.anime); // アニメ情報を設定
-            setModalOpen(true); // モーダルを開く
-            setContentNotFound(false); // コンテンツが見つかったためエラーをリセット
+            setArtist(data.artist);
+            setModalOpen(true);
+            setContentNotFound(false);
+          } else if (
+            contentType === 'anime' &&
+            data.data &&
+            data.data.searchWorks &&
+            data.data.searchWorks.nodes.length > 0
+          ) {
+            const anime = data.data.searchWorks.nodes[0];
+            setAnime({
+              id: anime.id,
+              title: anime.title,
+              images: {
+                recommendedUrl: anime.image.recommendedImageUrl,
+                facebookOgImageUrl: anime.image.facebookOgImageUrl,
+                twitterImageUrl: anime.image.twitterImageUrl,
+              },
+            });
+            setModalOpen(true);
+            setContentNotFound(false);
           }
         } else {
-          setContentNotFound(true); // コンテンツが見つからなかった場合エラーを設定
+          setContentNotFound(true);
           setErrorMessage(
             contentType === 'music'
               ? '正しいアーティスト名を入力してください。'

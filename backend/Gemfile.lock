@@ -104,6 +104,10 @@ GEM
       rake
     globalid (1.2.1)
       activesupport (>= 6.1)
+    graphiql-rails (1.10.0)
+      railties
+    graphql (2.3.10)
+      base64
     http (5.2.0)
       addressable (~> 2.8)
       base64 (~> 0.1)
@@ -255,6 +259,8 @@ DEPENDENCIES
   cloudinary
   debug
   dotenv-rails
+  graphiql-rails
+  graphql (~> 2.0)
   http
   imgkit
   pg (~> 1.1)

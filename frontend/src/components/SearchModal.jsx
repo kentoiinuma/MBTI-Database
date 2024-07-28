@@ -19,9 +19,10 @@ const SearchModal = ({
     onImageSelect(imageUrl, content.name || content.title);
   };
 
-  const imageUrls = contentType === 'music' 
-    ? (content.images || []).map(img => img.url)
-    : Object.values(content.images || {});
+  const imageUrls =
+    contentType === 'music'
+      ? (content.images || []).map((img) => img.url)
+      : Object.values(content.images || {});
 
   // モーダルのUI部分
   return (
@@ -54,7 +55,7 @@ const SearchModal = ({
           <h2 className="text-xl font-semibold">
             {content.name || content.title}
           </h2>{' '}
-          {/* タイトルを表示 */}
+          {/* タ���トルを表示 */}
         </div>
         <div className="px-8 pb-8 flex flex-wrap justify-center">
           {imageUrls.length > 0 ? (
@@ -62,8 +63,12 @@ const SearchModal = ({
               <img
                 key={index}
                 src={url}
-                alt={`${contentType === 'music' ? 'Artist' : 'Anime'} ${content.name || content.title} ${index + 1}`}
-                className={`max-w-full h-auto cursor-pointer m-2 ${selectedImageUrl === url ? 'border-4 border-blue-500' : ''}`}
+                alt={`${
+                  contentType === 'music' ? 'Artist' : 'Anime'
+                } ${content.name || content.title} ${index + 1}`}
+                className={`max-w-full h-auto cursor-pointer m-2 ${
+                  selectedImageUrl === url ? 'border-4 border-blue-500' : ''
+                }`}
                 onClick={() => handleImageClick(url)}
               />
             ))
