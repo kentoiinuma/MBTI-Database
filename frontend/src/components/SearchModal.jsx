@@ -17,7 +17,9 @@ const SearchModal = ({
     if (contentType === 'music') {
       onImageSelect(artist.images[0].url, artist.name); // 画像URLとアーティスト名を親コンポーネントのコールバックでセット
     } else {
-      onImageSelect(anime.coverImage.large, anime.title.romaji); // 画像URLとアニメタイトルを親コンポーネントのコールバックでセット
+      // 日本語のタイトルを優先し、ない場合はローマ字を使用
+      const animeTitle = anime.title.native || anime.title.romaji;
+      onImageSelect(anime.coverImage.large, animeTitle); // 画像URLとアニメタイトルを親コンポーネントのコールバックでセット
     }
   };
 
@@ -50,7 +52,9 @@ const SearchModal = ({
         </div>
         <div className="flex justify-between items-center pl-8">
           <h2 className="text-xl font-semibold">
-            {contentType === 'music' ? artist.name : anime.title.romaji}
+            {contentType === 'music'
+              ? artist.name
+              : anime.title.native || anime.title.romaji}
           </h2>{' '}
           {/* アーティスト名またはアニメタイトルを表示 */}
         </div>
@@ -64,7 +68,7 @@ const SearchModal = ({
             alt={
               contentType === 'music'
                 ? `Artist ${artist.name}`
-                : `Anime ${anime.title.romaji}`
+                : `Anime ${anime.title.native || anime.title.romaji}`
             }
             className="max-w-full h-auto cursor-pointer"
             onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し

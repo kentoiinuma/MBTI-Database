@@ -41,53 +41,36 @@ const ImageContentPost = () => {
       const trimmedValue = event.target.value.trim();
       if (trimmedValue !== '') {
         setSearchQuery(trimmedValue);
-        try {
-          let response;
-          if (contentType === 'music') {
-            response = await fetch(
-              `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
-            );
-          } else {
-            response = await fetch(
-              `${API_URL}/api/v1/anilist/search/${trimmedValue}`,
-            );
-          }
-
-          if (response.ok) {
-            const data = await response.json();
-            if (contentType === 'music' && data.artist) {
-              setArtist(data.artist);
-              setModalOpen(true);
-              setArtistNotFound(false);
-            } else if (
-              contentType === 'anime' &&
-              Array.isArray(data) &&
-              data.length > 0
-            ) {
-              setAnime(data[0]);
-              setModalOpen(true);
-              setArtistNotFound(false);
-            } else {
-              setArtistNotFound(true);
-            }
-          } else {
-            const errorData = await response.json();
-            console.error(
-              'API request failed:',
-              errorData.error,
-              errorData.details,
-            );
-            setArtistNotFound(true);
-            alert(
-              `検索中にエラーが発生しました: ${errorData.details || errorData.error}`,
-            );
-          }
-        } catch (error) {
-          console.error('Error during API request:', error);
-          setArtistNotFound(true);
-          alert(
-            '検索中に予期せぬエラーが発生しました。しばらくしてからもう一度お試しください。',
+        let response;
+        if (contentType === 'music') {
+          response = await fetch(
+            `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
           );
+        } else {
+          response = await fetch(
+            `${API_URL}/api/v1/anilist/search/${trimmedValue}`,
+          );
+        }
+
+        if (response.ok) {
+          const data = await response.json();
+          if (contentType === 'music' && data.artist) {
+            setArtist(data.artist);
+            setModalOpen(true);
+            setArtistNotFound(false);
+          } else if (
+            contentType === 'anime' &&
+            Array.isArray(data) &&
+            data.length > 0
+          ) {
+            setAnime(data[0]);
+            setModalOpen(true);
+            setArtistNotFound(false);
+          } else {
+            setArtistNotFound(true);
+          }
+        } else {
+          setArtistNotFound(true);
         }
       }
     }
@@ -117,26 +100,15 @@ const ImageContentPost = () => {
   };
 
   const handlePost = async () => {
-    const existingPostsResponse = await fetch(
-      `${API_URL}/api/v1/posts?user_id=${user.id}`,
-    );
-    if (existingPostsResponse.ok) {
-      const existingPosts = await existingPostsResponse.json();
-      if (existingPosts.length > 0) {
-        setCustomAlertVisible(true);
-        return false;
-      }
-    } else {
-      console.error('Failed to check existing posts');
-      return false;
-    }
-
     const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clerk_id: user.id }),
+      body: JSON.stringify({
+        clerk_id: user.id,
+        media_type: contentType === 'music' ? 5 : 0,
+      }),
     });
 
     if (postResponse.ok) {
@@ -172,17 +144,36 @@ const ImageContentPost = () => {
     }
   };
 
+  const checkExistingPost = async () => {
+    const response = await fetch(
+      `${API_URL}/api/v1/check_existing_post?clerk_id=${user.id}&media_type=${contentType === 'music' ? 5 : 0}`,
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.exists;
+    }
+    return false;
+  };
+
   const handlePostAndRedirect = async () => {
     if (selectedImages.length === 0) {
       console.error('No images selected');
       return;
     }
     setIsLoading(true);
+    const existingPost = await checkExistingPost();
+    if (existingPost) {
+      setCustomAlertVisible(true);
+      setIsLoading(false);
+      return; // ここで処理を終了
+    }
     const postResult = await handlePost();
     setIsLoading(false);
     if (postResult) {
       console.log('Post success state set to true');
       navigate('/', { state: { postSuccess: true } });
+    } else {
+      setCustomAlertVisible(true); // 投稿に失敗した場合もアラートを表示
     }
   };
 
@@ -256,7 +247,9 @@ const ImageContentPost = () => {
                 severity="error"
                 sx={{ width: '100%' }}
               >
-                音楽アーティストの投稿は1回のみです。
+                {contentType === 'music'
+                  ? '音楽アーティストの投稿は1回のみです。'
+                  : 'アニメの投稿は1回のみです。'}
               </Alert>
             </Snackbar>
           )}
@@ -304,9 +297,7 @@ const ImageContentPost = () => {
             </div>
           </div>
           <span style={{ color: '#2EA9DF' }}>
-            ※1 現在、音楽アティストの投稿のみ行えます。
-            <br />
-            ※2 音楽アーティストの投稿は1回のみです。
+            ※  音楽アーティスト、アニメの投稿はそれぞれ1回のみ行えます。
           </span>
           <div className="bg-black">{renderImages()}</div>
           <div className="flex justify-center gap-4">

@@ -10,7 +10,6 @@ class Api::V1::AnilistController < ApplicationController
             id
             title {
               romaji
-              english
               native
             }
             coverImage {
@@ -35,16 +34,9 @@ class Api::V1::AnilistController < ApplicationController
 
     if response.is_a?(Net::HTTPSuccess)
       data = JSON.parse(response.body)
-      if data['data'] && data['data']['Page'] && data['data']['Page']['media']
-        render json: data['data']['Page']['media']
-      else
-        render json: { error: 'No anime data found' }, status: :not_found
-      end
+      render json: data['data']['Page']['media']
     else
-      error_data = JSON.parse(response.body)
-      render json: { error: 'Failed to fetch anime data', details: error_data['errors'][0]['message'] }, status: :service_unavailable
+      render json: { error: 'Failed to fetch anime data' }, status: :unprocessable_entity
     end
-  rescue StandardError => e
-    render json: { error: 'An error occurred', details: e.message }, status: :internal_server_error
   end
 end
