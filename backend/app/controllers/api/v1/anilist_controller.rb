@@ -9,7 +9,6 @@ class Api::V1::AnilistController < ApplicationController
           media(search: $search, type: ANIME) {
             id
             title {
-              romaji
               native
             }
             coverImage {
