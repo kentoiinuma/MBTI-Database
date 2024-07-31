@@ -9,6 +9,27 @@ import {
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
+  backgroundColor: selected ? '#2EA9DF' : '#fff',
+  borderColor: '#2EA9DF',
+  color: selected ? '#fff' : '#2EA9DF',
+  '&:hover': {
+    backgroundColor: selected ? '#2387c1' : '#fff',
+    borderColor: '#2387c1',
+  },
+  '&.Mui-selected': {
+    backgroundColor: '#2EA9DF',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#2387c1',
+    },
+  },
+  '&.MuiToggleButton-root': {
+    border: '1px solid #2EA9DF',
+  },
+}));
 
 const ImageContentPost = () => {
   const { user } = useUser();
@@ -22,7 +43,7 @@ const ImageContentPost = () => {
   const [customAlertVisible, setCustomAlertVisible] = useState(false);
   const [artistNotFound, setArtistNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [contentType, setContentType] = useState('music');
+  const [contentType, setContentType] = useState('anime'); // 'music'から'anime'に変更
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -259,12 +280,12 @@ const ImageContentPost = () => {
             onChange={handleContentTypeChange}
             aria-label="content type"
           >
-            <ToggleButton value="music" aria-label="music">
-              音楽アーティスト
-            </ToggleButton>
-            <ToggleButton value="anime" aria-label="anime">
+            <StyledToggleButton value="anime" aria-label="anime">
               アニメ
-            </ToggleButton>
+            </StyledToggleButton>
+            <StyledToggleButton value="music" aria-label="music">
+              音楽アーティスト
+            </StyledToggleButton>
           </ToggleButtonGroup>
           <div className="flex items-center space-x-2">
             <div className="relative w-full max-w-xs">
@@ -297,7 +318,7 @@ const ImageContentPost = () => {
             </div>
           </div>
           <span style={{ color: '#2EA9DF' }}>
-            ※  音楽アーティスト、アニメの投稿はそれぞれ1回のみ行えます。
+            ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
           <div className="bg-black">{renderImages()}</div>
           <div className="flex justify-center gap-4">
