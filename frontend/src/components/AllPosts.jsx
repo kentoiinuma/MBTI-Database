@@ -319,7 +319,7 @@ const AllPosts = () => {
         .join('')}です！`;
     }
 
-    const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
+    const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
     )}&url=${encodeURIComponent(ogPageUrl)}`;
