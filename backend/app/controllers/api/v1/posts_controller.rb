@@ -40,8 +40,10 @@ module Api
       # 投稿を取得する
       def show
         post = Post.find(params[:id])
-        render json: post.as_json(include: { user: { only: %i[clerk_id avatar_url username] },
-                                             media_works: { only: %i[title image] } })
+        render json: post.as_json(include: { 
+          user: { only: %i[clerk_id avatar_url username] },
+          media_works: { only: %i[title image media_type] }
+        })
       end
 
       # 投稿を削除する
