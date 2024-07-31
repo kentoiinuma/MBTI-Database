@@ -70,8 +70,8 @@ const AllPosts = () => {
             setPosts(posts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイアログを閉じる
             setOpenSnackbar(true); // スナックバーを表示する
-            // スナックバーのメッセージを設定する
-            setSnackbarMessage('ポストを削除しました！');
+            // スナックバーのメッセージを設定る
+            setSnackbarMessage('ポストを除しました！');
           } else {
             // エラーハンドリング
             console.error('Failed to delete the post');
@@ -96,7 +96,7 @@ const AllPosts = () => {
     API_URL = 'http://localhost:3000';
   }
 
-  // コンポーネントのマウント時とAPI_URL、location.pathnameが変更された時に実行
+  // コンポーネントのマウント時とAPI_URL、location.pathnameが変��された時に実行
   useEffect(() => {
     // 投稿データを取得
     fetch(`${API_URL}/api/v1/posts/all`)
@@ -302,14 +302,23 @@ const AllPosts = () => {
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
-    const artistText = mediaWorks[post.id]
-      ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
-          .map(
-            (work, index, array) =>
-              `${work.title}${index < array.length - 1 ? '、' : ''}`,
-          )
-          .join('')}です！`
-      : '';
+    let artistText = '';
+
+    if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
+      const mediaType =
+        mediaWorks[post.id][0].media_type === 'anime'
+          ? 'アニメ'
+          : '音楽アーティスト';
+      artistText = `${post.user.username}の好きな${mediaType}は${mediaWorks[
+        post.id
+      ]
+        .map(
+          (work, index, array) =>
+            `${work.title}${index < array.length - 1 ? '、' : ''}`,
+        )
+        .join('')}です！`;
+    }
+
     const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
@@ -353,9 +362,19 @@ const AllPosts = () => {
                   renderUserDetails(post.user, post.createdAt, post.id)}
               </div>
               {/* 好きな音楽アーティストの表示 */}
-              <div className="mb-5 text-center">
-                <span className="text-xl">
-                  {post.user.username}の好きな音楽アーティストは
+              <div className="mb-5">
+                <div className="text-xl pl-28 pr-16 w-full text-center">
+                  {post.user.username}の好きな
+                  {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
+                    <>
+                      {mediaWorks[post.id][0].media_type === 'anime'
+                        ? 'アニメ'
+                        : '音楽アーティスト'}
+                    </>
+                  ) : (
+                    ''
+                  )}
+                  は
                   {mediaWorks[post.id] &&
                     mediaWorks[post.id]
                       .map(
@@ -364,7 +383,7 @@ const AllPosts = () => {
                       )
                       .join('')}
                   です！
-                </span>
+                </div>
               </div>
               {/* メディア作品表示エリア */}
               <div

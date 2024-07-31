@@ -1,23 +1,50 @@
 import React, { useState } from 'react';
-import { useUser } from '@clerk/clerk-react'; // Clerkを使用してユーザー情報を取得
-import SearchModal from './SearchModal'; // 検索モーダルコンポーネント
-import { Image } from 'cloudinary-react'; // Cloudinaryを使用して画像を表示
-import { useNavigate } from 'react-router-dom'; // ページ遷移を扱うためのフック
-import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
+import { useUser } from '@clerk/clerk-react';
+import SearchModal from './SearchModal';
+import { Image } from 'cloudinary-react';
+import { useNavigate } from 'react-router-dom';
+import {
+  Snackbar,
+  Alert,
+  ToggleButtonGroup,
+  ToggleButton,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
+  backgroundColor: selected ? '#2EA9DF' : '#fff',
+  borderColor: '#2EA9DF',
+  color: selected ? '#fff' : '#2EA9DF',
+  '&:hover': {
+    backgroundColor: selected ? '#2387c1' : '#fff',
+    borderColor: '#2387c1',
+  },
+  '&.Mui-selected': {
+    backgroundColor: '#2EA9DF',
+    color: '#fff',
+    '&:hover': {
+      backgroundColor: '#2387c1',
+    },
+  },
+  '&.MuiToggleButton-root': {
+    border: '1px solid #2EA9DF',
+  },
+}));
 
 const ImageContentPost = () => {
-  const { user } = useUser(); // 現在のユーザー情報を取得
-  const [isModalOpen, setModalOpen] = useState(false); // モーダルの開閉状態
-  const [artist, setArtist] = useState(null); // 選択されたアーティスト情報
-  const [searchQuery, setSearchQuery] = useState(''); // 検索クエリ
-  const [selectedImages, setSelectedImages] = useState([]); // 選択された画像のリスト
-  const [inputValue, setInputValue] = useState(''); // 入力フィールドの値
-  const navigate = useNavigate(); // ナビゲーション関数を取得
-  const [customAlertVisible, setCustomAlertVisible] = useState(false); // スタムアラートの表示状態
-  const [artistNotFound, setArtistNotFound] = useState(false); // アーティストが見つからなかった場合の状態
-  const [isLoading, setIsLoading] = useState(false); // ローディング状態を追加
+  const { user } = useUser();
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [artist, setArtist] = useState(null);
+  const [anime, setAnime] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [inputValue, setInputValue] = useState('');
+  const navigate = useNavigate();
+  const [customAlertVisible, setCustomAlertVisible] = useState(false);
+  const [artistNotFound, setArtistNotFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [contentType, setContentType] = useState('anime'); // 'music'から'anime'に変更
 
-  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -27,103 +54,88 @@ const ImageContentPost = () => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    API_URL = 'http://localhost:3000'; // デフォルトのURL
+    API_URL = 'http://localhost:3000';
   }
 
-  // 検索処理
   const handleSearch = async (event) => {
     if (event.key === 'Enter') {
-      // Enterキーが押された場合
-      const trimmedValue = event.target.value.trim(); // 入力値の前後の空白を削除
+      const trimmedValue = event.target.value.trim();
       if (trimmedValue !== '') {
-        // 入力値が空でない場合
-        setSearchQuery(trimmedValue); // 検索クエリを設定
-        const response = await fetch(
-          `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
-        ); // Spotify検索APIにリクエストを送信
+        setSearchQuery(trimmedValue);
+        let response;
+        if (contentType === 'music') {
+          response = await fetch(
+            `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
+          );
+        } else {
+          response = await fetch(
+            `${API_URL}/api/v1/anilist/search/${trimmedValue}`,
+          );
+        }
+
         if (response.ok) {
-          // レスポンスが正常な場合
           const data = await response.json();
-          if (data.artist) {
-            // アーティスト情が存在する場合
-            setArtist(data.artist); // アーティスト情報を設定
-            setModalOpen(true); // モーダルを開く
-            setArtistNotFound(false); // アーティストが見かったためエラーをリセット
+          if (contentType === 'music' && data.artist) {
+            setArtist(data.artist);
+            setModalOpen(true);
+            setArtistNotFound(false);
+          } else if (
+            contentType === 'anime' &&
+            Array.isArray(data) &&
+            data.length > 0
+          ) {
+            setAnime(data[0]);
+            setModalOpen(true);
+            setArtistNotFound(false);
           } else {
-            setArtistNotFound(true); // アーティストが見つからなかった場合エラーを設定
+            setArtistNotFound(true);
           }
         } else {
-          console.error('API request failed'); // APIリクエストが失敗した場合
-          setArtistNotFound(true); // エラーを設定
+          setArtistNotFound(true);
         }
       }
     }
   };
 
-  // 画像選択処理
-  const handleImageSelect = async (imageUrl, artistName) => {
-    // 画像をアップロードするためのAPIエンドポイントにリクエストを送信
+  const handleImageSelect = async (imageUrl, title) => {
     const response = await fetch(`${API_URL}/api/v1/upload_image`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ imageUrl }), // imageUrlをリクエストボディに含める
+      body: JSON.stringify({ imageUrl }),
     });
     if (response.ok) {
-      // レスポンスが正常な場合
       const data = await response.json();
-      console.log(data); // レスポンスをログに出力
       const uploadedImageUrl = data.url;
-      // 既存のアティスト名と同じでない場合のみ追加
-      if (!selectedImages.some((image) => image.artist === artistName)) {
-        console.log(selectedImages); // selectedImages配列をログに出力
+      if (!selectedImages.some((image) => image.title === title)) {
         setSelectedImages((prevImages) =>
-          [...prevImages, { url: uploadedImageUrl, artist: artistName }].slice(
-            0,
-            4,
-          ),
-        ); // 最大4枚まで画像を追加
+          [...prevImages, { url: uploadedImageUrl, title }].slice(0, 4),
+        );
       }
     } else {
-      console.error('Image upload failed'); // 画像アップロードが失敗した場合
+      console.error('Image upload failed');
     }
-    setInputValue(''); // 入力値をリセット
-    setModalOpen(false); // モーダルを閉じる
+    setInputValue('');
+    setModalOpen(false);
   };
 
-  // 投稿処理
   const handlePost = async () => {
-    // ユーザーが既にポストを持っているかどうかを確認
-    const existingPostsResponse = await fetch(
-      `${API_URL}/api/v1/posts?user_id=${user.id}`,
-    );
-    if (existingPostsResponse.ok) {
-      const existingPosts = await existingPostsResponse.json();
-      if (existingPosts.length > 0) {
-        // 既にポストが存在する場合はカスタムアラートを表示して処理を中断
-        setCustomAlertVisible(true);
-        return false;
-      }
-    } else {
-      console.error('Failed to check existing posts');
-      return false;
-    }
-
-    // ポストを作成
     const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clerk_id: user.id }),
+      body: JSON.stringify({
+        clerk_id: user.id,
+        media_type: contentType === 'music' ? 5 : 0,
+      }),
     });
 
     if (postResponse.ok) {
       const postData = await postResponse.json();
       const postId = postData.id;
 
-      // 選択された画像とアーティスト名をmedia_worksに保存
       for (let i = 0; i < selectedImages.length; i++) {
         const imagePair = selectedImages[i];
         const mediaWorkResponse = await fetch(`${API_URL}/api/v1/media_works`, {
@@ -133,9 +145,9 @@ const ImageContentPost = () => {
           },
           body: JSON.stringify({
             post_id: postId,
-            title: imagePair.artist,
+            title: imagePair.title,
             image: imagePair.url,
-            media_type: 5,
+            media_type: contentType === 'music' ? 5 : 0,
           }),
         });
         if (!mediaWorkResponse.ok) {
@@ -143,7 +155,6 @@ const ImageContentPost = () => {
           break;
         }
       }
-      // OGP画像の生成とアップロードをトリガー
       await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
         method: 'GET',
       });
@@ -154,26 +165,50 @@ const ImageContentPost = () => {
     }
   };
 
-  // ポストするボタンのonClickイベントを変更します
+  const checkExistingPost = async () => {
+    const response = await fetch(
+      `${API_URL}/api/v1/check_existing_post?clerk_id=${user.id}&media_type=${contentType === 'music' ? 5 : 0}`,
+    );
+    if (response.ok) {
+      const data = await response.json();
+      return data.exists;
+    }
+    return false;
+  };
+
   const handlePostAndRedirect = async () => {
     if (selectedImages.length === 0) {
       console.error('No images selected');
       return;
     }
-    setIsLoading(true); // ポスト処理開始時にローディングを表示
+    setIsLoading(true);
+    const existingPost = await checkExistingPost();
+    if (existingPost) {
+      setCustomAlertVisible(true);
+      setIsLoading(false);
+      return; // ここで処理を終了
+    }
     const postResult = await handlePost();
-    setIsLoading(false); // ポスト処理終了時にローディングを非表示
+    setIsLoading(false);
     if (postResult) {
-      // ポスト成功時にSnackbarを表示するために状態をtrueに設定
       console.log('Post success state set to true');
       navigate('/', { state: { postSuccess: true } });
+    } else {
+      setCustomAlertVisible(true); // 投稿に失敗した場合もアラートを表示
     }
   };
 
-  // ImageContentPost.jsxのrenderImages関数内
+  const handleContentTypeChange = (event, newContentType) => {
+    if (newContentType !== null) {
+      setContentType(newContentType);
+      setSelectedImages([]);
+      setInputValue('');
+    }
+  };
+
   const renderImages = () => {
-    const containerClass = `image-container-${selectedImages.length}`; // コンテナのクラス名を設定
-    const imageSize = selectedImages.length === 1 ? 600 : 297.5; // 画像の数に応じて適切な画像サイズを設定
+    const containerClass = `image-container-${selectedImages.length}`;
+    const imageSize = selectedImages.length === 1 ? 600 : 297.5;
     if (selectedImages.length === 0) {
       return (
         <div
@@ -218,8 +253,9 @@ const ImageContentPost = () => {
                 severity="error"
                 sx={{ width: '100%' }}
               >
-                正しいアーティスト名を入力してください。
-                {/* アーティストが見つからなかった場合のメッセージ */}
+                {contentType === 'music'
+                  ? '正しいアーティスト名を入力してください。'
+                  : '正しいアニメ名を入力してください。'}
               </Alert>
             </Snackbar>
           )}
@@ -234,11 +270,25 @@ const ImageContentPost = () => {
                 severity="error"
                 sx={{ width: '100%' }}
               >
-                音楽アーティストの投稿は1回のみです。
-                {/* 既にポストが在する場合のメッセージ */}
+                {contentType === 'music'
+                  ? '音楽アーティストの投稿は1回のみです。'
+                  : 'アニメの投稿は1回のみです。'}
               </Alert>
             </Snackbar>
           )}
+          <ToggleButtonGroup
+            value={contentType}
+            exclusive
+            onChange={handleContentTypeChange}
+            aria-label="content type"
+          >
+            <StyledToggleButton value="anime" aria-label="anime">
+              アニメ
+            </StyledToggleButton>
+            <StyledToggleButton value="music" aria-label="music">
+              音楽アーティスト
+            </StyledToggleButton>
+          </ToggleButtonGroup>
           <div className="flex items-center space-x-2">
             <div className="relative w-full max-w-xs">
               <svg
@@ -257,7 +307,11 @@ const ImageContentPost = () => {
               </svg>
               <input
                 type="text"
-                placeholder="好きな音楽アーティスト"
+                placeholder={
+                  contentType === 'music'
+                    ? '好きな音楽アーティスト'
+                    : '好きなアニメ'
+                }
                 className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}
@@ -266,13 +320,9 @@ const ImageContentPost = () => {
             </div>
           </div>
           <span style={{ color: '#2EA9DF' }}>
-            ※1 現在、音楽アティストの投稿のみ行えます。
-            <br />
-            ※2 音楽アーティストの投稿は1回のみです。
+            ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
-          <div className="bg-black">
-            {renderImages()} {/* ここで選択された画像をレンダリング */}
-          </div>
+          <div className="bg-black">{renderImages()}</div>
           <div className="flex justify-center gap-4">
             <button
               type="submit"
@@ -290,7 +340,9 @@ const ImageContentPost = () => {
           <SearchModal
             isOpen={isModalOpen}
             searchQuery={searchQuery}
+            contentType={contentType}
             artist={artist}
+            anime={anime}
             onImageSelect={handleImageSelect}
             onClose={() => setModalOpen(false)}
           />

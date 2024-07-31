@@ -11,6 +11,14 @@ module Api
         user = find_user_by_clerk_id(params[:clerk_id])
         return unless user
 
+        media_type = params[:media_type].to_i
+        existing_post = user.posts.joins(:media_works).where(media_works: { media_type: media_type }).exists?
+
+        if existing_post
+          render json: { error: 'You can only post once for this media type' }, status: :unprocessable_entity
+          return
+        end
+
         post = user.posts.build
         save_post(post)
       end
@@ -32,8 +40,10 @@ module Api
       # 投稿を取得する
       def show
         post = Post.find(params[:id])
-        render json: post.as_json(include: { user: { only: %i[clerk_id avatar_url username] },
-                                             media_works: { only: %i[title image] } })
+        render json: post.as_json(include: { 
+          user: { only: %i[clerk_id avatar_url username] },
+          media_works: { only: %i[title image media_type] }
+        })
       end
 
       # 投稿を削除する

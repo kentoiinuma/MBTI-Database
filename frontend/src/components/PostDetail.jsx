@@ -65,24 +65,24 @@ const PostDetail = () => {
     fetch(`${API_URL}/api/v1/posts/${postId}`)
       .then((response) => response.json())
       .then((data) => {
+        console.log('API response:', data); // APIレスポンスの全体を確認
         setPost({
           ...data,
           user: {
             ...data.user,
-            avatarUrl: data.user.avatar_url, // usersテーブルから取得
-            username: data.user.username, // usersテーブルから取得
-            clerkId: data.user.clerk_id, // usersテーブルから取得
+            avatarUrl: data.user.avatar_url,
+            username: data.user.username,
+            clerkId: data.user.clerk_id,
           },
           createdAt: data.created_at,
         });
+        // メディア作品情報を直接設定
         setMediaWorks({
-          ...mediaWorks,
           [data.id]: data.media_works,
         });
-        // ユーザー名をコンテキストにセット
         setPostUsername(data.user.username);
       });
-  }, [API_URL, postId, mediaWorks, setPostUsername]);
+  }, [API_URL, postId, setPostUsername]);
 
   const handleClick = (event, postId) => {
     setAnchorEl(event.currentTarget);
@@ -114,7 +114,7 @@ const PostDetail = () => {
             setOpenDialog(false);
             setOpenSnackbar(true);
             setSnackbarMessage('ポストを削除しました！');
-            // ポスト削除後にAllPostsコンポーネントに遷移する
+            // ポスト削除にAllPostsコンポーネントに遷移する
             window.location.href = '/';
           } else {
             console.error('Failed to delete the post');
@@ -276,14 +276,23 @@ const PostDetail = () => {
   // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
-    const artistText = mediaWorks[post.id]
-      ? `${post.user.username}の好きな音楽アーティストは${mediaWorks[post.id]
-          .map(
-            (work, index, array) =>
-              `${work.title}${index < array.length - 1 ? '、' : ''}`,
-          )
-          .join('')}です！`
-      : '';
+    let artistText = '';
+
+    if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
+      const mediaType =
+        mediaWorks[post.id][0].media_type === 'anime'
+          ? 'アニメ'
+          : '音楽アーティスト';
+      artistText = `${post.user.username}の好きな${mediaType}は${mediaWorks[
+        post.id
+      ]
+        .map(
+          (work, index, array) =>
+            `${work.title}${index < array.length - 1 ? '、' : ''}`,
+        )
+        .join('')}です！`;
+    }
+
     const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
@@ -298,9 +307,17 @@ const PostDetail = () => {
           <div style={{ margin: '20px 0 0 30px' }}>
             {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
           </div>
-          <div className="mb-5 text-center">
-            <span className="text-xl">
-              {post.user.username}の好きな音楽アーティストは
+          <div className="mb-5">
+            <div className="text-xl pl-28 pr-16 w-full text-center">
+              {post.user.username}の好きな
+              {mediaWorks[post.id] && mediaWorks[post.id][0] && (
+                <>
+                  {mediaWorks[post.id][0].media_type === 'anime'
+                    ? 'アニメ'
+                    : '音楽アーティスト'}
+                </>
+              )}
+              は
               {mediaWorks[post.id] &&
                 mediaWorks[post.id]
                   .map(
@@ -309,7 +326,7 @@ const PostDetail = () => {
                   )
                   .join('')}
               です！
-            </span>
+            </div>
           </div>
           <div
             style={{

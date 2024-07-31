@@ -25,6 +25,7 @@ Rails.application.routes.draw do
       get '/ogp/:id', to: 'ogp#show'
       get '/ogp_page/:id', to: 'ogp#page'
       get '/post/:id', to: 'posts#show'
+      get '/anilist/search/:anime_title', to: 'anilist#search'
     end
   end
 end
