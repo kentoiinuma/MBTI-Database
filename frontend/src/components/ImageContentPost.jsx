@@ -253,7 +253,9 @@ const ImageContentPost = () => {
                 severity="error"
                 sx={{ width: '100%' }}
               >
-                正しいアーティスト名を入力してください。
+                {contentType === 'music'
+                  ? '正しいアーティスト名を入力してください。'
+                  : '正しいアニメ名を入力してください。'}
               </Alert>
             </Snackbar>
           )}
