@@ -34,10 +34,11 @@ module Api
       def statistics
         mbti_types = extract_mbti_types
         diagnosis_methods = extract_diagnosis_methods
+        media_type = extract_media_type
 
         user_ids = MbtiType.where(mbti_type: mbti_types, diagnosis_method: diagnosis_methods).pluck(:user_id)
         post_ids = Post.where(user_id: user_ids).pluck(:id)
-        titles = MediaWork.where(post_id: post_ids).group(:title).count
+        titles = MediaWork.where(post_id: post_ids, media_type: media_type).group(:title).count
         render json: titles
       end
 
@@ -56,6 +57,10 @@ module Api
       # リクエストから診断方法を抽出し、対応する内部表現に変換します。
       def extract_diagnosis_methods
         params[:diagnosis_methods].split(',').map { |method| MbtiType.diagnosis_methods[method] }
+      end
+
+      def extract_media_type
+        MediaWork.media_types[params[:media_type]]
       end
     end
   end

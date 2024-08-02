@@ -72,6 +72,7 @@ function Ni() {
         diagnosis_methods: selectedStatus.map((status) =>
           status === '公式' ? 'official_assessment' : 'self_assessment',
         ),
+        media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
       // APIからデータをフェッチ
@@ -87,6 +88,7 @@ function Ni() {
         datasets: [
           {
             ...chartData.datasets[0],
+            label: contentType,
             data: sortedData.map((item) => item[1]),
           },
         ],
@@ -94,7 +96,7 @@ function Ni() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
+  }, [selectedTypes, selectedStatus, contentType]);
 
   // グラフのオプション設定
   const options = {

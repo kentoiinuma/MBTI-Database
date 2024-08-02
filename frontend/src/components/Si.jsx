@@ -28,7 +28,7 @@ function Si() {
     labels: [],
     datasets: [
       {
-        label: '音楽アーティスト',
+        label: 'アニメ',
         data: [],
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
         borderColor: '#2EA9DF',
@@ -60,6 +60,9 @@ function Si() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // コンテンツタイプを管理するステート
+  const [contentType, setContentType] = useState('アニメ');
+
   // データをフェッチしてグラフを更新する
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +71,7 @@ function Si() {
         diagnosis_methods: selectedStatus.map((status) =>
           status === '公式' ? 'official_assessment' : 'self_assessment',
         ),
+        media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
       const response = await fetch(
@@ -80,6 +84,7 @@ function Si() {
         datasets: [
           {
             ...chartData.datasets[0],
+            label: contentType,
             data: sortedData.map((item) => item[1]),
           },
         ],
@@ -87,7 +92,7 @@ function Si() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
+  }, [selectedTypes, selectedStatus, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -125,11 +130,11 @@ function Si() {
 
   // ボタンのスタイルを定義
   const buttonStyle = (selected) => ({
-    backgroundColor: selected ? '#2EA9DF' : '#fff', // 選択されているかによって背景色を変更
+    backgroundColor: selected ? '#2EA9DF' : '#fff',
     borderColor: '#2EA9DF',
-    color: selected ? '#fff' : '#2EA9DF', // 選択されているかによって文字色を変更
+    color: selected ? '#fff' : '#2EA9DF',
     '&:hover': {
-      backgroundColor: selected ? '#2387c1' : '#fff', // 選択されているかによってホバー時の背景色を変更
+      backgroundColor: selected ? '#2387c1' : '#fff',
       borderColor: '#2387c1',
     },
     '&.MuiButton-outlined': {
@@ -140,6 +145,22 @@ function Si() {
 
   return (
     <>
+      {/* コンテンツタイプ選択ボタン */}
+      <div className="button-groups mt-6 ml-32">
+        <ButtonGroup className="mb-4">
+          {['アニメ', '音楽アーティスト'].map((type) => (
+            <Button
+              key={type}
+              onClick={() => setContentType(type)}
+              variant={contentType === type ? 'contained' : 'outlined'}
+              sx={buttonStyle(contentType === type)}
+            >
+              {type}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
+
       {/* ボタンを追加 */}
       <div className="button-groups mt-6 ml-32 ">
         {/* タイプ選択ボタン */}

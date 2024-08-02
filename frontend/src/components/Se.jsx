@@ -28,7 +28,7 @@ function Se() {
     labels: [],
     datasets: [
       {
-        label: '音楽アーティスト',
+        label: 'アニメ',
         data: [],
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
         borderColor: '#2EA9DF',
@@ -60,6 +60,9 @@ function Se() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // コンテンツタイプを管理するステート
+  const [contentType, setContentType] = useState('アニメ');
+
   // データをフェッチするための副作用
   useEffect(() => {
     const fetchData = async () => {
@@ -69,6 +72,7 @@ function Se() {
         diagnosis_methods: selectedStatus.map((status) =>
           status === '公式' ? 'official_assessment' : 'self_assessment',
         ),
+        media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
       // データをフェッチしてグラフを更新
@@ -82,6 +86,7 @@ function Se() {
         datasets: [
           {
             ...chartData.datasets[0],
+            label: contentType,
             data: sortedData.map((item) => item[1]),
           },
         ],
@@ -89,7 +94,7 @@ function Se() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
+  }, [selectedTypes, selectedStatus, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -142,6 +147,22 @@ function Se() {
 
   return (
     <>
+      {/* コンテンツタイプ選択ボタン */}
+      <div className="button-groups mt-6 ml-32">
+        <ButtonGroup className="mb-4">
+          {['アニメ', '音楽アーティスト'].map((type) => (
+            <Button
+              key={type}
+              onClick={() => setContentType(type)}
+              variant={contentType === type ? 'contained' : 'outlined'}
+              sx={buttonStyle(contentType === type)}
+            >
+              {type}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
+
       {/* ボタンを追加 */}
       <div className="button-groups mt-6 ml-32 ">
         {/* タイプ選択ボタン */}

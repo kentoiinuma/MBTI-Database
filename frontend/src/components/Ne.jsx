@@ -60,6 +60,9 @@ function Ne() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // コンテンツタイプを管理するステート
+  const [contentType, setContentType] = useState('アニメ');
+
   // データをフェッチしてグラフを更新する
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +71,7 @@ function Ne() {
         diagnosis_methods: selectedStatus.map((status) =>
           status === '公式' ? 'official_assessment' : 'self_assessment',
         ),
+        media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
       const response = await fetch(
@@ -80,6 +84,7 @@ function Ne() {
         datasets: [
           {
             ...chartData.datasets[0],
+            label: contentType,
             data: sortedData.map((item) => item[1]),
           },
         ],
@@ -87,7 +92,7 @@ function Ne() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
+  }, [selectedTypes, selectedStatus, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -140,6 +145,22 @@ function Ne() {
 
   return (
     <>
+      {/* コンテンツタイプ選択ボタン */}
+      <div className="button-groups mt-6 ml-32">
+        <ButtonGroup className="mb-4">
+          {['アニメ', '音楽アーティスト'].map((type) => (
+            <Button
+              key={type}
+              onClick={() => setContentType(type)}
+              variant={contentType === type ? 'contained' : 'outlined'}
+              sx={buttonStyle(contentType === type)}
+            >
+              {type}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
+
       {/* ボタンを追加 */}
       <div className="button-groups mt-6 ml-32 ">
         {/* タイプ選択ボタン */}
