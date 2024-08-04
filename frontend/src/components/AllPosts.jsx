@@ -96,7 +96,7 @@ const AllPosts = () => {
     API_URL = 'http://localhost:3000';
   }
 
-  // コンポーネントのマウント時とAPI_URL、location.pathnameが変��された時に実行
+  // コンポーネントのマウント時とAPI_URL、location.pathnameが変された時に実行
   useEffect(() => {
     // 投稿データを取得
     fetch(`${API_URL}/api/v1/posts/all`)
@@ -170,7 +170,7 @@ const AllPosts = () => {
     );
   };
 
-  // ユーザー詳細をレンダリングする関
+  // ユーザー詳細をレンダリングする関数
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString(
@@ -181,21 +181,33 @@ const AllPosts = () => {
     return (
       <div className="user-details flex items-center justify-between">
         <div className="flex items-center">
-          <div className="avatar">
-            <div className="w-20 rounded-full">
-              <img
-                src={postUser.avatarUrl}
-                alt={`profileImage`}
-                className="w-full h-full object-cover"
-              />
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/profile/${postUser.clerkId}`); // クリックしたユーザーのプロフィールページに遷移
+            }}
+          >
+            <div className="avatar">
+              <div className="w-20 rounded-full overflow-hidden">
+                <img
+                  src={postUser.avatarUrl}
+                  alt={`profileImage`}
+                  className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+                />
+              </div>
+            </div>
+            <div className="ml-4">
+              <h1>
+                <span className="text-2xl hover:underline cursor-pointer">
+                  {postUser.username}
+                </span>
+              </h1>
             </div>
           </div>
-          <div className="ml-4">
-            <h1>
-              <span className="text-2xl">{postUser.username}</span>{' '}
-              <span className="ml-4">{formattedDate}</span>
-            </h1>
-          </div>
+          <span className="ml-4 hover:underline cursor-pointer">
+            {formattedDate}
+          </span>
         </div>
         {currentUser?.id === postUser.clerkId && (
           <div className="mr-8" style={{ position: 'relative' }}>
@@ -319,7 +331,7 @@ const AllPosts = () => {
         .join('')}です！`;
     }
 
-    const hashtag = '#16typeFavoriteDatabase'; // ハッシュタグを追加
+    const hashtag = '#MBTIデータベース'; // ハッシュ��グを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
     )}&url=${encodeURIComponent(ogPageUrl)}`;
@@ -330,14 +342,14 @@ const AllPosts = () => {
     // ページ遷移時に渡されたstateを確認し、ポスト成功の状態に基づいてSnackbarを表示
     if (location.state?.postSuccess) {
       setOpenSnackbar(true);
-      setSnackbarMessage('ポストを送信しました！');
+      setSnackbarMessage('ポスを送信しました！');
       // 遷移後にstateをクリアする（ブラウザの戻る操作で再表示されないように）
       history.replaceState({}, '');
     }
   }, [location]);
 
   return (
-    <div style={{ cursor: 'pointer' }}>
+    <div>
       {isLoading ? (
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -350,7 +362,6 @@ const AllPosts = () => {
             {/* 投稿全体をクリック可能にするためのdivを追加 */}
             <div
               onClick={(e) => {
-                e.stopPropagation();
                 if (!anchorEl) {
                   navigate(`/post/${post.id}`);
                 }
@@ -391,7 +402,7 @@ const AllPosts = () => {
                   display: 'flex',
                   justifyContent: 'flex-start',
                   alignItems: 'flex-start',
-                  marginBottom: '5px',
+                  marginBottom: '20px',
                 }}
               >
                 {/* メディア作品の画像をレンダリング */}

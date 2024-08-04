@@ -21,7 +21,7 @@ import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのイ�
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
 
 function MainContent() {
-  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示状態を管理するステート
+  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示��態を管理するステート
   const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
@@ -128,6 +128,7 @@ function MainContent() {
           <Routes>
             {/* 各ルートに対応するコンポーネントを設定 */}
             <Route path="/profile" element={<Profile />} />
+            <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
             <Route path="/" element={<AllPosts />} />
             <Route path="/Se" element={<Se />} />

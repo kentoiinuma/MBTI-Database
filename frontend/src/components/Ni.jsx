@@ -60,6 +60,9 @@ function Ni() {
   ]);
   const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
+  // コンテンツタイプを管理するステート
+  const [contentType, setContentType] = useState('アニメ');
+
   // データをフェッチするための副作用
   useEffect(() => {
     const fetchData = async () => {
@@ -69,6 +72,7 @@ function Ni() {
         diagnosis_methods: selectedStatus.map((status) =>
           status === '公式' ? 'official_assessment' : 'self_assessment',
         ),
+        media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
       // APIからデータをフェッチ
@@ -84,6 +88,7 @@ function Ni() {
         datasets: [
           {
             ...chartData.datasets[0],
+            label: contentType,
             data: sortedData.map((item) => item[1]),
           },
         ],
@@ -91,7 +96,7 @@ function Ni() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus]); // 依存配列にselectedTypesとselectedStatusを追加
+  }, [selectedTypes, selectedStatus, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -129,11 +134,11 @@ function Ni() {
 
   // ボタンのスタイルを定義
   const buttonStyle = (selected) => ({
-    backgroundColor: selected ? '#2EA9DF' : '#fff', // 選択されているかによって背景色を変更
+    backgroundColor: selected ? '#2EA9DF' : '#fff',
     borderColor: '#2EA9DF',
-    color: selected ? '#fff' : '#2EA9DF', // 選択されているかによって文字色を変更
+    color: selected ? '#fff' : '#2EA9DF',
     '&:hover': {
-      backgroundColor: selected ? '#2387c1' : '#fff', // 選択されているかによってホバー時の背景色を変更
+      backgroundColor: selected ? '#2387c1' : '#fff',
       borderColor: '#2387c1',
     },
     '&.MuiButton-outlined': {
@@ -144,8 +149,24 @@ function Ni() {
 
   return (
     <>
+      {/* コンテンツタイプ選択ボタン */}
+      <div className="button-groups mt-6 ml-32">
+        <ButtonGroup className="mb-4">
+          {['アニメ', '音楽アーティスト'].map((type) => (
+            <Button
+              key={type}
+              onClick={() => setContentType(type)}
+              variant={contentType === type ? 'contained' : 'outlined'}
+              sx={buttonStyle(contentType === type)}
+            >
+              {type}
+            </Button>
+          ))}
+        </ButtonGroup>
+      </div>
+
       {/* ボタンを追加 */}
-      <div className="button-groups mt-6 ml-32 ">
+      <div className="button-groups ml-32">
         {/* タイプ選択ボタン */}
         <ButtonGroup className="mr-6">
           {['ENFJ', 'ENTJ', 'INFJ', 'INTJ'].map((type) => (
