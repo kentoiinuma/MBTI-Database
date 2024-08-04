@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
 import MBTIModal from './MBTIModal2';
-import { useUser } from '@clerk/clerk-react'; // ClerkのuseUserフックをインポート
-import { useUserContext } from '../contexts/UserContext'; // UserContextのuseUserContextフックをインポート
+import { useUser } from '@clerk/clerk-react';
+import { useUserContext } from '../contexts/UserContext';
+import { useParams } from 'react-router-dom';
 
-// Profileコンポーネントの定義
 const Profile = () => {
-  // 状態管理のためのuseStateフック
-  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイル情報
-  const [mbtiType, setMbtiType] = useState(null); // MBTIタイプ
-  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダル表示状態
-  const [userImages, setUserImages] = useState([]); // ユーザー画像
+  const [userProfile, setUserProfile] = useState(null);
+  const [mbtiType, setMbtiType] = useState(null);
+  const [showMBTIModal, setShowMBTIModal] = useState(false);
+  const [userImages, setUserImages] = useState([]);
 
-  const { user } = useUser(); // 現在のユーザー情報を取得
-  const { userUpdated } = useUserContext(); // UserContextからuserUpdatedを取得
+  const { user: currentUser } = useUser();
+  const { userUpdated } = useUserContext();
+  const { clerkId } = useParams();
 
-  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -25,16 +24,13 @@ const Profile = () => {
   ) {
     API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
   } else {
-    // デフォルトのURL
     API_URL = 'http://localhost:3000';
   }
 
-  // コンポーネントがマウントされた後に実行されるuseEffectフック
   useEffect(() => {
-    const clerkId = user?.id; // Clerkから取得したユーザーID
-    if (clerkId) {
-      // ユーザープロファイル情報を取得
-      fetch(`${API_URL}/api/v1/users/${clerkId}`)
+    const targetClerkId = clerkId || currentUser?.id;
+    if (targetClerkId) {
+      fetch(`${API_URL}/api/v1/users/${targetClerkId}`)
         .then((response) => response.json())
         .then((data) => {
           setUserProfile({
@@ -43,13 +39,11 @@ const Profile = () => {
           });
         });
 
-      // ユーザーのMBTIタイプを取得
-      fetch(`${API_URL}/api/v1/mbti/${clerkId}`)
+      fetch(`${API_URL}/api/v1/mbti/${targetClerkId}`)
         .then((response) => response.json())
         .then((data) => setMbtiType(data.mbti_type));
 
-      // ユーザーの投稿を取得し、関連するメディア作品の画像を取得
-      fetch(`${API_URL}/api/v1/posts?user_id=${clerkId}`)
+      fetch(`${API_URL}/api/v1/posts?user_id=${targetClerkId}`)
         .then((response) => response.json())
         .then((posts) => {
           posts.forEach((post) => {
@@ -64,17 +58,14 @@ const Profile = () => {
           });
         });
     }
-  }, [API_URL, user, userUpdated]); // 依存配列にuserUpdatedを追加
+  }, [API_URL, currentUser, clerkId, userUpdated]);
 
-  // 選択されたセクションを管理するための状態
   const [selectedSection, setSelectedSection] = useState('posts');
 
-  // セクションを選択する関数
   const selectSection = (section) => {
     setSelectedSection(section);
   };
 
-  // 選択されたセクションにスタイルを適用する関数
   const getSelectedStyle = (section) => {
     if (selectedSection === section) {
       return {
@@ -87,7 +78,6 @@ const Profile = () => {
     return {};
   };
 
-  // ユーザー画像をレンダリングする関数
   const renderImages = () => {
     const containerClass = `image-container-${userImages.length}`;
     const imageSize = userImages.length === 1 ? 600 : 297.5;
@@ -107,7 +97,6 @@ const Profile = () => {
     );
   };
 
-  // 選択されたセクションに応じたコンテンツをレンダリングする関数
   const renderContent = () => {
     switch (selectedSection) {
       case 'posts':
@@ -173,8 +162,12 @@ const Profile = () => {
         <>
           <div className="flex items-center justify-between w-full px-8">
             <div className="avatar">
-              <div className="w-24 rounded-full">
-                <img src={userProfile?.avatarUrl} alt="User profile" />
+              <div className="w-24 rounded-full overflow-hidden">
+                <img
+                  src={userProfile?.avatarUrl}
+                  alt="User profile"
+                  className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+                />
               </div>
             </div>
             <div className="ml-8">
@@ -184,27 +177,29 @@ const Profile = () => {
               </h1>
             </div>
             <div className="ml-auto mb-12 mr-20">
-              <div
-                tabIndex={0}
-                role="button"
-                onClick={() => setShowMBTIModal(true)}
-                className="p-2 rounded-full hover:bg-gray-200"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="w-6 h-6"
+              {(!clerkId || clerkId === currentUser?.id) && (
+                <div
+                  tabIndex={0}
+                  role="button"
+                  onClick={() => setShowMBTIModal(true)}
+                  className="p-2 rounded-full hover:bg-gray-200"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
-                  />
-                </svg>
-              </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-6 h-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                    />
+                  </svg>
+                </div>
+              )}
             </div>
           </div>
           <div className="flex justify-between items-center mt-16 w-full">
@@ -234,7 +229,7 @@ const Profile = () => {
           {renderContent()}
         </>
       )}
-      {showMBTIModal && (
+      {showMBTIModal && (!clerkId || clerkId === currentUser?.id) && (
         <MBTIModal
           onClose={() => setShowMBTIModal(false)}
           onUpdate={setMbtiType}
