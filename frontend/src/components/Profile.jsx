@@ -444,7 +444,7 @@ const Profile = () => {
     <div className="flex flex-col w-full">
       {userProfile && (
         <>
-          <div className="flex items-center justify-between w-full px-8">
+          <div className="flex items-center justify-between w-full pt-8 px-8">
             <div className="avatar">
               <div className="w-24 rounded-full overflow-hidden">
                 <img
