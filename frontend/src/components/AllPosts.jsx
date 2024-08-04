@@ -402,7 +402,7 @@ const AllPosts = () => {
                   display: 'flex',
                   justifyContent: 'flex-start',
                   alignItems: 'flex-start',
-                  marginBottom: '5px',
+                  marginBottom: '20px',
                 }}
               >
                 {/* メディア作品の画像をレンダリング */}

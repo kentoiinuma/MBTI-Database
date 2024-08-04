@@ -355,7 +355,7 @@ const PostDetail = () => {
               display: 'flex',
               justifyContent: 'flex-start',
               alignItems: 'flex-start',
-              marginBottom: '5px',
+              marginBottom: '20px',
             }}
           >
             <div
