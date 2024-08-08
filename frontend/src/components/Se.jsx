@@ -51,14 +51,13 @@ function Se() {
     API_URL = 'http://localhost:3000';
   }
 
-  // ボタンの状態を管理するためのステート
+  // ボタンの状態を管理するステート
   const [selectedTypes, setSelectedTypes] = useState([
     'ESFP',
     'ESTP',
     'ISFP',
     'ISTP',
   ]);
-  const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
@@ -69,9 +68,6 @@ function Se() {
       // クエリパラメータを設定
       const queryParams = new URLSearchParams({
         mbti_types: selectedTypes,
-        diagnosis_methods: selectedStatus.map((status) =>
-          status === '公式' ? 'official_assessment' : 'self_assessment',
-        ),
         media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
@@ -94,7 +90,7 @@ function Se() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus, contentType]);
+  }, [selectedTypes, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -120,23 +116,13 @@ function Se() {
     });
   };
 
-  const toggleStatus = (status) => {
-    setSelectedStatus((prev) => {
-      if (prev.includes(status)) {
-        return prev.filter((s) => s !== status);
-      } else {
-        return [...prev, status];
-      }
-    });
-  };
-
   // ボタンのスタイルを定義
   const buttonStyle = (selected) => ({
-    backgroundColor: selected ? '#2EA9DF' : '#fff', // 選択されているかによって背景色を変更
+    backgroundColor: selected ? '#2EA9DF' : '#fff',
     borderColor: '#2EA9DF',
-    color: selected ? '#fff' : '#2EA9DF', // 選択されているかによって文字色を変更
+    color: selected ? '#fff' : '#2EA9DF',
     '&:hover': {
-      backgroundColor: selected ? '#2387c1' : '#fff', // 選択されているかによってホバー時の背景色を変更
+      backgroundColor: selected ? '#2387c1' : '#fff',
       borderColor: '#2387c1',
     },
     '&.MuiButton-outlined': {
@@ -166,7 +152,7 @@ function Se() {
       {/* ボタンを追加 */}
       <div className="button-groups mt-6 ml-32 ">
         {/* タイプ選択ボタン */}
-        <ButtonGroup className="mr-6">
+        <ButtonGroup>
           {['ESFP', 'ESTP', 'ISFP', 'ISTP'].map((type) => (
             <Button
               key={type}
@@ -175,21 +161,6 @@ function Se() {
               sx={buttonStyle(selectedTypes.includes(type))}
             >
               {type}
-            </Button>
-          ))}
-        </ButtonGroup>
-        {/* 状態選択ボタン */}
-        <ButtonGroup>
-          {['公式', '非公式'].map((status) => (
-            <Button
-              key={status}
-              onClick={() => toggleStatus(status)}
-              variant={
-                selectedStatus.includes(status) ? 'contained' : 'outlined'
-              }
-              sx={buttonStyle(selectedStatus.includes(status))}
-            >
-              {status}
             </Button>
           ))}
         </ButtonGroup>

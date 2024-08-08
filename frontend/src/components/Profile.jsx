@@ -24,6 +24,7 @@ const Profile = () => {
   const [mbtiType, setMbtiType] = useState(null);
   const [showMBTIModal, setShowMBTIModal] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
+  const [userMbtiType, setUserMbtiType] = useState(null);
 
   const { user: currentUser } = useUser();
   const { userUpdated } = useUserContext();
@@ -62,7 +63,10 @@ const Profile = () => {
 
       fetch(`${API_URL}/api/v1/mbti/${targetClerkId}`)
         .then((response) => response.json())
-        .then((data) => setMbtiType(data.mbti_type));
+        .then((data) => {
+          setMbtiType(data.mbti_type);
+          setUserMbtiType(data.mbti_type);
+        });
 
       fetch(`${API_URL}/api/v1/posts?user_id=${targetClerkId}`)
         .then((response) => response.json())
@@ -248,7 +252,7 @@ const Profile = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // 投稿が正常に削除された場合、投稿リストからの投稿を削除
+            // 投稿が正常に削��された場合、投稿リストからの投稿を削除
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイアログを閉じる
             // ここでスナックバーを表示するなど処理を追加できます
@@ -280,7 +284,9 @@ const Profile = () => {
                   </div>
                   <div className="mb-5">
                     <div className="text-xl pl-28 pr-16 w-full text-center">
-                      {userProfile.username}の好きな
+                      {userProfile.username}
+                      {userMbtiType && `(${userMbtiType})`}
+                      の好きな
                       {post.mediaWorks && post.mediaWorks[0] ? (
                         <>
                           {post.mediaWorks[0].media_type === 'anime'
@@ -415,16 +421,18 @@ const Profile = () => {
         post.mediaWorks[0].media_type === 'anime'
           ? 'アニメ'
           : '音楽アーティスト';
-      artistText = post.mediaWorks
+      const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
+      artistText = `${userProfile.username}${mbtiTypeText}の好きな${mediaType}は${post.mediaWorks
         .map(
           (work, index, array) =>
             `${work.title}${index < array.length - 1 ? '、' : ''}`,
         )
-        .join('');
+        .join('')}です！`;
 
+      const hashtag = '#MBTIデータベース';
       const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        `${userProfile.username}の好きな${mediaType}は${artistText}です！\n${ogPageUrl}`,
-      )}`;
+        artistText + '\n' + hashtag + '\n',
+      )}&url=${encodeURIComponent(ogPageUrl)}`;
       window.open(shareUrl, '_blank');
     }
   };
@@ -533,7 +541,7 @@ const Profile = () => {
           },
         }}
       >
-        <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'��ストの削除'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             ポストを完全に削除しますか？

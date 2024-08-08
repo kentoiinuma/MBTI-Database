@@ -58,7 +58,6 @@ function Ni() {
     'INFJ',
     'INTJ',
   ]);
-  const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
@@ -69,9 +68,6 @@ function Ni() {
       // クエリパラメータを設定
       const queryParams = new URLSearchParams({
         mbti_types: selectedTypes,
-        diagnosis_methods: selectedStatus.map((status) =>
-          status === '公式' ? 'official_assessment' : 'self_assessment',
-        ),
         media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
@@ -96,7 +92,7 @@ function Ni() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus, contentType]);
+  }, [selectedTypes, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -118,16 +114,6 @@ function Ni() {
         return prev.filter((t) => t !== type);
       } else {
         return [...prev, type];
-      }
-    });
-  };
-
-  const toggleStatus = (status) => {
-    setSelectedStatus((prev) => {
-      if (prev.includes(status)) {
-        return prev.filter((s) => s !== status);
-      } else {
-        return [...prev, status];
       }
     });
   };
@@ -165,10 +151,9 @@ function Ni() {
         </ButtonGroup>
       </div>
 
-      {/* ボタンを追加 */}
+      {/* タイプ選択ボタン */}
       <div className="button-groups ml-32">
-        {/* タイプ選択ボタン */}
-        <ButtonGroup className="mr-6">
+        <ButtonGroup>
           {['ENFJ', 'ENTJ', 'INFJ', 'INTJ'].map((type) => (
             <Button
               key={type}
@@ -177,21 +162,6 @@ function Ni() {
               sx={buttonStyle(selectedTypes.includes(type))}
             >
               {type}
-            </Button>
-          ))}
-        </ButtonGroup>
-        {/* 状態選択ボタン */}
-        <ButtonGroup>
-          {['公式', '非公式'].map((status) => (
-            <Button
-              key={status}
-              onClick={() => toggleStatus(status)}
-              variant={
-                selectedStatus.includes(status) ? 'contained' : 'outlined'
-              }
-              sx={buttonStyle(selectedStatus.includes(status))}
-            >
-              {status}
             </Button>
           ))}
         </ButtonGroup>

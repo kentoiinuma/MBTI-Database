@@ -32,6 +32,7 @@ const AllPosts = () => {
   const open = Boolean(anchorEl); // ドロップダウンメニューが開いているかどうか
   const { user: currentUser } = useUser(); // useUserからuserを取得
   const [isLoading, setIsLoading] = useState(true); // ローディング状態の管理
+  const [userMbtiTypes, setUserMbtiTypes] = useState({});
 
   // ドロップダウンメニューを開く
   const handleClick = (event, postId) => {
@@ -109,12 +110,13 @@ const AllPosts = () => {
               ...post.user,
               avatarUrl: null,
               username: null,
-              clerkId: null,
-            }, // clerkIdをnullで初期化
-            createdAt: post.created_at, // 投稿日時
+              clerkId: post.user.clerk_id,
+            },
+            createdAt: post.created_at,
           })),
         );
-        setIsLoading(false); // ローディング状態をfalseに更新
+        setIsLoading(false);
+
         data.forEach((post) => {
           // ユーザーデータを取得
           fetch(`${API_URL}/api/v1/users/${post.user.clerk_id}`)
@@ -127,9 +129,9 @@ const AllPosts = () => {
                       ...p,
                       user: {
                         ...p.user,
-                        avatarUrl: userData.avatar_url, // usersテルから取得
-                        username: userData.username, // usersテーブルから取
-                        clerkId: userData.clerk_id, // usersテーブルから取得
+                        avatarUrl: userData.avatar_url,
+                        username: userData.username,
+                        clerkId: userData.clerk_id,
                       },
                     };
                   }
@@ -137,6 +139,7 @@ const AllPosts = () => {
                 }),
               );
             });
+
           // メディア作品データを取得
           fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
             .then((response) => response.json())
@@ -146,9 +149,24 @@ const AllPosts = () => {
                 [post.id]: media,
               }));
             });
+
+          // MBTIタイプを取得
+          fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`)
+            .then((response) => response.json())
+            .then((data) => {
+              if (data.mbti_type) {
+                setUserMbtiTypes((prevTypes) => ({
+                  ...prevTypes,
+                  [post.user.clerk_id]: data.mbti_type,
+                }));
+              }
+            })
+            .catch((error) =>
+              console.error('Error fetching MBTI type:', error),
+            );
         });
       });
-  }, [API_URL, location.pathname]); // API_URLとlocation.pathnameの変更時にのみ実行
+  }, [API_URL, location.pathname]);
 
   // 画像をレンダリングする関数
   const renderImages = (works) => {
@@ -259,7 +277,7 @@ const AllPosts = () => {
                   style: {
                     boxShadow:
                       '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
-                    borderRadius: '16px', // ダイアログの角を丸くする
+                    borderRadius: '16px', // ダアログの角を丸くする
                   },
                 }}
               >
@@ -321,7 +339,10 @@ const AllPosts = () => {
         mediaWorks[post.id][0].media_type === 'anime'
           ? 'アニメ'
           : '音楽アーティスト';
-      artistText = `${post.user.username}の好きな${mediaType}は${mediaWorks[
+      const mbtiType = userMbtiTypes[post.user.clerk_id]
+        ? `(${userMbtiTypes[post.user.clerk_id]})`
+        : '';
+      artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[
         post.id
       ]
         .map(
@@ -331,7 +352,7 @@ const AllPosts = () => {
         .join('')}です！`;
     }
 
-    const hashtag = '#MBTIデータベース'; // ハッシュ��グを追加
+    const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
     )}&url=${encodeURIComponent(ogPageUrl)}`;
@@ -375,7 +396,10 @@ const AllPosts = () => {
               {/* 好きな音楽アーティストの表示 */}
               <div className="mb-5">
                 <div className="text-xl pl-28 pr-16 w-full text-center">
-                  {post.user.username}の好きな
+                  {post.user.username}
+                  {userMbtiTypes[post.user.clerkId] &&
+                    `(${userMbtiTypes[post.user.clerkId]})`}
+                  の好きな
                   {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
                     <>
                       {mediaWorks[post.id][0].media_type === 'anime'
