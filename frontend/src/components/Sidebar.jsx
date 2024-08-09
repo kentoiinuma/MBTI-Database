@@ -11,15 +11,16 @@ const Sidebar = () => {
         <NavLink
           to="/"
           style={{
-            color: '#2EA9DF',
             fontSize: '1.3em',
             fontWeight: '600',
             fontStyle: 'italic',
           }}
         >
-          16type Favorite
-          <br />
-          Database
+          <span style={{ color: '#7B90D2' }}>M</span>
+          <span style={{ color: '#86C166' }}>B</span>
+          <span style={{ color: '#A5DEE4' }}>T</span>
+          <span style={{ color: '#FBE251' }}>I</span>
+          <span style={{ color: '#2EA9DF' }}>データベース</span>
         </NavLink>
       </h1>
       {/* ナビゲーションメニューのメイン部分 */}
