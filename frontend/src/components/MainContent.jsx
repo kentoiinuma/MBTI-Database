@@ -11,7 +11,6 @@ import Se from './Se';
 import Si from './Si';
 import Ne from './Ne';
 import Ni from './Ni';
-import Notifications from './Notifications';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
@@ -135,7 +134,6 @@ function MainContent() {
             <Route path="/Si" element={<Si />} />
             <Route path="/Ne" element={<Ne />} />
             <Route path="/Ni" element={<Ni />} />
-            <Route path="/notifications" element={<Notifications />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/about" element={<AboutApp />} />
