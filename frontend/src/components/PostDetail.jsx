@@ -34,7 +34,7 @@ export const PostUsernameProvider = ({ children }) => {
   );
 };
 
-// usePostUsernameカスタムフックのエク��ポート
+// usePostUsernameカスタムフックのエク��ート
 export const usePostUsername = () => useContext(PostUsernameContext);
 
 let API_URL;
@@ -63,6 +63,7 @@ const PostDetail = () => {
   const { user: currentUser } = useUser(); // useUserからcurrentUserを取得
   const { setPostUsername } = usePostUsername(); // コンテキストからsetPostUsernameを取得
   const [loading, setLoading] = useState(true);
+  const [userMbtiType, setUserMbtiType] = useState(null);
 
   useEffect(() => {
     fetch(`${API_URL}/api/v1/posts/${postId}`)
@@ -82,6 +83,16 @@ const PostDetail = () => {
         setMediaWorks(data.media_works);
         setPostUsername(data.user.username);
         setLoading(false);
+
+        // ユーザーのMBTIタイプを取得
+        fetch(`${API_URL}/api/v1/mbti/${data.user.clerk_id}`)
+          .then((response) => response.json())
+          .then((mbtiData) => {
+            if (mbtiData.mbti_type) {
+              setUserMbtiType(mbtiData.mbti_type);
+            }
+          })
+          .catch((error) => console.error('Error fetching MBTI type:', error));
       })
       .catch((error) => {
         console.error('Error fetching post:', error);
@@ -118,7 +129,7 @@ const PostDetail = () => {
           if (response.ok) {
             setOpenDialog(false);
             setOpenSnackbar(true);
-            setSnackbarMessage('ポストを削除��ました！');
+            setSnackbarMessage('ポストを削除ました！');
             // ポスト削除にAllPostsコンポーネントに遷移する
             window.location.href = '/';
           } else {
@@ -295,14 +306,11 @@ const PostDetail = () => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     let artistText = '';
 
-    if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
+    if (mediaWorks && mediaWorks[0]) {
       const mediaType =
-        mediaWorks[post.id][0].media_type === 'anime'
-          ? 'アニメ'
-          : '音楽アーティスト';
-      artistText = `${post.user.username}の好きな${mediaType}は${mediaWorks[
-        post.id
-      ]
+        mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
+      const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
+      artistText = `${post.user.username}${mbtiTypeText}の好きな${mediaType}は${mediaWorks
         .map(
           (work, index, array) =>
             `${work.title}${index < array.length - 1 ? '、' : ''}`,
@@ -310,7 +318,7 @@ const PostDetail = () => {
         .join('')}です！`;
     }
 
-    const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
+    const hashtag = '#MBTIデータベース';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n',
     )}&url=${encodeURIComponent(ogPageUrl)}`;
@@ -330,7 +338,9 @@ const PostDetail = () => {
           </div>
           <div className="mb-5">
             <div className="text-xl pl-28 pr-16 w-full text-center">
-              {post.user.username}の好きな
+              {post.user.username}
+              {userMbtiType && `(${userMbtiType})`}
+              の好きな
               {mediaWorks[0] ? (
                 <>
                   {mediaWorks[0].media_type === 'anime'

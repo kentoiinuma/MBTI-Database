@@ -1,31 +1,34 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import '../App.css'; // CSSファイルをインポート
+import '../App.css';
 
-// サイドバーのコンポーネント
 const Sidebar = () => {
   return (
     <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#2EA9DF]">
-      {/* サイトのタイトル部分 */}
-      <h1 className="text-xl font-bold mb-8">
+      <h1 className="text-xl font-bold mb-8 flex items-center">
+        <img
+          src={process.env.PUBLIC_URL + '/favicon.ico'}
+          alt="favicon"
+          className="w-8 h-8"
+        />
         <NavLink
           to="/"
           style={{
-            color: '#2EA9DF',
-            fontSize: '1.3em',
             fontWeight: '600',
             fontStyle: 'italic',
           }}
         >
-          16type Favorite
-          <br />
-          Database
+          <span style={{ color: '#7B90D2', fontSize: '1.4em' }}>M</span>
+          <span style={{ color: '#86C166', fontSize: '1.4em' }}>B</span>
+          <span style={{ color: '#A5DEE4', fontSize: '1.4em' }}>T</span>
+          <span style={{ color: '#FBE251', fontSize: '1.4em' }}>I</span>
+          <span style={{ color: '#2EA9DF', fontSize: '1.2em' }}>
+            データベース
+          </span>
         </NavLink>
       </h1>
-      {/* ナビゲーションメニューのメイン部分 */}
       <nav className="flex-grow">
         <ul className="space-y-4">
-          {/* ホームリンク */}
           <li>
             <NavLink
               to="/"
@@ -41,7 +44,6 @@ const Sidebar = () => {
                 stroke="currentColor"
                 className="w-6 h-6 inline-block mr-2"
               >
-                {/* アイコンのSVGパス */}
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -51,7 +53,6 @@ const Sidebar = () => {
               ホーム
             </NavLink>
           </li>
-          {/* 各タイプへのリンク */}
           <li>
             <NavLink
               to="/Se"
@@ -94,10 +95,8 @@ const Sidebar = () => {
           </li>
         </ul>
       </nav>
-      {/* フッター部分のナビゲーション */}
       <nav className="mt-auto">
         <ul className="space-y-2">
-          {/* 利用規約とプライバシーポリシーへのリンク */}
           <li>
             <NavLink
               to="/terms-of-service"

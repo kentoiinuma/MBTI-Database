@@ -58,7 +58,6 @@ function Si() {
     'ISFJ',
     'ISTJ',
   ]);
-  const [selectedStatus, setSelectedStatus] = useState(['公式', '非公式']);
 
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
@@ -68,9 +67,6 @@ function Si() {
     const fetchData = async () => {
       const queryParams = new URLSearchParams({
         mbti_types: selectedTypes,
-        diagnosis_methods: selectedStatus.map((status) =>
-          status === '公式' ? 'official_assessment' : 'self_assessment',
-        ),
         media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
@@ -92,7 +88,7 @@ function Si() {
     };
 
     fetchData();
-  }, [selectedTypes, selectedStatus, contentType]);
+  }, [selectedTypes, contentType]);
 
   // グラフのオプション設定
   const options = {
@@ -114,16 +110,6 @@ function Si() {
         return prev.filter((t) => t !== type);
       } else {
         return [...prev, type];
-      }
-    });
-  };
-
-  const toggleStatus = (status) => {
-    setSelectedStatus((prev) => {
-      if (prev.includes(status)) {
-        return prev.filter((s) => s !== status);
-      } else {
-        return [...prev, status];
       }
     });
   };
@@ -164,7 +150,7 @@ function Si() {
       {/* ボタンを追加 */}
       <div className="button-groups mt-6 ml-32 ">
         {/* タイプ選択ボタン */}
-        <ButtonGroup className="mr-6">
+        <ButtonGroup>
           {['ESFJ', 'ESTJ', 'ISFJ', 'ISTJ'].map((type) => (
             <Button
               key={type}
@@ -173,21 +159,6 @@ function Si() {
               sx={buttonStyle(selectedTypes.includes(type))}
             >
               {type}
-            </Button>
-          ))}
-        </ButtonGroup>
-        {/* 状態選択ボタン */}
-        <ButtonGroup>
-          {['公式', '非公式'].map((status) => (
-            <Button
-              key={status}
-              onClick={() => toggleStatus(status)}
-              variant={
-                selectedStatus.includes(status) ? 'contained' : 'outlined'
-              }
-              sx={buttonStyle(selectedStatus.includes(status))}
-            >
-              {status}
             </Button>
           ))}
         </ButtonGroup>
