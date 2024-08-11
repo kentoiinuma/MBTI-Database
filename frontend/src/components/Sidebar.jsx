@@ -6,7 +6,11 @@ const Sidebar = () => {
   return (
     <aside className="z-20 fixed bg-white text-black w-69 min-h-screen py-5 pl-5 flex flex-col border-r border-[#2EA9DF]">
       <h1 className="text-xl font-bold mb-8 flex items-center">
-        <img src="/Favicon.ico" alt="Favicon" className="w-8 h-8" />
+        <img
+          src={process.env.PUBLIC_URL + '/favicon.ico'}
+          alt="favicon"
+          className="w-8 h-8"
+        />
         <NavLink
           to="/"
           style={{
