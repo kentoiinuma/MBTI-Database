@@ -30,7 +30,7 @@ const Header = ({ onSignIn }) => {
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
   } else if (window.location.origin === 'https://www.mbti-database.com') {
-    API_URL = 'https://api.mbti-database.com/';
+    API_URL = 'https://api.mbti-database.com';
   } else {
     // デフォルトのURL
     API_URL = 'http://localhost:3000';
