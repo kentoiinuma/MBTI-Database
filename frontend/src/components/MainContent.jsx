@@ -30,11 +30,8 @@ function MainContent() {
   // 環境に応じてAPIのURLを設定
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
-  } else if (
-    window.location.origin ===
-    'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
-  ) {
-    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
+  } else if (window.location.origin === 'https://www.mbti-database.com') {
+    API_URL = 'https://api.mbti-database.com/';
   } else {
     // デフォルトのURL
     API_URL = 'http://localhost:3000';
