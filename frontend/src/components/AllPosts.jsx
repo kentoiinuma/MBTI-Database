@@ -23,7 +23,7 @@ const AllPosts = () => {
   const [posts, setPosts] = useState([]); // 投稿データ
   const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
   const location = useLocation(); // 現在のURL情報
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // useNavigateフックを追加
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
   const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
   const [anchorEl, setAnchorEl] = useState(null); // ドロップダウンメニューのアンカー要素
@@ -48,7 +48,7 @@ const AllPosts = () => {
 
   // ダイアログを開く関数
   const handleOpenDialog = () => {
-    console.log('Opening dialog for post ID:', deletePostId); // 既に設定されているdeletePostIdを使用
+    console.log('Opening dialog for post ID:', deletePostId); // 既設定されているdeletePostIdを使用
     setOpenDialog(true);
   };
 
@@ -149,18 +149,25 @@ const AllPosts = () => {
 
           // MBTIタイプを取得
           fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`)
-            .then((response) => response.json())
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
             .then((data) => {
               if (data.mbti_type) {
                 setUserMbtiTypes((prevTypes) => ({
                   ...prevTypes,
                   [post.user.clerk_id]: data.mbti_type,
                 }));
+              } else {
+                console.log(`MBTI type not set for user ${post.user.clerk_id}`);
               }
             })
-            .catch((error) =>
-              console.error('Error fetching MBTI type:', error),
-            );
+            .catch((error) => {
+              console.error('Error fetching MBTI type:', error);
+            });
         });
       });
   }, [API_URL, location.pathname]);
@@ -304,7 +311,7 @@ const AllPosts = () => {
                     sx={{
                       borderRadius: '20px', // ボタンの角を丸くする
                       ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー��影を薄い青色に設定
                       },
                     }}
                   >
@@ -360,11 +367,11 @@ const AllPosts = () => {
     // ページ遷移時に渡されたstateを確認し、ポスト成功の状態に基づいてSnackbarを表示
     if (location.state?.postSuccess) {
       setOpenSnackbar(true);
-      setSnackbarMessage('ポスを送信しました！');
+      setSnackbarMessage('ポストを送信しました！');
       // 遷移後にstateをクリアする（ブラウザの戻る操作で再表示されないように）
-      history.replaceState({}, '');
+      navigate(location.pathname, { replace: true, state: {} }); // historyの代わりにnavigateを使用
     }
-  }, [location]);
+  }, [location, navigate]);
 
   return (
     <div>
@@ -394,8 +401,9 @@ const AllPosts = () => {
               <div className="mb-5">
                 <div className="text-xl pl-28 pr-16 w-full text-center">
                   {post.user.username}
-                  {userMbtiTypes[post.user.clerkId] &&
-                    `(${userMbtiTypes[post.user.clerkId]})`}
+                  {userMbtiTypes[post.user.clerkId]
+                    ? `(${userMbtiTypes[post.user.clerkId]})`
+                    : '(未設定)'}
                   の好きな
                   {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
                     <>
