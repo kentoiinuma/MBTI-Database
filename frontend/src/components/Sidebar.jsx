@@ -95,28 +95,6 @@ const Sidebar = () => {
           </li>
         </ul>
       </nav>
-      <nav className="mt-auto">
-        <ul className="space-y-2">
-          <li>
-            <NavLink
-              to="/terms-of-service"
-              className="sidebar-link"
-              style={{ fontSize: '1em' }}
-            >
-              利用規約
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              to="/privacy-policy"
-              className="sidebar-link"
-              style={{ fontSize: '1em' }}
-            >
-              プライバシーポリシー
-            </NavLink>
-          </li>
-        </ul>
-      </nav>
     </aside>
   );
 };

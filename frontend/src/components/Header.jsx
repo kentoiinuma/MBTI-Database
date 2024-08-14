@@ -185,7 +185,7 @@ const Header = ({ onSignIn }) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to="/about" // Updated link
+                  to="/about"
                   className="flex items-center"
                 >
                   <InfoOutlinedIcon
@@ -197,13 +197,37 @@ const Header = ({ onSignIn }) => {
                 <MenuItem
                   onClick={handleClose}
                   component={Link}
-                  to="/contact" // Updated link
+                  to="/contact"
                   className="flex items-center"
                 >
                   <HelpOutlineOutlinedIcon
                     style={{ fontSize: '20px', marginRight: '8px' }}
                   />
                   お問い合わせ
+                </MenuItem>
+                {/* 利用規約メニューアイテム */}
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/terms-of-service"
+                  className="flex items-center"
+                >
+                  <InfoOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  利用規約
+                </MenuItem>
+                {/* プライバシーポリシーメニューアイテム */}
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/privacy-policy"
+                  className="flex items-center"
+                >
+                  <InfoOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  プライバシーポリシー
                 </MenuItem>
                 {/* サインアウトメニューアイテム */}
                 <MenuItem
