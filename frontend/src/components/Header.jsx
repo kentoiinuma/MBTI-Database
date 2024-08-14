@@ -12,6 +12,8 @@ import Menu from '@mui/material/Menu'; // メニューコンポーネント
 import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 import { usePostUsername } from './PostDetail'; // usePostUsernameカスタムフックをインポート
+import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
+import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -212,7 +214,7 @@ const Header = ({ onSignIn }) => {
                   to="/terms-of-service"
                   className="flex items-center"
                 >
-                  <InfoOutlinedIcon
+                  <GavelOutlinedIcon
                     style={{ fontSize: '20px', marginRight: '8px' }}
                   />
                   利用規約
@@ -224,7 +226,7 @@ const Header = ({ onSignIn }) => {
                   to="/privacy-policy"
                   className="flex items-center"
                 >
-                  <InfoOutlinedIcon
+                  <PolicyOutlinedIcon
                     style={{ fontSize: '20px', marginRight: '8px' }}
                   />
                   プライバシーポリシー
