@@ -213,7 +213,7 @@ const Profile = () => {
                   fontSize="small"
                   style={{ marginRight: '8px' }}
                 />
-                編集（本リリース時）
+                編集（実装予定）
               </MenuItem>
             </Menu>
           </div>
@@ -376,7 +376,7 @@ const Profile = () => {
                 d="M4.867 19.125h.008v.008h-.008v-.008Z"
               />
             </svg>
-            本リリースで実装予定
+            実装予定
           </div>
         );
       case 'likes':
@@ -401,7 +401,7 @@ const Profile = () => {
                 d="M4.867 19.125h.008v.008h-.008v-.008Z"
               />
             </svg>
-            本リリースで実装予定
+            実装予定
           </div>
         );
       default:
@@ -441,7 +441,6 @@ const Profile = () => {
 
   const handleEditClick = (event) => {
     event.stopPropagation();
-    // 編集機能の実装（本リリース時）
     handleClose();
   };
 

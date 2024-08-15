@@ -289,7 +289,7 @@ const PostDetail = () => {
                   fontSize="small"
                   style={{ marginRight: '8px' }}
                 />
-                編集（本リリース時）
+                編集（実装予定）
               </MenuItem>
             </Menu>
           </div>

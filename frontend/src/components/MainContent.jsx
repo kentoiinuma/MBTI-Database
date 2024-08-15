@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react'; // Clerkを使ったユーザー認証のためのフック
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -20,11 +20,12 @@ import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのイ�
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
 
 function MainContent() {
-  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示��態を管理するステート
+  const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート
   const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
   const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
+  const navigate = useNavigate(); // useNavigateフックを使用
 
   let API_URL; // APIのURLを格納する変数
   // 環境に応じてAPIのURLを設定
@@ -93,7 +94,7 @@ function MainContent() {
       if (isSignedIn && user) {
         handleSignIn();
       } else if (!isSignedIn) {
-        // サインアウトの処理を行う前に、以前はサインインしていたかどうかを確認
+        // サインアウトの処理を行う前に、以前はサインインしていかどうかを確認
         const wasSignedIn = localStorage.getItem('wasSignedIn') === 'true';
         if (wasSignedIn) {
           handleSignOut();
@@ -118,7 +119,7 @@ function MainContent() {
   return (
     <div className="flex h-screen">
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 relative">
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto pl-69">
           <Routes>
@@ -141,6 +142,28 @@ function MainContent() {
           {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}{' '}
           {/* MBTIモーダルを表示 */}
         </main>
+        {/* フローティングアクションボタンを追加 */}
+        {isSignedIn && (
+          <button
+            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white shadow-lg hover:bg-[#2596be] transition-colors duration-300"
+            onClick={() => navigate('/post')}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2.0}
+              stroke="currentColor"
+              className="w-10 h-10" // この部分を変更
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 4.5v15m7.5-7.5h-15"
+              />
+            </svg>
+          </button>
+        )}
       </div>
       <Snackbar
         open={snackbarOpen}

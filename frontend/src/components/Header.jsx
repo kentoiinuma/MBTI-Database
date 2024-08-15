@@ -122,26 +122,6 @@ const Header = ({ onSignIn }) => {
       {isSignedIn ? (
         <>
           <div className="flex items-center gap-4">
-            {/* 投稿アイコンボタン */}
-            <button
-              className="p-2 rounded-full hover:bg-gray-200"
-              onClick={() => navigate('/post')}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.0}
-                stroke="#2EA9DF"
-                className="w-11 h-11"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4.5v15m7.5-7.5h-15"
-                />
-              </svg>
-            </button>
             {/* ユーザーアバター */}
             <div>
               <button
