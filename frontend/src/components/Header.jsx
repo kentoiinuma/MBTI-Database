@@ -14,6 +14,7 @@ import { useUserContext } from '../contexts/UserContext'; // UserContextをイ�
 import { usePostUsername } from './PostDetail'; // usePostUsernameカスタムフックをインポート
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
+import StorageIcon from '@mui/icons-material/Storage'; // データベースアイコン
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -103,6 +104,8 @@ const Header = ({ onSignIn }) => {
         return '利用規約';
       case '/privacy-policy':
         return 'プライバシーポリシー';
+      case '/database':
+        return 'データベース'; // 新しいケースを追加
       case '/about':
         return 'MBTIデータベースとは？';
       case '/contact':
@@ -211,6 +214,18 @@ const Header = ({ onSignIn }) => {
                   />
                   プライバシーポリシー
                 </MenuItem>
+                {/* データベースメニューアイテム */}
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/database"
+                  className="flex items-center"
+                >
+                  <StorageIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  データベース
+                </MenuItem>
                 {/* サインアウトメニューアイテム */}
                 <MenuItem
                   onClick={() => {
@@ -238,7 +253,7 @@ const Header = ({ onSignIn }) => {
             }
             style={{ fontSize: '20px', color: '#2EA9DF' }}
           >
-            このアプリについて
+            このアプリについ��
           </Link>
           <div className="p-2 rounded-full hover:bg-gray-200">
             <SignInButton>

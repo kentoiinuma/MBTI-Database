@@ -18,6 +18,7 @@ import Contact from './Contact';
 import PostDetail from './PostDetail'; // PostDetailのインポート
 import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
+import Database from './database'; // データベースコンポーネントのインポート
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート
@@ -41,7 +42,7 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // バックエンドにユーザー情報を送信して新規ユーザーかどうかを確認
+      // バックエンドにユーザー情報を送信して新規ユー���ーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -134,6 +135,8 @@ function MainContent() {
             <Route path="/Ni" element={<Ni />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+            <Route path="/database" element={<Database />} />{' '}
+            {/* 新しいルートを追加 */}
             <Route path="/about" element={<AboutApp />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/post/:postId" element={<PostDetail />} />{' '}
