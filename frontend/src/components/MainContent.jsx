@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react'; // Clerkを使ったユーザー認証のためのフック
 import Header from './Header';
-import Sidebar from './Sidebar';
 import MBTIModal from './MBTIModal'; // MBTIモーダルのインポート
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
@@ -42,7 +41,7 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // バックエンドにユーザー情報を送信して新規ユー���ーかどうかを確認
+      // バックエンドにユーザー情報を送信して新規ユーーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -58,7 +57,7 @@ function MainContent() {
       // setSnackbarMessage('サインインしました！');
       // setSnackbarOpen(true);
 
-      // 新規ユーザーの場合のみ、ユーザーネームとアイコンURLを送信
+      // 新規ユーザーの��合のみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
         // 新規ユーザーの場合はMBTIモーダルを表示
         setShowMBTIModal(true);
@@ -119,10 +118,9 @@ function MainContent() {
 
   return (
     <div className="flex h-screen">
-      <Sidebar />
       <div className="flex flex-col flex-1 relative">
         <Header onSignIn={handleSignIn} />
-        <main className="flex-1 overflow-auto pl-69">
+        <main className="flex-1 overflow-auto">
           <Routes>
             {/* 各ルートに対応するコンポーネントを設定 */}
             <Route path="/profile" element={<Profile />} />

@@ -77,52 +77,81 @@ const Header = ({ onSignIn }) => {
 
   // 現在のパスに応じたタイトルを取得する関数
   const getTitle = () => {
-    const path = location.pathname;
-    const postIdMatch = path.match(/\/post\/(\d+)/);
-    if (postIdMatch && postUsername) {
-      // コンテキストから取得したユーザー名を使用
-      return `${postUsername}のポスト`;
-    }
-    // その他のパス��対する既存のタイトルロジック...
-    switch (path) {
-      case '/profile':
-        return 'プロフィール';
-      case '/post':
-        return 'ポスト';
-      case '/':
-        return 'ホーム';
-      case '/Se':
-        return <>Se {smallText('ESFP/ESTP/ISFP/ISTP')} のデータベース</>;
-      case '/Si':
-        return <>Si {smallText('ESFJ/ESTJ/ISFJ/ISTJ')} のデータベース</>;
-      case '/Ne':
-        return <>Ne {smallText('ENFP/ENTP/INFP/INTP')} のデータベース</>;
-      case '/Ni':
-        return <>Ni {smallText('ENFJ/ENTJ/INFJ/INTJ')} のデータベース</>;
-      case '/notifications':
-        return '通知';
-      case '/terms-of-service':
-        return '利用規約';
-      case '/privacy-policy':
-        return 'プライバシーポリシー';
-      case '/database':
-        return 'データベース'; // 新しいケースを追加
-      case '/about':
-        return 'MBTIデータベースとは？';
-      case '/contact':
-        return 'お問い合わせ';
-      default:
-        return '';
-    }
+    return (
+      <div className="flex items-center">
+        {/* Sidebarから移動したh1ブロック */}
+        <h1 className="text-xl font-bold mr-4 flex items-center">
+          <img
+            src={process.env.PUBLIC_URL + '/favicon.ico'}
+            alt="favicon"
+            className="w-8 h-8 mr-2"
+          />
+          <NavLink
+            to="/"
+            style={{
+              fontWeight: '600',
+              fontStyle: 'italic',
+            }}
+          >
+            <span style={{ color: '#7B90D2', fontSize: '1.4em' }}>M</span>
+            <span style={{ color: '#86C166', fontSize: '1.4em' }}>B</span>
+            <span style={{ color: '#A5DEE4', fontSize: '1.4em' }}>T</span>
+            <span style={{ color: '#FBE251', fontSize: '1.4em' }}>I</span>
+            <span style={{ color: '#2EA9DF', fontSize: '1.2em' }}>
+              データベース
+            </span>
+          </NavLink>
+        </h1>
+        {/* 既存のタイトル表示ロジック */}
+        <span style={{ fontSize: '24px' }}>
+          <span className="ml-72">
+            {isSignedIn ? (
+              <span>
+                {location.pathname === '/profile' ? (
+                  'プロフィール'
+                ) : location.pathname === '/post' ? (
+                  'ポスト'
+                ) : location.pathname === '/' ? (
+                  'ホーム'
+                ) : location.pathname === '/Se' ? (
+                  <>Se {smallText('ESFP/ESTP/ISFP/ISTP')} のデータベース</>
+                ) : location.pathname === '/Si' ? (
+                  <>Si {smallText('ESFJ/ESTJ/ISFJ/ISTJ')} のデータベース</>
+                ) : location.pathname === '/Ne' ? (
+                  <>Ne {smallText('ENFP/ENTP/INFP/INTP')} のデータベース</>
+                ) : location.pathname === '/Ni' ? (
+                  <>Ni {smallText('ENFJ/ENTJ/INFJ/INTJ')} のデータベース</>
+                ) : location.pathname === '/notifications' ? (
+                  '通知'
+                ) : location.pathname === '/terms-of-service' ? (
+                  '利用規約'
+                ) : location.pathname === '/privacy-policy' ? (
+                  'プライバシーポリシー'
+                ) : location.pathname === '/database' ? (
+                  'データベース'
+                ) : location.pathname === '/about' ? (
+                  'MBTIデータベースとは？'
+                ) : location.pathname === '/contact' ? (
+                  'お問い合わせ'
+                ) : (
+                  ''
+                )}
+              </span>
+            ) : (
+              <span>
+                {location.pathname === '/about' ? 'このアプリについて' : ''}
+              </span>
+            )}
+          </span>
+        </span>
+      </div>
+    );
   };
 
   // ヘッダーコンポーネントのレンダリング
   return (
     <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#2EA9DF]">
-      {/* タイトル表示 */}
-      <span className="ml-72" style={{ fontSize: '24px' }}>
-        {getTitle()}
-      </span>
+      {getTitle()}
       {isSignedIn ? (
         <>
           <div className="flex items-center gap-4">
