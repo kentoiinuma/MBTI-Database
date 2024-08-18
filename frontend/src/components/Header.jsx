@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // PropTypesをインポート
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
-import { Link, useNavigate, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
+import { Link, useNavigate, useLocation, NavLink } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // 情報アイコン
@@ -15,6 +15,7 @@ import { usePostUsername } from './PostDetail'; // usePostUsernameカスタム�
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
 import StorageIcon from '@mui/icons-material/Storage'; // データベースアイコン
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'; // ホームアイコンをインポート
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -82,7 +83,7 @@ const Header = ({ onSignIn }) => {
       // コンテキストから取得したユーザー名を使用
       return `${postUsername}のポスト`;
     }
-    // その他のパスに対する既存のタイトルロジック...
+    // その他のパス��対する既存のタイトルロジック...
     switch (path) {
       case '/profile':
         return 'プロフィール';
@@ -214,6 +215,18 @@ const Header = ({ onSignIn }) => {
                   />
                   プライバシーポリシー
                 </MenuItem>
+                {/* ホームメニューアイテム */}
+                <MenuItem
+                  onClick={handleClose}
+                  component={NavLink}
+                  to="/"
+                  className="flex items-center"
+                >
+                  <HomeOutlinedIcon
+                    style={{ fontSize: '20px', marginRight: '8px' }}
+                  />
+                  ホーム
+                </MenuItem>
                 {/* データベースメニューアイテム */}
                 <MenuItem
                   onClick={handleClose}
@@ -253,7 +266,7 @@ const Header = ({ onSignIn }) => {
             }
             style={{ fontSize: '20px', color: '#2EA9DF' }}
           >
-            このアプリについ��
+            このアプリについて
           </Link>
           <div className="p-2 rounded-full hover:bg-gray-200">
             <SignInButton>
