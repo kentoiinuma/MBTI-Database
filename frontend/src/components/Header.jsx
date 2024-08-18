@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // PropTypesをインポート
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
-import { Link, useNavigate, NavLink } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
+import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // 情報アイコン
@@ -25,6 +25,7 @@ const Header = ({ onSignIn }) => {
   const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
   const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
   const { userUpdated, setUserUpdated } = useUserContext(); // UserContextから状態を取得
+  const location = useLocation(); // useLocationフックを使用して現在のlocationを取得
 
   // APIのURLを設定
   let API_URL;
