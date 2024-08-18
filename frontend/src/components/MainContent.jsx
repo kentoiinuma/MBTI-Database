@@ -6,10 +6,6 @@ import MBTIModal from './MBTIModal'; // MBTIモーダルのインポート
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
 import AllPosts from './AllPosts';
-import Se from './Se';
-import Si from './Si';
-import Ne from './Ne';
-import Ni from './Ni';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
@@ -57,7 +53,7 @@ function MainContent() {
       // setSnackbarMessage('サインインしました！');
       // setSnackbarOpen(true);
 
-      // 新規ユーザーの��合のみ、ユーザーネームとアイコンURLを送信
+      // 新規ユーザーの合のみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
         // 新規ユーザーの場合はMBTIモーダルを表示
         setShowMBTIModal(true);
@@ -127,21 +123,14 @@ function MainContent() {
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
             <Route path="/" element={<AllPosts />} />
-            <Route path="/Se" element={<Se />} />
-            <Route path="/Si" element={<Si />} />
-            <Route path="/Ne" element={<Ne />} />
-            <Route path="/Ni" element={<Ni />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/database" element={<Database />} />{' '}
-            {/* 新しいルートを追加 */}
+            <Route path="/database" element={<Database />} />
             <Route path="/about" element={<AboutApp />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/post/:postId" element={<PostDetail />} />{' '}
-            {/* 新しいルートを追加 */}
+            <Route path="/post/:postId" element={<PostDetail />} />
           </Routes>
-          {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}{' '}
-          {/* MBTIモーダルを表示 */}
+          {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
         </main>
         {/* フローティングアクションボタンを追加 */}
         {isSignedIn && (
