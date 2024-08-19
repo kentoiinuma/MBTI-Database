@@ -79,7 +79,7 @@ function MainContent() {
 
   // サインアウト処理を行う関数
   const handleSignOut = useCallback(() => {
-    // サインアウトのスナックバーを表示
+    // サインアウトのスナック��を表示
     // setSnackbarMessage('サインアウトしました！');
     // setSnackbarOpen(true);
   }, []);
@@ -135,7 +135,10 @@ function MainContent() {
         {/* フローティングアクションボタンを追加 */}
         {isSignedIn && (
           <button
-            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white shadow-lg hover:bg-[#2596be] transition-colors duration-300"
+            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300"
+            style={{
+              boxShadow: '0 8px 12px -3px rgba(0, 0, 0, 0.2), 0 3px 5px -3px rgba(0, 0, 0, 0.2)',
+            }}
             onClick={() => navigate('/post')}
           >
             <svg
@@ -144,7 +147,7 @@ function MainContent() {
               viewBox="0 0 24 24"
               strokeWidth={2.0}
               stroke="currentColor"
-              className="w-10 h-10" // この部分を変更
+              className="w-12 h-12"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
