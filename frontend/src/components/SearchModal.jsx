@@ -42,11 +42,7 @@ const SearchModal = ({
               stroke="currentColor"
               className="w-6 h-6"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -58,16 +54,8 @@ const SearchModal = ({
         </div>
         <div className="px-8 pb-8 flex justify-center">
           <img
-            src={
-              contentType === 'music'
-                ? artist.images[0].url
-                : anime.coverImage.large
-            } // アーティストの画像またはアニメのカバー画像を表示
-            alt={
-              contentType === 'music'
-                ? `Artist ${artist.name}`
-                : `Anime ${anime.title.native}`
-            }
+            src={contentType === 'music' ? artist.images[0].url : anime.coverImage.large} // アーティストの画像またはアニメのカバー画像を表示
+            alt={contentType === 'music' ? `Artist ${artist.name}` : `Anime ${anime.title.native}`}
             className="max-w-full h-auto cursor-pointer"
             onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し
           />

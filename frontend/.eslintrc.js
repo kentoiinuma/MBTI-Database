@@ -6,7 +6,7 @@ module.exports = {
     es2021: true,
     jest: true, // Jest's environment added
   },
-  extends: ['plugin:react/recommended', 'standard', 'prettier'],
+  extends: ['react-app', 'react-app/jest'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

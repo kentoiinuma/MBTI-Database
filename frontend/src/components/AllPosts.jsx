@@ -23,7 +23,7 @@ const AllPosts = () => {
   const [posts, setPosts] = useState([]); // 投稿データ
   const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
   const location = useLocation(); // 現在のURL情報
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // useNavigateフックを追加
   const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
   const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
   const [anchorEl, setAnchorEl] = useState(null); // ドロップダウンメニューのアンカー要素
@@ -48,7 +48,7 @@ const AllPosts = () => {
 
   // ダイアログを開く関数
   const handleOpenDialog = () => {
-    console.log('Opening dialog for post ID:', deletePostId); // 既に設定されているdeletePostIdを使用
+    console.log('Opening dialog for post ID:', deletePostId); // 既設定されているdeletePostIdを使用
     setOpenDialog(true);
   };
 
@@ -88,11 +88,8 @@ const AllPosts = () => {
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
-  } else if (
-    window.location.origin ===
-    'https://favorite-database-16type-f-5f78fa224595.herokuapp.com'
-  ) {
-    API_URL = 'https://favorite-database-16type-5020d6339517.herokuapp.com';
+  } else if (window.location.origin === 'https://www.mbti-database.com') {
+    API_URL = 'https://api.mbti-database.com';
   } else {
     API_URL = 'http://localhost:3000';
   }
@@ -113,7 +110,7 @@ const AllPosts = () => {
               clerkId: post.user.clerk_id,
             },
             createdAt: post.created_at,
-          })),
+          }))
         );
         setIsLoading(false);
 
@@ -136,7 +133,7 @@ const AllPosts = () => {
                     };
                   }
                   return p;
-                }),
+                })
               );
             });
 
@@ -152,18 +149,25 @@ const AllPosts = () => {
 
           // MBTIタイプを取得
           fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`)
-            .then((response) => response.json())
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
             .then((data) => {
               if (data.mbti_type) {
                 setUserMbtiTypes((prevTypes) => ({
                   ...prevTypes,
                   [post.user.clerk_id]: data.mbti_type,
                 }));
+              } else {
+                console.log(`MBTI type not set for user ${post.user.clerk_id}`);
               }
             })
-            .catch((error) =>
-              console.error('Error fetching MBTI type:', error),
-            );
+            .catch((error) => {
+              console.error('Error fetching MBTI type:', error);
+            });
         });
       });
   }, [API_URL, location.pathname]);
@@ -191,10 +195,7 @@ const AllPosts = () => {
   // ユーザー詳細をレンダリングする関数
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleDateString(
-      'ja-JP',
-      dateOptions,
-    );
+    const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
       <div className="user-details flex items-center justify-between">
@@ -217,15 +218,11 @@ const AllPosts = () => {
             </div>
             <div className="ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">
-                  {postUser.username}
-                </span>
+                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">
-            {formattedDate}
-          </span>
+          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
           <div className="mr-8" style={{ position: 'relative' }}>
@@ -261,10 +258,7 @@ const AllPosts = () => {
               }}
             >
               <MenuItem onClick={() => handleOpenDialog()}>
-                <DeleteOutlineOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 削除
               </MenuItem>
               <Dialog
@@ -281,9 +275,7 @@ const AllPosts = () => {
                   },
                 }}
               >
-                <DialogTitle id="alert-dialog-title">
-                  {'ポストの削除'}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     ポストを完全に削除しますか？
@@ -307,7 +299,7 @@ const AllPosts = () => {
                     sx={{
                       borderRadius: '20px', // ボタンの角を丸くする
                       ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー��影を薄い青色に設定
                       },
                     }}
                   >
@@ -316,11 +308,8 @@ const AllPosts = () => {
                 </DialogActions>
               </Dialog>
               <MenuItem onClick={handleClose}>
-                <EditOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
-                編集（本リリース時）
+                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
+                編集（実装予定）
               </MenuItem>
             </Menu>
           </div>
@@ -336,25 +325,18 @@ const AllPosts = () => {
 
     if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
       const mediaType =
-        mediaWorks[post.id][0].media_type === 'anime'
-          ? 'アニメ'
-          : '音楽アーティスト';
+        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
       const mbtiType = userMbtiTypes[post.user.clerk_id]
         ? `(${userMbtiTypes[post.user.clerk_id]})`
         : '';
-      artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[
-        post.id
-      ]
-        .map(
-          (work, index, array) =>
-            `${work.title}${index < array.length - 1 ? '、' : ''}`,
-        )
+      artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[post.id]
+        .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
     }
 
     const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n' + hashtag + '\n',
+      artistText + '\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
@@ -363,11 +345,11 @@ const AllPosts = () => {
     // ページ遷移時に渡されたstateを確認し、ポスト成功の状態に基づいてSnackbarを表示
     if (location.state?.postSuccess) {
       setOpenSnackbar(true);
-      setSnackbarMessage('ポスを送信しました！');
+      setSnackbarMessage('ポストを送信しました！');
       // 遷移後にstateをクリアする（ブラウザの戻る操作で再表示されないように）
-      history.replaceState({}, '');
+      navigate(location.pathname, { replace: true, state: {} }); // historyの代わりにnavigateを使用
     }
-  }, [location]);
+  }, [location, navigate]);
 
   return (
     <div>
@@ -390,15 +372,15 @@ const AllPosts = () => {
             >
               {/* ユーザー詳細表示 */}
               <div style={{ margin: '20px 0 0 30px' }}>
-                {post.user &&
-                  renderUserDetails(post.user, post.createdAt, post.id)}
+                {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
               </div>
               {/* 好きな音楽アーティストの表示 */}
               <div className="mb-5">
                 <div className="text-xl pl-28 pr-16 w-full text-center">
                   {post.user.username}
-                  {userMbtiTypes[post.user.clerkId] &&
-                    `(${userMbtiTypes[post.user.clerkId]})`}
+                  {userMbtiTypes[post.user.clerkId]
+                    ? `(${userMbtiTypes[post.user.clerkId]})`
+                    : '(未設定)'}
                   の好きな
                   {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
                     <>
@@ -414,7 +396,7 @@ const AllPosts = () => {
                     mediaWorks[post.id]
                       .map(
                         (work, index, array) =>
-                          `${work.title}${index < array.length - 1 ? '、' : ''}`,
+                          `${work.title}${index < array.length - 1 ? '、' : ''}`
                       )
                       .join('')}
                   です！
@@ -472,16 +454,8 @@ const AllPosts = () => {
           </React.Fragment>
         ))
       )}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={2500}
-        onClose={() => setOpenSnackbar(false)}
-      >
-        <Alert
-          onClose={() => setOpenSnackbar(false)}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

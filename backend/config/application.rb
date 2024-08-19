@@ -39,7 +39,7 @@ module Api
     # 必要最小限のミドルウェアのみを使用
     config.middleware.use Rack::MethodOverride
     config.middleware.use ActionDispatch::Cookies
-    config.middleware.use ActionDispatch::Session::CookieStore, key: '_favorite_database_16type_session',
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_mbti_database_session',
                                                                 same_site: :none, secure: Rails.env.production?
 
     # Add this line to enable HTML rendering in API mode

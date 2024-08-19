@@ -26,7 +26,7 @@ module Api
         if @mbti_type
           render json: { mbti_type: @mbti_type.mbti_type, diagnosis_method: @mbti_type.diagnosis_method }
         else
-          render json: { error: 'MbtiType not found' }, status: 404
+          render json: { mbti_type: nil, message: 'MBTI type not set' }, status: 200
         end
       end
 
