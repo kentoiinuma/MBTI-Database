@@ -74,7 +74,6 @@ const Header = ({ onSignIn }) => {
   const getTitle = () => {
     return (
       <div className="flex items-center">
-        {/* Sidebarから移動したh1ブロック */}
         <h1 className="text-xl font-bold mr-4 flex items-center">
           <img
             src={process.env.PUBLIC_URL + '/favicon.ico'}
