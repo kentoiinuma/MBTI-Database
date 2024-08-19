@@ -14,14 +14,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Chart.jsの設定を登録
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const theme = createTheme({
   components: {
@@ -120,11 +113,7 @@ function Database() {
       // 選択された心理機能に基づいてMBTIタイプを更新
       const newSelectedTypes =
         newSelectedFunctions.length > 0
-          ? [
-              ...new Set(
-                newSelectedFunctions.flatMap((f) => functionToTypes[f]),
-              ),
-            ]
+          ? [...new Set(newSelectedFunctions.flatMap((f) => functionToTypes[f]))]
           : [];
       setSelectedTypes(newSelectedTypes);
 
@@ -140,10 +129,7 @@ function Database() {
 
   // MBTIタイプの選択状態を切り替える関数
   const toggleType = (type) => {
-    if (
-      selectedFunctions.length > 0 ||
-      Object.values(selectedIndicators).some((v) => v !== '')
-    ) {
+    if (selectedFunctions.length > 0 || Object.values(selectedIndicators).some((v) => v !== '')) {
       // 心理機能または指標が選択されている場合
       setSelectedTypes([type]);
       setSelectedFunctions([]);
@@ -220,26 +206,28 @@ function Database() {
         media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
 
-      // データをフェッチしてグラフを更新
-      const response = await fetch(
-        `${API_URL}/api/v1/media_works/statistics?${queryParams}`,
-      );
-      const data = await response.json();
-      const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
-      setChartData({
-        labels: sortedData.map((item) => item[0]),
-        datasets: [
-          {
-            ...chartData.datasets[0],
-            label: contentType,
-            data: sortedData.map((item) => item[1]),
-          },
-        ],
-      });
+      try {
+        // データをフェッチしてグラフを更新
+        const response = await fetch(`${API_URL}/api/v1/media_works/statistics?${queryParams}`);
+        const data = await response.json();
+        const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
+        setChartData((prevChartData) => ({
+          labels: sortedData.map((item) => item[0]),
+          datasets: [
+            {
+              ...prevChartData.datasets[0],
+              label: contentType,
+              data: sortedData.map((item) => item[1]),
+            },
+          ],
+        }));
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
     fetchData();
-  }, [selectedTypes, selectedFunctions, contentType]);
+  }, [selectedTypes, selectedFunctions, contentType, API_URL]);
 
   // グラフのオプション設定
   const options = {
@@ -310,11 +298,7 @@ function Database() {
                 <Button
                   key={letter}
                   onClick={() => handleIndicatorClick(group, letter)}
-                  variant={
-                    selectedIndicators[group] === letter
-                      ? 'contained'
-                      : 'outlined'
-                  }
+                  variant={selectedIndicators[group] === letter ? 'contained' : 'outlined'}
                   sx={buttonStyle(selectedIndicators[group] === letter)}
                 >
                   {letter}
@@ -331,9 +315,7 @@ function Database() {
               <Button
                 key={func}
                 onClick={() => toggleFunction(func)}
-                variant={
-                  selectedFunctions.includes(func) ? 'contained' : 'outlined'
-                }
+                variant={selectedFunctions.includes(func) ? 'contained' : 'outlined'}
                 sx={{
                   ...buttonStyle(selectedFunctions.includes(func)),
                   textTransform: 'none',
@@ -348,9 +330,7 @@ function Database() {
               <Button
                 key={func}
                 onClick={() => toggleFunction(func)}
-                variant={
-                  selectedFunctions.includes(func) ? 'contained' : 'outlined'
-                }
+                variant={selectedFunctions.includes(func) ? 'contained' : 'outlined'}
                 sx={{
                   ...buttonStyle(selectedFunctions.includes(func)),
                   textTransform: 'none',
@@ -386,9 +366,7 @@ function Database() {
               <Button
                 key={type}
                 onClick={() => toggleType(type)}
-                variant={
-                  selectedTypes.includes(type) ? 'contained' : 'outlined'
-                }
+                variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
                 sx={buttonStyle(selectedTypes.includes(type))}
               >
                 {type}

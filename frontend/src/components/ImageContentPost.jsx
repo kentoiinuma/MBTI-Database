@@ -3,12 +3,7 @@ import { useUser } from '@clerk/clerk-react';
 import SearchModal from './SearchModal';
 import { Image } from 'cloudinary-react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Snackbar,
-  Alert,
-  ToggleButtonGroup,
-  ToggleButton,
-} from '@mui/material';
+import { Snackbar, Alert, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
@@ -61,13 +56,9 @@ const ImageContentPost = () => {
         setSearchQuery(trimmedValue);
         let response;
         if (contentType === 'music') {
-          response = await fetch(
-            `${API_URL}/api/v1/spotify/search/${trimmedValue}`,
-          );
+          response = await fetch(`${API_URL}/api/v1/spotify/search/${trimmedValue}`);
         } else {
-          response = await fetch(
-            `${API_URL}/api/v1/anilist/search/${trimmedValue}`,
-          );
+          response = await fetch(`${API_URL}/api/v1/anilist/search/${trimmedValue}`);
         }
 
         if (response.ok) {
@@ -76,11 +67,7 @@ const ImageContentPost = () => {
             setArtist(data.artist);
             setModalOpen(true);
             setArtistNotFound(false);
-          } else if (
-            contentType === 'anime' &&
-            Array.isArray(data) &&
-            data.length > 0
-          ) {
+          } else if (contentType === 'anime' && Array.isArray(data) && data.length > 0) {
             setAnime(data[0]);
             setModalOpen(true);
             setArtistNotFound(false);
@@ -107,7 +94,7 @@ const ImageContentPost = () => {
       const uploadedImageUrl = data.url;
       if (!selectedImages.some((image) => image.title === title)) {
         setSelectedImages((prevImages) =>
-          [...prevImages, { url: uploadedImageUrl, title }].slice(0, 4),
+          [...prevImages, { url: uploadedImageUrl, title }].slice(0, 4)
         );
       }
     } else {
@@ -164,7 +151,7 @@ const ImageContentPost = () => {
 
   const checkExistingPost = async () => {
     const response = await fetch(
-      `${API_URL}/api/v1/check_existing_post?clerk_id=${user.id}&media_type=${contentType === 'music' ? 5 : 0}`,
+      `${API_URL}/api/v1/check_existing_post?clerk_id=${user.id}&media_type=${contentType === 'music' ? 5 : 0}`
     );
     if (response.ok) {
       const data = await response.json();
@@ -304,11 +291,7 @@ const ImageContentPost = () => {
               </svg>
               <input
                 type="text"
-                placeholder={
-                  contentType === 'music'
-                    ? '好きな音楽アーティスト'
-                    : '好きなアニメ'
-                }
+                placeholder={contentType === 'music' ? '好きな音楽アーティスト' : '好きなアニメ'}
                 className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}

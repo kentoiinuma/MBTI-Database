@@ -34,7 +34,7 @@ export const PostUsernameProvider = ({ children }) => {
   );
 };
 
-// usePostUsernameカスタムフックのエク��ート
+// usePostUsernameカスタムフックのエク��ト
 export const usePostUsername = () => useContext(PostUsernameContext);
 
 let API_URL;
@@ -63,9 +63,10 @@ const PostDetail = () => {
   const [userMbtiType, setUserMbtiType] = useState(null);
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v1/posts/${postId}`)
-      .then((response) => response.json())
-      .then((data) => {
+    const fetchPostData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/api/v1/posts/${postId}`);
+        const data = await response.json();
         console.log('API response:', data);
         setPost({
           ...data,
@@ -82,20 +83,19 @@ const PostDetail = () => {
         setLoading(false);
 
         // ユーザーのMBTIタイプを取得
-        fetch(`${API_URL}/api/v1/mbti/${data.user.clerk_id}`)
-          .then((response) => response.json())
-          .then((mbtiData) => {
-            if (mbtiData.mbti_type) {
-              setUserMbtiType(mbtiData.mbti_type);
-            }
-          })
-          .catch((error) => console.error('Error fetching MBTI type:', error));
-      })
-      .catch((error) => {
+        const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${data.user.clerk_id}`);
+        const mbtiData = await mbtiResponse.json();
+        if (mbtiData.mbti_type) {
+          setUserMbtiType(mbtiData.mbti_type);
+        }
+      } catch (error) {
         console.error('Error fetching post:', error);
         setLoading(false);
-      });
-  }, [API_URL, postId, setPostUsername]);
+      }
+    };
+
+    fetchPostData();
+  }, [postId, setPostUsername]);
 
   const handleClick = (event, postId) => {
     setAnchorEl(event.currentTarget);
@@ -160,10 +160,7 @@ const PostDetail = () => {
 
   const renderUserDetails = (postUser, createdAt) => {
     const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleDateString(
-      'ja-JP',
-      dateOptions,
-    );
+    const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
       <div className="user-details flex items-center justify-between">
@@ -186,15 +183,11 @@ const PostDetail = () => {
             </div>
             <div className="ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">
-                  {postUser.username}
-                </span>
+                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">
-            {formattedDate}
-          </span>
+          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
           <div className="mr-8" style={{ position: 'relative' }}>
@@ -230,10 +223,7 @@ const PostDetail = () => {
               }}
             >
               <MenuItem onClick={() => handleOpenDialog()}>
-                <DeleteOutlineOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 削除
               </MenuItem>
               <Dialog
@@ -250,9 +240,7 @@ const PostDetail = () => {
                   },
                 }}
               >
-                <DialogTitle id="alert-dialog-title">
-                  {'ポストの削除'}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     ポストを完全に削除しますか？
@@ -285,10 +273,7 @@ const PostDetail = () => {
                 </DialogActions>
               </Dialog>
               <MenuItem onClick={handleClose}>
-                <EditOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 編集（実装予定）
               </MenuItem>
             </Menu>
@@ -304,20 +289,16 @@ const PostDetail = () => {
     let artistText = '';
 
     if (mediaWorks && mediaWorks[0]) {
-      const mediaType =
-        mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
+      const mediaType = mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
       const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
       artistText = `${post.user.username}${mbtiTypeText}の好きな${mediaType}は${mediaWorks
-        .map(
-          (work, index, array) =>
-            `${work.title}${index < array.length - 1 ? '、' : ''}`,
-        )
+        .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
     }
 
     const hashtag = '#MBTIデータベース';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n' + hashtag + '\n',
+      artistText + '\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
@@ -339,20 +320,13 @@ const PostDetail = () => {
               {userMbtiType && `(${userMbtiType})`}
               の好きな
               {mediaWorks[0] ? (
-                <>
-                  {mediaWorks[0].media_type === 'anime'
-                    ? 'アニメ'
-                    : '音楽アーティスト'}
-                </>
+                <>{mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト'}</>
               ) : (
                 ''
               )}
               は
               {mediaWorks
-                .map(
-                  (work, index, array) =>
-                    `${work.title}${index < array.length - 1 ? '、' : ''}`,
-                )
+                .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
                 .join('')}
               です！
             </div>
@@ -407,11 +381,7 @@ const PostDetail = () => {
             autoHideDuration={2500}
             onClose={() => setOpenSnackbar(false)}
           >
-            <Alert
-              onClose={() => setOpenSnackbar(false)}
-              severity="success"
-              sx={{ width: '100%' }}
-            >
+            <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
               {snackbarMessage}
             </Alert>
           </Snackbar>

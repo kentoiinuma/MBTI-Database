@@ -110,7 +110,7 @@ const AllPosts = () => {
               clerkId: post.user.clerk_id,
             },
             createdAt: post.created_at,
-          })),
+          }))
         );
         setIsLoading(false);
 
@@ -133,7 +133,7 @@ const AllPosts = () => {
                     };
                   }
                   return p;
-                }),
+                })
               );
             });
 
@@ -195,10 +195,7 @@ const AllPosts = () => {
   // ユーザー詳細をレンダリングする関数
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleDateString(
-      'ja-JP',
-      dateOptions,
-    );
+    const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
       <div className="user-details flex items-center justify-between">
@@ -221,15 +218,11 @@ const AllPosts = () => {
             </div>
             <div className="ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">
-                  {postUser.username}
-                </span>
+                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">
-            {formattedDate}
-          </span>
+          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
           <div className="mr-8" style={{ position: 'relative' }}>
@@ -265,10 +258,7 @@ const AllPosts = () => {
               }}
             >
               <MenuItem onClick={() => handleOpenDialog()}>
-                <DeleteOutlineOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 削除
               </MenuItem>
               <Dialog
@@ -285,9 +275,7 @@ const AllPosts = () => {
                   },
                 }}
               >
-                <DialogTitle id="alert-dialog-title">
-                  {'ポストの削除'}
-                </DialogTitle>
+                <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
                     ポストを完全に削除しますか？
@@ -320,10 +308,7 @@ const AllPosts = () => {
                 </DialogActions>
               </Dialog>
               <MenuItem onClick={handleClose}>
-                <EditOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 編集（実装予定）
               </MenuItem>
             </Menu>
@@ -340,25 +325,18 @@ const AllPosts = () => {
 
     if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
       const mediaType =
-        mediaWorks[post.id][0].media_type === 'anime'
-          ? 'アニメ'
-          : '音楽アーティスト';
+        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
       const mbtiType = userMbtiTypes[post.user.clerk_id]
         ? `(${userMbtiTypes[post.user.clerk_id]})`
         : '';
-      artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[
-        post.id
-      ]
-        .map(
-          (work, index, array) =>
-            `${work.title}${index < array.length - 1 ? '、' : ''}`,
-        )
+      artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[post.id]
+        .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
     }
 
     const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n' + hashtag + '\n',
+      artistText + '\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
@@ -394,8 +372,7 @@ const AllPosts = () => {
             >
               {/* ユーザー詳細表示 */}
               <div style={{ margin: '20px 0 0 30px' }}>
-                {post.user &&
-                  renderUserDetails(post.user, post.createdAt, post.id)}
+                {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
               </div>
               {/* 好きな音楽アーティストの表示 */}
               <div className="mb-5">
@@ -419,7 +396,7 @@ const AllPosts = () => {
                     mediaWorks[post.id]
                       .map(
                         (work, index, array) =>
-                          `${work.title}${index < array.length - 1 ? '、' : ''}`,
+                          `${work.title}${index < array.length - 1 ? '、' : ''}`
                       )
                       .join('')}
                   です！
@@ -477,16 +454,8 @@ const AllPosts = () => {
           </React.Fragment>
         ))
       )}
-      <Snackbar
-        open={openSnackbar}
-        autoHideDuration={2500}
-        onClose={() => setOpenSnackbar(false)}
-      >
-        <Alert
-          onClose={() => setOpenSnackbar(false)}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
+        <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
         </Alert>
       </Snackbar>

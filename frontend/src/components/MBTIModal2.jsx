@@ -75,10 +75,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
           }
         })
         .catch((error) =>
-          console.error(
-            "Failed to load user's MBTI type and diagnosis method",
-            error,
-          ),
+          console.error("Failed to load user's MBTI type and diagnosis method", error)
         );
     }
   }, [user, API_URL]);
@@ -109,8 +106,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
   };
 
   // アバター画像クリック時にファイル選択をトリガーする
-  const triggerFileSelect = () =>
-    document.getElementById('avatarUpload').click();
+  const triggerFileSelect = () => document.getElementById('avatarUpload').click();
 
   // ファイルが選択された時の処理
   const handleFileChange = (event) => {
@@ -136,13 +132,10 @@ const MBTIModal = ({ onClose, onUpdate }) => {
     formData.append('avatar', file);
 
     try {
-      const response = await fetch(
-        `${API_URL}/api/v1/users/${user.id}/upload_avatar`,
-        {
-          method: 'POST',
-          body: formData,
-        },
-      );
+      const response = await fetch(`${API_URL}/api/v1/users/${user.id}/upload_avatar`, {
+        method: 'POST',
+        body: formData,
+      });
       const data = await response.json();
       if (response.ok) {
         setUserProfile({
@@ -243,10 +236,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
           onClick={(e) => e.stopPropagation()} // モーダルのコンテンツ内でのクリックイベントが外側に伝播しないようにする
         >
           {userProfile && (
-            <Box
-              position="relative"
-              className="flex items-center space-x-4 p-4"
-            >
+            <Box position="relative" className="flex items-center space-x-4 p-4">
               <div className="avatar" onClick={triggerFileSelect}>
                 <div className="w-24 rounded-full mr-4 cursor-pointer overflow-hidden">
                   <img
@@ -308,12 +298,8 @@ const MBTIModal = ({ onClose, onUpdate }) => {
               </div>
             </Box>
           )}
-          {mbtiError && (
-            <Alert severity="error">MBTIタイプを選択してください</Alert>
-          )}
-          {methodError && (
-            <Alert severity="error">タイプ診断の方法を選択してください。</Alert>
-          )}
+          {mbtiError && <Alert severity="error">MBTIタイプを選択してください</Alert>}
+          {methodError && <Alert severity="error">タイプ診断の方法を選択してください。</Alert>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
@@ -398,11 +384,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
                   checked={diagnosisMethod === 'official_assessment'}
                   className="mr-2"
                 />
-                <Link
-                  href="https://www.mbti.or.jp/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <Link href="https://www.mbti.or.jp/" target="_blank" rel="noopener noreferrer">
                   公式
                 </Link>
                 のセッションを通じて決定した

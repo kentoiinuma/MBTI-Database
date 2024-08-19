@@ -92,9 +92,7 @@ const Header = ({ onSignIn }) => {
             <span style={{ color: '#86C166', fontSize: '1.4em' }}>B</span>
             <span style={{ color: '#A5DEE4', fontSize: '1.4em' }}>T</span>
             <span style={{ color: '#FBE251', fontSize: '1.4em' }}>I</span>
-            <span style={{ color: '#2EA9DF', fontSize: '1.2em' }}>
-              データベース
-            </span>
+            <span style={{ color: '#2EA9DF', fontSize: '1.2em' }}>データベース</span>
           </NavLink>
         </h1>
       </div>
@@ -144,9 +142,7 @@ const Header = ({ onSignIn }) => {
                   to="/profile"
                   className="flex items-center"
                 >
-                  <AccountCircleOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <AccountCircleOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   {userProfile ? userProfile.username : 'Loading...'}
                 </MenuItem>
                 {/* アプリ情報メニューアイテム */}
@@ -156,9 +152,7 @@ const Header = ({ onSignIn }) => {
                   to="/about"
                   className="flex items-center"
                 >
-                  <InfoOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <InfoOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   このアプリについて
                 </MenuItem>
                 {/* お問い合わせメニューアイテム */}
@@ -168,9 +162,7 @@ const Header = ({ onSignIn }) => {
                   to="/contact"
                   className="flex items-center"
                 >
-                  <HelpOutlineOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <HelpOutlineOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   お問い合わせ
                 </MenuItem>
                 {/* 利用規約メニューアイテム */}
@@ -180,9 +172,7 @@ const Header = ({ onSignIn }) => {
                   to="/terms-of-service"
                   className="flex items-center"
                 >
-                  <GavelOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <GavelOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   利用規約
                 </MenuItem>
                 {/* プライバシーポリシーメニューアイテム */}
@@ -192,9 +182,7 @@ const Header = ({ onSignIn }) => {
                   to="/privacy-policy"
                   className="flex items-center"
                 >
-                  <PolicyOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <PolicyOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   プライバシーポリシー
                 </MenuItem>
                 {/* ホームメニューアイテム */}
@@ -204,9 +192,7 @@ const Header = ({ onSignIn }) => {
                   to="/"
                   className="flex items-center"
                 >
-                  <HomeOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <HomeOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   ホーム
                 </MenuItem>
                 {/* データベースメニューアイテム */}
@@ -216,9 +202,7 @@ const Header = ({ onSignIn }) => {
                   to="/database"
                   className="flex items-center"
                 >
-                  <StorageIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <StorageIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   データベース
                 </MenuItem>
                 {/* サインアウトメニューアイテム */}
@@ -228,9 +212,7 @@ const Header = ({ onSignIn }) => {
                     handleClose();
                   }}
                 >
-                  <LogoutOutlinedIcon
-                    style={{ fontSize: '20px', marginRight: '8px' }}
-                  />
+                  <LogoutOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   サインアウト
                 </MenuItem>
               </Menu>
@@ -241,11 +223,7 @@ const Header = ({ onSignIn }) => {
         <div className="ml-auto flex items-center gap-2">
           <Link
             to="/about"
-            className={
-              location.pathname === '/about'
-                ? 'sidebar-link active'
-                : 'sidebar-link'
-            }
+            className={location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}
             style={{ fontSize: '20px', color: '#2EA9DF' }}
           >
             このアプリについて

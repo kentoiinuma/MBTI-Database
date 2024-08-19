@@ -146,25 +146,13 @@ function MainContent() {
               stroke="currentColor"
               className="w-10 h-10" // この部分を変更
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M12 4.5v15m7.5-7.5h-15"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>
           </button>
         )}
       </div>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2500}
-        onClose={handleCloseSnackbar}
-      >
-        <Alert
-          onClose={handleCloseSnackbar}
-          severity="success"
-          sx={{ width: '100%' }}
-        >
+      <Snackbar open={snackbarOpen} autoHideDuration={2500} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
           {/* {snackbarMessage} */}
         </Alert>
       </Snackbar>

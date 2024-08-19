@@ -74,9 +74,7 @@ const Profile = () => {
               .then((response) => response.json())
               .then((mediaWorks) => {
                 setUserPosts((prevPosts) =>
-                  prevPosts.map((p) =>
-                    p.id === post.id ? { ...p, mediaWorks } : p,
-                  ),
+                  prevPosts.map((p) => (p.id === post.id ? { ...p, mediaWorks } : p))
                 );
               });
           });
@@ -132,10 +130,7 @@ const Profile = () => {
     }
 
     const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleDateString(
-      'ja-JP',
-      dateOptions,
-    );
+    const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
       <div className="user-details flex items-center justify-between">
@@ -164,9 +159,7 @@ const Profile = () => {
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">
-            {formattedDate}
-          </span>
+          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === userProfile.clerkId && (
           <div className="mr-8" style={{ position: 'relative' }}>
@@ -202,17 +195,11 @@ const Profile = () => {
               }}
             >
               <MenuItem onClick={handleDeleteClick}>
-                <DeleteOutlineOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 削除
               </MenuItem>
               <MenuItem onClick={handleEditClick}>
-                <EditOutlinedIcon
-                  fontSize="small"
-                  style={{ marginRight: '8px' }}
-                />
+                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 編集（実装予定）
               </MenuItem>
             </Menu>
@@ -272,10 +259,7 @@ const Profile = () => {
           <div>
             {userPosts.map((post) => (
               <React.Fragment key={post.id}>
-                <div
-                  onClick={() => navigate(`/post/${post.id}`)}
-                  className="cursor-pointer"
-                >
+                <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
                   <div style={{ margin: '20px 0 0 30px' }}>
                     {renderUserDetails(post, post.created_at, post.id)}
                   </div>
@@ -298,7 +282,7 @@ const Profile = () => {
                         post.mediaWorks
                           .map(
                             (work, index, array) =>
-                              `${work.title}${index < array.length - 1 ? '、' : ''}`,
+                              `${work.title}${index < array.length - 1 ? '、' : ''}`
                           )
                           .join('')}
                       です！
@@ -414,21 +398,15 @@ const Profile = () => {
     let artistText = '';
 
     if (post.mediaWorks && post.mediaWorks[0]) {
-      const mediaType =
-        post.mediaWorks[0].media_type === 'anime'
-          ? 'アニメ'
-          : '音楽アーティスト';
+      const mediaType = post.mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
       const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
       artistText = `${userProfile.username}${mbtiTypeText}の好きな${mediaType}は${post.mediaWorks
-        .map(
-          (work, index, array) =>
-            `${work.title}${index < array.length - 1 ? '、' : ''}`,
-        )
+        .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
 
       const hashtag = '#MBTIデータベース';
       const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        artistText + '\n' + hashtag + '\n',
+        artistText + '\n' + hashtag + '\n'
       )}&url=${encodeURIComponent(ogPageUrl)}`;
       window.open(shareUrl, '_blank');
     }
@@ -518,10 +496,7 @@ const Profile = () => {
         </>
       )}
       {showMBTIModal && (!clerkId || clerkId === currentUser?.id) && (
-        <MBTIModal
-          onClose={() => setShowMBTIModal(false)}
-          onUpdate={setMbtiType}
-        />
+        <MBTIModal onClose={() => setShowMBTIModal(false)} onUpdate={setMbtiType} />
       )}
       <Dialog
         open={openDialog}

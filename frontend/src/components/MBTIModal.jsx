@@ -104,16 +104,10 @@ const MBTIModal = ({ onClose }) => {
           MBTIタイプと診断方法を選択してください。
         </h2>
         {formSubmitted && agreedToTerms === false && (
-          <Alert severity="error">
-            利用規約とプライバシーポリシーに同意してください。
-          </Alert>
+          <Alert severity="error">利用規約とプライバシーポリシーに同意してください。</Alert>
         )}
-        {mbtiError && (
-          <Alert severity="error">MBTIタイプを選択してください</Alert>
-        )}
-        {methodError && (
-          <Alert severity="error">タイプ診断の方法を選択してください。</Alert>
-        )}
+        {mbtiError && <Alert severity="error">MBTIタイプを選択してください</Alert>}
+        {methodError && <Alert severity="error">タイプ診断の方法を選択してください。</Alert>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label
@@ -139,10 +133,7 @@ const MBTIModal = ({ onClose }) => {
             </select>
           </div>
           <fieldset className="mb-4">
-            <legend
-              className="text-sm font-medium text-gray-700 mb-1"
-              style={{ color: '#2EA9DF' }}
-            >
+            <legend className="text-sm font-medium text-gray-700 mb-1" style={{ color: '#2EA9DF' }}>
               タイプ診断の方法
             </legend>
 
@@ -204,11 +195,7 @@ const MBTIModal = ({ onClose }) => {
                 onChange={handleDiagnosisMethodChange}
                 className="mr-2"
               />
-              <MuiLink
-                href="https://www.mbti.or.jp/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <MuiLink href="https://www.mbti.or.jp/" target="_blank" rel="noopener noreferrer">
                 公式
               </MuiLink>
               のセッションを通じて決定した

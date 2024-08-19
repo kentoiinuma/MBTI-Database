@@ -55,9 +55,7 @@ function AboutApp() {
       >
         Step1 ログインしてMBTIタイプとその診断方法を登録しよう！
       </h2>
-      <div
-        style={{ display: 'flex', alignItems: 'flex-start', marginTop: '10px' }}
-      >
+      <div style={{ display: 'flex', alignItems: 'flex-start', marginTop: '10px' }}>
         <div style={{ flex: 1 }}>
           <p>
             MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視��れていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました！
@@ -116,11 +114,7 @@ function AboutApp() {
                 </li>
                 <li style={{ marginTop: '20px' }}>
                   ②
-                  <Link
-                    href="https://www.mbti.or.jp/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
+                  <Link href="https://www.mbti.or.jp/" target="_blank" rel="noopener noreferrer">
                     公式
                   </Link>
                   のセッションを通じて決定したものなのか?（公式）
@@ -130,10 +124,7 @@ function AboutApp() {
           </ul>
         </div>
         <div>
-          <Paper
-            elevation={8}
-            style={{ width: '550px', height: 'auto', marginLeft: '20px' }}
-          >
+          <Paper elevation={8} style={{ width: '550px', height: 'auto', marginLeft: '20px' }}>
             <video
               src="https://i.gyazo.com/dba4e9981c3d8da5d0d1c2782ede6463.mp4"
               alt="公式セッション画像"
@@ -153,14 +144,10 @@ function AboutApp() {
           marginBottom: '10px',
         }}
       >
-        Step2
-        好きな作品やアーティストのイメージ画像を投稿しよう！(現在音楽アーティストのみ)
+        Step2 好きな作品やアーティストのイメージ画像を投稿しよう！(現在音楽アーティストのみ)
       </h2>
       <p style={{ display: 'flex', alignItems: 'center' }}>
-        <Paper
-          elevation={8}
-          style={{ width: '550px', height: 'auto', marginRight: '20px' }}
-        >
+        <Paper elevation={8} style={{ width: '550px', height: 'auto', marginRight: '20px' }}>
           <video
             src="https://i.gyazo.com/99db8bc5f73a4ccf2e81d85317632a1f.mp4"
             alt="イメージ画像投稿例"
@@ -190,10 +177,7 @@ function AboutApp() {
           flexDirection: 'row-reverse',
         }}
       >
-        <Paper
-          elevation={8}
-          style={{ width: '550px', height: 'auto', marginLeft: '20px' }}
-        >
+        <Paper elevation={8} style={{ width: '550px', height: 'auto', marginLeft: '20px' }}>
           <img
             src="https://i.gyazo.com/71ea70c914f372f656fcaa4e139292a0.jpg"
             alt="イメージ画像投稿例"
@@ -220,10 +204,7 @@ function AboutApp() {
           flexDirection: 'row',
         }}
       >
-        <Paper
-          elevation={8}
-          style={{ minWidth: '550px', height: 'auto', marginRight: '20px' }}
-        >
+        <Paper elevation={8} style={{ minWidth: '550px', height: 'auto', marginRight: '20px' }}>
           <video
             src="https://i.gyazo.com/cc5004bd2682567293c4bad9b534e682.mp4"
             alt="データベース詳細画面"
