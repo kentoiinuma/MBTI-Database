@@ -16,7 +16,6 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
 import { useUser } from '@clerk/clerk-react'; // useUserをインポート
 
@@ -34,7 +33,7 @@ export const PostUsernameProvider = ({ children }) => {
   );
 };
 
-// usePostUsernameカスタムフックのエク��ト
+// usePostUsernameカスタムフックのエクト
 export const usePostUsername = () => useContext(PostUsernameContext);
 
 let API_URL;
@@ -272,10 +271,6 @@ const PostDetail = () => {
                   </Button>
                 </DialogActions>
               </Dialog>
-              <MenuItem onClick={handleClose}>
-                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
-                編集（実装予定）
-              </MenuItem>
             </Menu>
           </div>
         )}

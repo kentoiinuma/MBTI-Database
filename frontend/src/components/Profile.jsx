@@ -6,7 +6,6 @@ import { useUserContext } from '../contexts/UserContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
 import {
   Menu,
@@ -198,10 +197,6 @@ const Profile = () => {
                 <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
                 削除
               </MenuItem>
-              <MenuItem onClick={handleEditClick}>
-                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
-                編集（実装予定）
-              </MenuItem>
             </Menu>
           </div>
         )}
@@ -236,7 +231,7 @@ const Profile = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // 投稿が正常に削��された場合、投稿リストからの投稿を削除
+            // 投稿が正常に削された場合、投稿リストからの投稿を削除
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイアログを閉じる
             // ここでスナックバーを表示するなど処理を追加できます
@@ -417,11 +412,6 @@ const Profile = () => {
     handleOpenDialog();
   };
 
-  const handleEditClick = (event) => {
-    event.stopPropagation();
-    handleClose();
-  };
-
   return (
     <div className="flex flex-col w-full">
       {userProfile && (
@@ -512,7 +502,7 @@ const Profile = () => {
           },
         }}
       >
-        <DialogTitle id="alert-dialog-title">{'��ストの削除'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'ストの削除'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             ポストを完全に削除しますか？

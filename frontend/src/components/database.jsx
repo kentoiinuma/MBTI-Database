@@ -195,7 +195,7 @@ function Database() {
     setSelectedTypes(filteredTypes);
   };
 
-  // データをフェッチするための副作用
+  // データをフ��の副作用
   useEffect(() => {
     const fetchData = async () => {
       const typesToUse = selectedTypes.length > 0 ? selectedTypes : [];
@@ -269,14 +269,9 @@ function Database() {
   return (
     <ThemeProvider theme={theme}>
       <>
-        {/* 説明テキストを追加 */}
-        <p className="text-[#2EA9DF] mt-5 mb-5 ml-32">
-          ボタンを選択・選択解除することでデータベースをフィルタリングすることができま。心理機能またはMBTIタイプを選択してください。
-        </p>
-
         {/* コンテンツタイプ選択ボタン */}
-        <div className="ml-32">
-          <ButtonGroup className="mb-4">
+        <div className="flex justify-center mt-5 mb-5">
+          <ButtonGroup>
             {['アニメ', '音楽アーティスト'].map((type) => (
               <Button
                 key={type}
@@ -290,10 +285,20 @@ function Database() {
           </ButtonGroup>
         </div>
 
+        {/* 説明テキストを追加 */}
+        <div className="text-center mt-5 mb-5">
+          <p className="text-black mb-2">
+            興味のあるMBTI指標、心理機能、またはタイプを選んでください。
+          </p>
+          <p className="text-black">
+            選択したボタンに基づいてデータベースがフィルタリングされ、結果がグラフに反映されます。
+          </p>
+        </div>
+
         {/* 指標選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
+        <div className="flex justify-center mt-6">
           {['EI', 'SN', 'TF', 'JP'].map((group) => (
-            <ButtonGroup key={group} className="mr-4">
+            <ButtonGroup key={group} className="mx-2">
               {group.split('').map((letter) => (
                 <Button
                   key={letter}
@@ -309,8 +314,8 @@ function Database() {
         </div>
 
         {/* 心理機能選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
-          <ButtonGroup className="mb-4 mr-4">
+        <div className="flex justify-center mt-6">
+          <ButtonGroup className="mb-4 mx-2">
             {perceptionFunctions.map((func) => (
               <Button
                 key={func}
@@ -325,7 +330,7 @@ function Database() {
               </Button>
             ))}
           </ButtonGroup>
-          <ButtonGroup className="mb-4">
+          <ButtonGroup className="mb-4 mx-2">
             {judgmentFunctions.map((func) => (
               <Button
                 key={func}
@@ -343,7 +348,7 @@ function Database() {
         </div>
 
         {/* MBTIタイプ選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
+        <div className="flex justify-center mt-6">
           <ButtonGroup>
             {[
               'ESFP',

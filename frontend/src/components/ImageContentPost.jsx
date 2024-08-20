@@ -299,7 +299,7 @@ const ImageContentPost = () => {
               />
             </div>
           </div>
-          <span style={{ color: '#2EA9DF' }}>
+          <span className="text-[#2EA9DF]">
             ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
           <div className="bg-black">{renderImages()}</div>

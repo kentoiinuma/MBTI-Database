@@ -13,7 +13,7 @@ import Contact from './Contact';
 import PostDetail from './PostDetail'; // PostDetailのインポート
 import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
-import Database from './Database'; // データベースコンポーネントのインポート
+import Database from './database'; // データベースコンポーネントのインポート
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート

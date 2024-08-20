@@ -16,9 +16,8 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
-import Database from './Database';
+import Database from './database';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -309,10 +308,6 @@ const AllPosts = () => {
                   </Button>
                 </DialogActions>
               </Dialog>
-              <MenuItem onClick={handleClose}>
-                <EditOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
-                編集（実装予定）
-              </MenuItem>
             </Menu>
           </div>
         )}
@@ -465,21 +460,23 @@ const AllPosts = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mt-16 w-full">
-        <div
-          className="flex-1 text-center cursor-pointer"
-          onClick={() => selectSection('database')}
-        >
-          <span className="text-xl">データベース</span>
-          <div style={getSelectedStyle('database')}></div>
+      <div className="fixed top-16 left-0 right-0 bg-white z-10">
+        <div className="flex justify-between items-center mt-16 w-full max-w-2xl mx-auto">
+          <div
+            className="flex-1 text-center cursor-pointer"
+            onClick={() => selectSection('database')}
+          >
+            <span className="text-xl">データベース</span>
+            <div style={getSelectedStyle('database')}></div>
+          </div>
+          <div className="flex-1 text-center cursor-pointer" onClick={() => selectSection('home')}>
+            <span className="text-xl">ホーム</span>
+            <div style={getSelectedStyle('home')}></div>
+          </div>
         </div>
-        <div className="flex-1 text-center cursor-pointer" onClick={() => selectSection('home')}>
-          <span className="text-xl">ホーム</span>
-          <div style={getSelectedStyle('home')}></div>
-        </div>
+        <hr className="border-t border-[#91989F] w-full" />
       </div>
-      <hr className="border-t border-[#2EA9DF] w-full" />
-      {renderContent()}
+      <div className="mt-32">{renderContent()}</div>
       <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
         <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
