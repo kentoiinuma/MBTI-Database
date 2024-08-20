@@ -100,7 +100,7 @@ const Header = ({ onSignIn }) => {
 
   // ヘッダーコンポーネントのレンダリング
   return (
-    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#2EA9DF]">
+    <header className="flex justify-between items-center px-4 py-2 bg-white text-black">
       {getTitle()}
       {isSignedIn ? (
         <>

@@ -13,68 +13,78 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-} from '@mui/material'; // 必要なコンポーネントをインポート
+} from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import XIcon from '@mui/icons-material/X';
+import Database from './Database';
 
 const AllPosts = () => {
-  const [posts, setPosts] = useState([]); // 投稿データ
-  const [mediaWorks, setMediaWorks] = useState({}); // メディア作品データ
-  const location = useLocation(); // 現在のURL情報
-  const navigate = useNavigate(); // useNavigateフックを追加
-  const [openSnackbar, setOpenSnackbar] = useState(false); // Snackbarの開閉状態を管理
-  const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ
-  const [anchorEl, setAnchorEl] = useState(null); // ドロップダウンメニューのアンカー要素
-  const [openDialog, setOpenDialog] = useState(false); // ダイアログの開閉状態を管理
-  const [deletePostId, setDeletePostId] = useState(null); // 削除する投稿のID
-  const open = Boolean(anchorEl); // ドロップダウンメニューが開いているかどうか
-  const { user: currentUser } = useUser(); // useUserからuserを取得
-  const [isLoading, setIsLoading] = useState(true); // ローディング状態の管理
+  const [posts, setPosts] = useState([]);
+  const [mediaWorks, setMediaWorks] = useState({});
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [deletePostId, setDeletePostId] = useState(null);
+  const open = Boolean(anchorEl);
+  const { user: currentUser } = useUser();
+  const [isLoading, setIsLoading] = useState(true);
   const [userMbtiTypes, setUserMbtiTypes] = useState({});
+  const [selectedSection, setSelectedSection] = useState('home');
 
-  // ドロップダウンメニューを開く
-  const handleClick = (event, postId) => {
-    event.stopPropagation(); // この行を追加
-    setAnchorEl(event.currentTarget);
-    setDeletePostId(postId); // ここで削除する投稿のIDを設定
+  const selectSection = (section) => {
+    setSelectedSection(section);
   };
 
-  // ドロップダウンメニューを閉じる
+  const getSelectedStyle = (section) => {
+    if (selectedSection === section) {
+      return {
+        borderBottom: '4px solid #2EA9DF',
+        width: '50%',
+        margin: '0 auto',
+        borderRadius: '10px',
+      };
+    }
+    return {};
+  };
+
+  const handleClick = (event, postId) => {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setDeletePostId(postId);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // ダイアログを開く関数
   const handleOpenDialog = () => {
-    console.log('Opening dialog for post ID:', deletePostId); // 既設定されているdeletePostIdを使用
+    console.log('Opening dialog for post ID:', deletePostId);
     setOpenDialog(true);
   };
 
-  // ダイアログを閉じる関数
   const handleCloseDialog = () => {
     setOpenDialog(false);
-    handleClose(); // ダイアログを閉じると同時にMenuも閉じるようにす
+    handleClose();
   };
 
-  // 投稿を削除する関数
   const handleDeletePost = () => {
-    console.log('Deleting post with ID:', deletePostId); // この行を追加
+    console.log('Deleting post with ID:', deletePostId);
     if (deletePostId) {
       fetch(`${API_URL}/api/v1/posts/${deletePostId}`, {
         method: 'DELETE',
       })
         .then((response) => {
           if (response.ok) {
-            // 投稿が正常に削除された場合、投稿リストからその投稿を削除
             setPosts(posts.filter((post) => post.id !== deletePostId));
-            setOpenDialog(false); // ダイアログを閉じる
-            setOpenSnackbar(true); // スナックバーを表示する
-            // スナックバーのメッセージを設定る
+            setOpenDialog(false);
+            setOpenSnackbar(true);
             setSnackbarMessage('ポストを除しました！');
           } else {
-            // エラーハンドリング
             console.error('Failed to delete the post');
           }
         })
@@ -84,7 +94,6 @@ const AllPosts = () => {
     }
   };
 
-  // APIのURLを環境に応じて設定
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
     API_URL = 'http://localhost:3000';
@@ -94,9 +103,7 @@ const AllPosts = () => {
     API_URL = 'http://localhost:3000';
   }
 
-  // コンポーネントのマウント時とAPI_URL、location.pathnameが変された時に実行
   useEffect(() => {
-    // 投稿データを取得
     fetch(`${API_URL}/api/v1/posts/all`)
       .then((response) => response.json())
       .then((data) => {
@@ -115,7 +122,6 @@ const AllPosts = () => {
         setIsLoading(false);
 
         data.forEach((post) => {
-          // ユーザーデータを取得
           fetch(`${API_URL}/api/v1/users/${post.user.clerk_id}`)
             .then((response) => response.json())
             .then((userData) => {
@@ -137,7 +143,6 @@ const AllPosts = () => {
               );
             });
 
-          // メディア作品データを取得
           fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
             .then((response) => response.json())
             .then((media) => {
@@ -147,7 +152,6 @@ const AllPosts = () => {
               }));
             });
 
-          // MBTIタイプを取得
           fetch(`${API_URL}/api/v1/mbti/${post.user.clerk_id}`)
             .then((response) => {
               if (!response.ok) {
@@ -172,7 +176,6 @@ const AllPosts = () => {
       });
   }, [API_URL, location.pathname]);
 
-  // 画像をレンダリングする関数
   const renderImages = (works) => {
     const containerClass = `image-container-${works.length}`;
     const imageSize = works.length === 1 ? 500 : 247.5;
@@ -192,7 +195,6 @@ const AllPosts = () => {
     );
   };
 
-  // ユーザー詳細をレンダリングする関数
   const renderUserDetails = (postUser, createdAt, postId) => {
     const dateOptions = { month: 'long', day: 'numeric' };
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
@@ -204,7 +206,7 @@ const AllPosts = () => {
             className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/profile/${postUser.clerkId}`); // クリックしたユーザーのプロフィールページに遷移
+              navigate(`/profile/${postUser.clerkId}`);
             }}
           >
             <div className="avatar">
@@ -229,7 +231,7 @@ const AllPosts = () => {
             <div
               className="hover:bg-gray-200 p-2 rounded-full"
               style={{ display: 'inline-block', cursor: 'pointer' }}
-              onClick={(event) => handleClick(event, postId)} // ここでpostIdを渡す
+              onClick={(event) => handleClick(event, postId)}
             >
               <MoreVertIcon style={{ fontSize: 35 }} />
             </div>
@@ -245,7 +247,7 @@ const AllPosts = () => {
                 style: {
                   maxHeight: 48 * 4.5,
                   width: '20ch',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)', // 影のスタイルを薄く調整
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
                 },
               }}
               anchorOrigin={{
@@ -271,7 +273,7 @@ const AllPosts = () => {
                   style: {
                     boxShadow:
                       '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
-                    borderRadius: '16px', // ダアログの角を丸くする
+                    borderRadius: '16px',
                   },
                 }}
               >
@@ -285,9 +287,9 @@ const AllPosts = () => {
                   <Button
                     onClick={handleCloseDialog}
                     sx={{
-                      borderRadius: '20px', // ボタンの角を丸くする
+                      borderRadius: '20px',
                       ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー時の影を薄い青色に設定
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
                       },
                     }}
                   >
@@ -297,9 +299,9 @@ const AllPosts = () => {
                     onClick={handleDeletePost}
                     autoFocus
                     sx={{
-                      borderRadius: '20px', // ボタンの角を丸くする
+                      borderRadius: '20px',
                       ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)', // ホバー��影を薄い青色に設定
+                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
                       },
                     }}
                   >
@@ -318,7 +320,6 @@ const AllPosts = () => {
     );
   };
 
-  // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     let artistText = '';
@@ -334,7 +335,7 @@ const AllPosts = () => {
         .join('')}です！`;
     }
 
-    const hashtag = '#MBTIデータベース'; // ハッシュタグを追加
+    const hashtag = '#MBTIデータベース';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
       artistText + '\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
@@ -342,118 +343,143 @@ const AllPosts = () => {
   };
 
   useEffect(() => {
-    // ページ遷移時に渡されたstateを確認し、ポスト成功の状態に基づいてSnackbarを表示
     if (location.state?.postSuccess) {
       setOpenSnackbar(true);
       setSnackbarMessage('ポストを送信しました！');
-      // 遷移後にstateをクリアする（ブラウザの戻る操作で再表示されないように）
-      navigate(location.pathname, { replace: true, state: {} }); // historyの代わりにnavigateを使用
+      navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
 
-  return (
-    <div>
-      {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="loading loading-spinner loading-lg text-custom"></div>
+  const renderContent = () => {
+    switch (selectedSection) {
+      case 'home':
+        return renderPosts();
+      case 'database':
+        return <Database />;
+      default:
+        return null;
+    }
+  };
+
+  const renderPosts = () => {
+    return (
+      <div>
+        {isLoading ? (
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="loading loading-spinner loading-lg text-custom"></div>
+            </div>
           </div>
-        </div>
-      ) : (
-        posts.map((post) => (
-          <React.Fragment key={post.id}>
-            {/* 投稿全体をクリック可能にするためのdivを追加 */}
-            <div
-              onClick={(e) => {
-                if (!anchorEl) {
-                  navigate(`/post/${post.id}`);
-                }
-              }}
-            >
-              {/* ユーザー詳細表示 */}
-              <div style={{ margin: '20px 0 0 30px' }}>
-                {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
-              </div>
-              {/* 好きな音楽アーティストの表示 */}
-              <div className="mb-5">
-                <div className="text-xl pl-28 pr-16 w-full text-center">
-                  {post.user.username}
-                  {userMbtiTypes[post.user.clerkId]
-                    ? `(${userMbtiTypes[post.user.clerkId]})`
-                    : '(未設定)'}
-                  の好きな
-                  {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
-                    <>
-                      {mediaWorks[post.id][0].media_type === 'anime'
-                        ? 'アニメ'
-                        : '音楽アーティスト'}
-                    </>
-                  ) : (
-                    ''
-                  )}
-                  は
-                  {mediaWorks[post.id] &&
-                    mediaWorks[post.id]
-                      .map(
-                        (work, index, array) =>
-                          `${work.title}${index < array.length - 1 ? '、' : ''}`
-                      )
-                      .join('')}
-                  です！
-                </div>
-              </div>
-              {/* メディア作品表示エリア */}
+        ) : (
+          posts.map((post) => (
+            <React.Fragment key={post.id}>
               <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-start',
-                  alignItems: 'flex-start',
-                  marginBottom: '20px',
+                onClick={(e) => {
+                  if (!anchorEl) {
+                    navigate(`/post/${post.id}`);
+                  }
                 }}
               >
-                {/* メディア作品の画像をレンダリング */}
-                <div
-                  style={
-                    mediaWorks[post.id] && mediaWorks[post.id].length === 2
-                      ? {
-                          width: '500px',
-                          height: '247.5px',
-                          backgroundColor: 'black',
-                          marginLeft: '345px',
-                        }
-                      : {
-                          width: '500px',
-                          height: '500px',
-                          backgroundColor: 'black',
-                          marginLeft: '345px',
-                        }
-                  }
-                >
-                  {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
+                <div style={{ margin: '20px 0 0 30px' }}>
+                  {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
                 </div>
-                {/* 画像をレンダリングする関数の直後にXIconを配置するコード */}
-                {currentUser?.id === post.user.clerkId && (
-                  <div
-                    style={{
-                      textAlign: 'right',
-                      marginTop: '450px',
-                      marginLeft: '200px',
-                    }}
-                    className="p-3 rounded-full hover:bg-gray-200"
-                    onClick={(e) => {
-                      e.stopPropagation(); // 親要素のonClickイベントが発火するのを防ぐ
-                      shareToX(post);
-                    }}
-                  >
-                    <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                <div className="mb-5">
+                  <div className="text-xl pl-28 pr-16 w-full text-center">
+                    {post.user.username}
+                    {userMbtiTypes[post.user.clerkId]
+                      ? `(${userMbtiTypes[post.user.clerkId]})`
+                      : '(未設定)'}
+                    の好きな
+                    {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
+                      <>
+                        {mediaWorks[post.id][0].media_type === 'anime'
+                          ? 'アニメ'
+                          : '音楽アーティスト'}
+                      </>
+                    ) : (
+                      ''
+                    )}
+                    は
+                    {mediaWorks[post.id] &&
+                      mediaWorks[post.id]
+                        .map(
+                          (work, index, array) =>
+                            `${work.title}${index < array.length - 1 ? '、' : ''}`
+                        )
+                        .join('')}
+                    です！
                   </div>
-                )}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    marginBottom: '20px',
+                  }}
+                >
+                  <div
+                    style={
+                      mediaWorks[post.id] && mediaWorks[post.id].length === 2
+                        ? {
+                            width: '500px',
+                            height: '247.5px',
+                            backgroundColor: 'black',
+                            marginLeft: '345px',
+                          }
+                        : {
+                            width: '500px',
+                            height: '500px',
+                            backgroundColor: 'black',
+                            marginLeft: '345px',
+                          }
+                    }
+                  >
+                    {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
+                  </div>
+                  {currentUser?.id === post.user.clerkId && (
+                    <div
+                      style={{
+                        textAlign: 'right',
+                        marginTop: '450px',
+                        marginLeft: '200px',
+                      }}
+                      className="p-3 rounded-full hover:bg-gray-200"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        shareToX(post);
+                      }}
+                    >
+                      <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            <hr className="border-t border-[#2EA9DF] w-full" />
-          </React.Fragment>
-        ))
-      )}
+              <hr className="border-t border-[#2EA9DF] w-full" />
+            </React.Fragment>
+          ))
+        )}
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mt-16 w-full">
+        <div
+          className="flex-1 text-center cursor-pointer"
+          onClick={() => selectSection('database')}
+        >
+          <span className="text-xl">データベース</span>
+          <div style={getSelectedStyle('database')}></div>
+        </div>
+        <div className="flex-1 text-center cursor-pointer" onClick={() => selectSection('home')}>
+          <span className="text-xl">ホーム</span>
+          <div style={getSelectedStyle('home')}></div>
+        </div>
+      </div>
+      <hr className="border-t border-[#2EA9DF] w-full" />
+      {renderContent()}
       <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
         <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}
