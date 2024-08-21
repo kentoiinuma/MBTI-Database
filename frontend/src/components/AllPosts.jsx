@@ -321,7 +321,7 @@ const AllPosts = () => {
 
     if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
       const mediaType =
-        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
+        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アー���ィスト';
       const mbtiType = userMbtiTypes[post.user.clerk_id]
         ? `(${userMbtiTypes[post.user.clerk_id]})`
         : '';
@@ -350,7 +350,11 @@ const AllPosts = () => {
       case 'home':
         return renderPosts();
       case 'database':
-        return <Database />;
+        return (
+          <div className="w-full max-w-7xl mx-auto">
+            <Database />
+          </div>
+        );
       default:
         return null;
     }

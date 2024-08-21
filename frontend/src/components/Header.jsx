@@ -13,8 +13,6 @@ import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコン
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
-import StorageIcon from '@mui/icons-material/Storage'; // データベースアイコン
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'; // ホームアイコンをインポート
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -183,26 +181,6 @@ const Header = ({ onSignIn }) => {
                 >
                   <PolicyOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
                   プライバシーポリシー
-                </MenuItem>
-                {/* ホームメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={NavLink}
-                  to="/"
-                  className="flex items-center"
-                >
-                  <HomeOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
-                  ホーム
-                </MenuItem>
-                {/* データベースメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/database"
-                  className="flex items-center"
-                >
-                  <StorageIcon style={{ fontSize: '20px', marginRight: '8px' }} />
-                  データベース
                 </MenuItem>
                 {/* サインアウトメニューアイテム */}
                 <MenuItem

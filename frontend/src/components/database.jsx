@@ -195,7 +195,7 @@ function Database() {
     setSelectedTypes(filteredTypes);
   };
 
-  // データをフ��の副作用
+  // データをフ��副作用
   useEffect(() => {
     const fetchData = async () => {
       const typesToUse = selectedTypes.length > 0 ? selectedTypes : [];
@@ -242,7 +242,7 @@ function Database() {
     },
   };
 
-  // ボタンのスタイルを定義
+  // ��タンのスタイルを定義
   const buttonStyle = (selected) => ({
     backgroundColor: selected ? '#2EA9DF' : '#fff',
     borderColor: '#2EA9DF',
@@ -268,7 +268,7 @@ function Database() {
 
   return (
     <ThemeProvider theme={theme}>
-      <>
+      <div className="w-full max-w-7xl mx-auto">
         {/* コンテンツタイプ選択ボタン */}
         <div className="flex justify-center mt-5 mb-5">
           <ButtonGroup>
@@ -381,10 +381,10 @@ function Database() {
         </div>
 
         {/* グラフ表示 */}
-        <div className="my-8 ml-2" style={{ width: '98%', height: '100%' }}>
+        <div className="my-8 w-full h-[600px]">
           <Bar options={options} data={chartData} />
         </div>
-      </>
+      </div>
     </ThemeProvider>
   );
 }
