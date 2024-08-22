@@ -17,7 +17,8 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import XIcon from '@mui/icons-material/X';
-import { useUser } from '@clerk/clerk-react'; // useUserをインポート
+import { useUser } from '@clerk/clerk-react';
+import { styled } from '@mui/material/styles';
 
 // PostUsernameContextの作成
 const PostUsernameContext = createContext();
@@ -45,6 +46,14 @@ if (window.location.origin === 'http://localhost:3001') {
   API_URL = 'http://localhost:3000';
 }
 
+const StyledMoreVertIcon = styled(MoreVertIcon)({
+  fontSize: 35,
+});
+
+const StyledXIcon = styled(XIcon)({
+  fontSize: 40,
+});
+
 const PostDetail = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
@@ -56,8 +65,8 @@ const PostDetail = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [deletePostId, setDeletePostId] = useState(null);
   const open = Boolean(anchorEl);
-  const { user: currentUser } = useUser(); // useUserからcurrentUserを取得
-  const { setPostUsername } = usePostUsername(); // コンテキストからsetPostUsernameを取得
+  const { user: currentUser } = useUser();
+  const { setPostUsername } = usePostUsername();
   const [loading, setLoading] = useState(true);
   const [userMbtiType, setUserMbtiType] = useState(null);
 
@@ -162,7 +171,7 @@ const PostDetail = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="user-details flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -171,14 +180,12 @@ const PostDetail = () => {
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="avatar">
-              <div className="w-20 rounded-full overflow-hidden">
-                <img
-                  src={postUser.avatarUrl}
-                  alt={`profileImage`}
-                  className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
-                />
-              </div>
+            <div className="w-20 h-20 rounded-full overflow-hidden">
+              <img
+                src={postUser.avatarUrl}
+                alt={`profileImage`}
+                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+              />
             </div>
             <div className="ml-4">
               <h1>
@@ -189,13 +196,12 @@ const PostDetail = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-8" style={{ position: 'relative' }}>
+          <div className="mr-8 relative">
             <div
-              className="hover:bg-gray-200 p-2 rounded-full"
-              style={{ display: 'inline-block', cursor: 'pointer' }}
+              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
-              <MoreVertIcon style={{ fontSize: 35 }} />
+              <StyledMoreVertIcon />
             </div>
             <Menu
               id="long-menu"
@@ -278,7 +284,6 @@ const PostDetail = () => {
     );
   };
 
-  // XIconをクリックしたときの処理を追加
   const shareToX = (post) => {
     const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
     let artistText = '';
@@ -306,11 +311,11 @@ const PostDetail = () => {
         </div>
       ) : (
         <>
-          <div style={{ margin: '20px 0 0 30px' }}>
+          <div className="mt-5 mx-7">
             {post?.user && renderUserDetails(post.user, post.createdAt)}
           </div>
           <div className="mb-5">
-            <div className="text-xl pl-28 pr-16 w-full text-center">
+            <div className="text-xl px-28 w-full text-center">
               {post.user.username}
               {userMbtiType && `(${userMbtiType})`}
               の好きな
@@ -326,47 +331,21 @@ const PostDetail = () => {
               です！
             </div>
           </div>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              marginBottom: '20px',
-            }}
-          >
+          <div className="flex justify-start items-start mb-5">
             <div
-              style={
-                mediaWorks.length === 2
-                  ? {
-                      width: '500px',
-                      height: '247.5px',
-                      backgroundColor: 'black',
-                      marginLeft: '345px',
-                    }
-                  : {
-                      width: '500px',
-                      height: '500px',
-                      backgroundColor: 'black',
-                      marginLeft: '345px',
-                    }
-              }
+              className={`w-[500px] ${mediaWorks.length === 2 ? 'h-[247.5px]' : 'h-[500px]'} bg-black ml-[345px]`}
             >
               {renderImages(mediaWorks)}
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                style={{
-                  textAlign: 'right',
-                  marginTop: '450px',
-                  marginLeft: '200px',
-                }}
-                className="p-3 rounded-full hover:bg-gray-200"
+                className="mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);
                 }}
               >
-                <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                <StyledXIcon />
               </div>
             )}
           </div>

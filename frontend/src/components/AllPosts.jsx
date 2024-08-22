@@ -18,6 +18,15 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import XIcon from '@mui/icons-material/X';
 import Database from './database';
+import { styled } from '@mui/material/styles';
+
+const StyledMoreVertIcon = styled(MoreVertIcon)({
+  fontSize: 35,
+});
+
+const StyledXIcon = styled(XIcon)({
+  fontSize: 40,
+});
 
 const AllPosts = () => {
   const [posts, setPosts] = useState([]);
@@ -199,7 +208,7 @@ const AllPosts = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="user-details flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -208,14 +217,12 @@ const AllPosts = () => {
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="avatar">
-              <div className="w-20 rounded-full overflow-hidden">
-                <img
-                  src={postUser.avatarUrl}
-                  alt={`profileImage`}
-                  className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
-                />
-              </div>
+            <div className="w-20 h-20 rounded-full overflow-hidden">
+              <img
+                src={postUser.avatarUrl}
+                alt={`profileImage`}
+                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+              />
             </div>
             <div className="ml-4">
               <h1>
@@ -226,13 +233,12 @@ const AllPosts = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-8" style={{ position: 'relative' }}>
+          <div className="mr-8 relative">
             <div
-              className="hover:bg-gray-200 p-2 rounded-full"
-              style={{ display: 'inline-block', cursor: 'pointer' }}
+              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
-              <MoreVertIcon style={{ fontSize: 35 }} />
+              <StyledMoreVertIcon />
             </div>
             <Menu
               id="long-menu"
@@ -321,7 +327,7 @@ const AllPosts = () => {
 
     if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
       const mediaType =
-        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アー���ィスト';
+        mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
       const mbtiType = userMbtiTypes[post.user.clerk_id]
         ? `(${userMbtiTypes[post.user.clerk_id]})`
         : '';
@@ -379,7 +385,7 @@ const AllPosts = () => {
                   }
                 }}
               >
-                <div style={{ margin: '20px 0 0 30px' }}>
+                <div className="mt-5 ml-8">
                   {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
                 </div>
                 <div className="mb-5">
@@ -409,47 +415,25 @@ const AllPosts = () => {
                     です！
                   </div>
                 </div>
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    marginBottom: '20px',
-                  }}
-                >
+                <div className="flex justify-start items-start mb-5">
                   <div
-                    style={
+                    className={`${
                       mediaWorks[post.id] && mediaWorks[post.id].length === 2
-                        ? {
-                            width: '500px',
-                            height: '247.5px',
-                            backgroundColor: 'black',
-                            marginLeft: '345px',
-                          }
-                        : {
-                            width: '500px',
-                            height: '500px',
-                            backgroundColor: 'black',
-                            marginLeft: '345px',
-                          }
-                    }
+                        ? 'w-[500px] h-[247.5px]'
+                        : 'w-[500px] h-[500px]'
+                    } bg-black ml-[345px]`}
                   >
                     {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
                   </div>
                   {currentUser?.id === post.user.clerkId && (
                     <div
-                      style={{
-                        textAlign: 'right',
-                        marginTop: '450px',
-                        marginLeft: '200px',
-                      }}
-                      className="p-3 rounded-full hover:bg-gray-200"
+                      className="mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         shareToX(post);
                       }}
                     >
-                      <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                      <StyledXIcon />
                     </div>
                   )}
                 </div>
@@ -471,11 +455,23 @@ const AllPosts = () => {
             onClick={() => selectSection('database')}
           >
             <span className="text-xl">データベース</span>
-            <div style={getSelectedStyle('database')}></div>
+            <div
+              className={
+                selectedSection === 'database'
+                  ? 'border-b-4 border-[#2EA9DF] w-1/2 mx-auto rounded-lg'
+                  : ''
+              }
+            ></div>
           </div>
           <div className="flex-1 text-center cursor-pointer" onClick={() => selectSection('home')}>
             <span className="text-xl">ホーム</span>
-            <div style={getSelectedStyle('home')}></div>
+            <div
+              className={
+                selectedSection === 'home'
+                  ? 'border-b-4 border-[#2EA9DF] w-1/2 mx-auto rounded-lg'
+                  : ''
+              }
+            ></div>
           </div>
         </div>
         <hr className="border-t border-[#91989F] w-full" />

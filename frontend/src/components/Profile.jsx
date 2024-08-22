@@ -7,6 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import XIcon from '@mui/icons-material/X';
+import { styled } from '@mui/material/styles';
 import {
   Menu,
   MenuItem,
@@ -17,6 +18,15 @@ import {
   DialogTitle,
   Button,
 } from '@mui/material';
+
+// スタイル付きアイコンの定義
+const StyledMoreVertIcon = styled(MoreVertIcon)({
+  fontSize: 35,
+});
+
+const StyledXIcon = styled(XIcon)({
+  fontSize: 40,
+});
 
 const Profile = () => {
   const [userProfile, setUserProfile] = useState(null);
@@ -93,14 +103,9 @@ const Profile = () => {
 
   const getSelectedStyle = (section) => {
     if (selectedSection === section) {
-      return {
-        borderBottom: '4px solid #2EA9DF',
-        width: '33%',
-        margin: '0 auto',
-        borderRadius: '10px',
-      };
+      return 'border-b-4 border-[#2EA9DF] w-1/3 mx-auto rounded-lg';
     }
-    return {};
+    return '';
   };
 
   const renderImages = (works) => {
@@ -161,13 +166,12 @@ const Profile = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === userProfile.clerkId && (
-          <div className="mr-8" style={{ position: 'relative' }}>
+          <div className="mr-8 relative">
             <div
-              className="hover:bg-gray-200 p-2 rounded-full"
-              style={{ display: 'inline-block', cursor: 'pointer' }}
+              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
-              <MoreVertIcon style={{ fontSize: 35 }} />
+              <StyledMoreVertIcon />
             </div>
             <Menu
               id="long-menu"
@@ -194,7 +198,7 @@ const Profile = () => {
               }}
             >
               <MenuItem onClick={handleDeleteClick}>
-                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
+                <DeleteOutlineOutlinedIcon fontSize="small" className="mr-2" />
                 削除
               </MenuItem>
             </Menu>
@@ -255,7 +259,7 @@ const Profile = () => {
             {userPosts.map((post) => (
               <React.Fragment key={post.id}>
                 <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
-                  <div style={{ margin: '20px 0 0 30px' }}>
+                  <div className="mt-5 ml-8">
                     {renderUserDetails(post, post.created_at, post.id)}
                   </div>
                   <div className="mb-5">
@@ -283,47 +287,25 @@ const Profile = () => {
                       です！
                     </div>
                   </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                      alignItems: 'flex-start',
-                      marginBottom: '20px',
-                    }}
-                  >
+                  <div className="flex justify-start items-start mb-5">
                     <div
-                      style={
+                      className={`${
                         post.mediaWorks && post.mediaWorks.length === 2
-                          ? {
-                              width: '500px',
-                              height: '247.5px',
-                              backgroundColor: 'black',
-                              marginLeft: '345px',
-                            }
-                          : {
-                              width: '500px',
-                              height: '500px',
-                              backgroundColor: 'black',
-                              marginLeft: '345px',
-                            }
-                      }
+                          ? 'w-[500px] h-[247.5px]'
+                          : 'w-[500px] h-[500px]'
+                      } bg-black ml-[345px]`}
                     >
                       {post.mediaWorks && renderImages(post.mediaWorks)}
                     </div>
                     {currentUser?.id === userProfile.clerkId && (
                       <div
-                        style={{
-                          textAlign: 'right',
-                          marginTop: '450px',
-                          marginLeft: '200px',
-                        }}
-                        className="p-3 rounded-full hover:bg-gray-200"
+                        className="text-right mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200"
                         onClick={(e) => {
                           e.stopPropagation();
                           shareToX(post);
                         }}
                       >
-                        <XIcon style={{ fontSize: 40, cursor: 'pointer' }} />
+                        <StyledXIcon className="cursor-pointer" />
                       </div>
                     )}
                   </div>
@@ -464,21 +446,21 @@ const Profile = () => {
               onClick={() => selectSection('posts')}
             >
               <span className="text-xl">ポスト</span>
-              <div style={getSelectedStyle('posts')}></div>
+              <div className={getSelectedStyle('posts')}></div>
             </div>
             <div
               className="flex-1 text-center cursor-pointer"
               onClick={() => selectSection('comments')}
             >
               <span className="text-xl">コメント</span>
-              <div style={getSelectedStyle('comments')}></div>
+              <div className={getSelectedStyle('comments')}></div>
             </div>
             <div
               className="flex-1 text-center cursor-pointer"
               onClick={() => selectSection('likes')}
             >
               <span className="text-xl">いいね</span>
-              <div style={getSelectedStyle('likes')}></div>
+              <div className={getSelectedStyle('likes')}></div>
             </div>
           </div>
           <hr className="border-t border-[#2EA9DF] w-full" />
@@ -502,7 +484,7 @@ const Profile = () => {
           },
         }}
       >
-        <DialogTitle id="alert-dialog-title">{'ストの削除'}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             ポストを完全に削除しますか？
