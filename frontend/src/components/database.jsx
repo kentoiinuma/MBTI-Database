@@ -12,6 +12,7 @@ import {
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 
 // Chart.jsの設定を登録
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -27,6 +28,26 @@ const theme = createTheme({
     },
   },
 });
+
+// スタイル付きのButtonコンポーネントを作成
+const StyledButton = styled(Button)(({ theme, selected }) => ({
+  backgroundColor: selected ? '#2EA9DF' : '#fff',
+  borderColor: '#2EA9DF',
+  color: selected ? '#fff' : '#2EA9DF',
+  '&:hover': {
+    backgroundColor: selected ? '#2387c1' : '#fff',
+    borderColor: '#2387c1',
+  },
+  '&.MuiButton-outlined': {
+    color: '#2EA9DF',
+    borderColor: '#2EA9DF',
+  },
+  '&.Mui-disabled': {
+    backgroundColor: selected ? '#2EA9DF' : '#fff',
+    color: selected ? '#fff' : '#2EA9DF',
+    opacity: 1,
+  },
+}));
 
 function Database() {
   // グラフのデータを管理するステート
@@ -80,7 +101,7 @@ function Database() {
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
 
-  // 指標の選択状態を管理するステート
+  // 指標の選択状態を���理するステート
   const [selectedIndicators, setSelectedIndicators] = useState({
     EI: '',
     SN: '',
@@ -195,7 +216,7 @@ function Database() {
     setSelectedTypes(filteredTypes);
   };
 
-  // データをフェッチするための副作用
+  // データをフェッチしてグラフを更新する副作用
   useEffect(() => {
     const fetchData = async () => {
       const typesToUse = selectedTypes.length > 0 ? selectedTypes : [];
@@ -242,108 +263,87 @@ function Database() {
     },
   };
 
-  // ボタンのスタイルを定義
-  const buttonStyle = (selected) => ({
-    backgroundColor: selected ? '#2EA9DF' : '#fff',
-    borderColor: '#2EA9DF',
-    color: selected ? '#fff' : '#2EA9DF',
-    '&:hover': {
-      backgroundColor: selected ? '#2387c1' : '#fff',
-      borderColor: '#2387c1',
-    },
-    '&.MuiButton-outlined': {
-      color: '#2EA9DF',
-      borderColor: '#2EA9DF',
-    },
-    '&.Mui-disabled': {
-      backgroundColor: selected ? '#2EA9DF' : '#fff',
-      color: selected ? '#fff' : '#2EA9DF',
-      opacity: 1,
-    },
-  });
-
   // 心理機能の配列を2つのグループに分ける
   const perceptionFunctions = ['Se', 'Si', 'Ne', 'Ni'];
   const judgmentFunctions = ['Fe', 'Fi', 'Te', 'Ti'];
 
   return (
     <ThemeProvider theme={theme}>
-      <>
-        {/* 説明テキストを追加 */}
-        <p className="text-[#2EA9DF] mt-5 mb-5 ml-32">
-          ボタンを選択・選択解除することでデータベースをフィルタリングすることができま。心理機能またはMBTIタイプを選択してください。
-        </p>
-
+      <div className="w-full max-w-7xl mx-auto">
         {/* コンテンツタイプ選択ボタン */}
-        <div className="ml-32">
-          <ButtonGroup className="mb-4">
+        <div className="flex justify-center mt-5 mb-5">
+          <ButtonGroup>
             {['アニメ', '音楽アーティスト'].map((type) => (
-              <Button
+              <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}
                 variant={contentType === type ? 'contained' : 'outlined'}
-                sx={buttonStyle(contentType === type)}
+                selected={contentType === type}
               >
                 {type}
-              </Button>
+              </StyledButton>
             ))}
           </ButtonGroup>
         </div>
 
+        {/* 説明テキストを追加 */}
+        <div className="text-center mt-5 mb-5">
+          <p className="text-black mb-2">
+            興味のあるMBTI指標、心理機能、またはタイプを選んでください。
+          </p>
+          <p className="text-black">
+            選択したボタンに基づいてデータベースがフィルタリングされ、結果がグラフに反映されます。
+          </p>
+        </div>
+
         {/* 指標選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
+        <div className="flex justify-center mt-6">
           {['EI', 'SN', 'TF', 'JP'].map((group) => (
-            <ButtonGroup key={group} className="mr-4">
+            <ButtonGroup key={group} className="mx-2">
               {group.split('').map((letter) => (
-                <Button
+                <StyledButton
                   key={letter}
                   onClick={() => handleIndicatorClick(group, letter)}
                   variant={selectedIndicators[group] === letter ? 'contained' : 'outlined'}
-                  sx={buttonStyle(selectedIndicators[group] === letter)}
+                  selected={selectedIndicators[group] === letter}
                 >
                   {letter}
-                </Button>
+                </StyledButton>
               ))}
             </ButtonGroup>
           ))}
         </div>
 
         {/* 心理機能選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
-          <ButtonGroup className="mb-4 mr-4">
+        <div className="flex justify-center mt-6">
+          <ButtonGroup className="mb-4 mx-2">
             {perceptionFunctions.map((func) => (
-              <Button
+              <StyledButton
                 key={func}
                 onClick={() => toggleFunction(func)}
                 variant={selectedFunctions.includes(func) ? 'contained' : 'outlined'}
-                sx={{
-                  ...buttonStyle(selectedFunctions.includes(func)),
-                  textTransform: 'none',
-                }}
+                selected={selectedFunctions.includes(func)}
               >
                 {func}
-              </Button>
+              </StyledButton>
             ))}
           </ButtonGroup>
-          <ButtonGroup className="mb-4">
+          <ButtonGroup className="mb-4 mx-2">
             {judgmentFunctions.map((func) => (
-              <Button
+              <StyledButton
                 key={func}
                 onClick={() => toggleFunction(func)}
                 variant={selectedFunctions.includes(func) ? 'contained' : 'outlined'}
-                sx={{
-                  ...buttonStyle(selectedFunctions.includes(func)),
-                  textTransform: 'none',
-                }}
+                selected={selectedFunctions.includes(func)}
               >
                 {func}
-              </Button>
+              </StyledButton>
             ))}
           </ButtonGroup>
         </div>
 
         {/* MBTIタイプ選択ボタン */}
-        <div className="button-groups mt-6 ml-32">
+        <div className="flex justify-center mt-6">
           <ButtonGroup>
             {[
               'ESFP',
@@ -363,23 +363,23 @@ function Database() {
               'INFJ',
               'INTJ',
             ].map((type) => (
-              <Button
+              <StyledButton
                 key={type}
                 onClick={() => toggleType(type)}
                 variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
-                sx={buttonStyle(selectedTypes.includes(type))}
+                selected={selectedTypes.includes(type)}
               >
                 {type}
-              </Button>
+              </StyledButton>
             ))}
           </ButtonGroup>
         </div>
 
         {/* グラフ表示 */}
-        <div className="my-8 ml-2" style={{ width: '98%', height: '100%' }}>
+        <div className="my-8 w-full h-[600px]">
           <Bar options={options} data={chartData} />
         </div>
-      </>
+      </div>
     </ThemeProvider>
   );
 }

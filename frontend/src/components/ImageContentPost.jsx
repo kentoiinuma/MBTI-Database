@@ -194,12 +194,7 @@ const ImageContentPost = () => {
     const containerClass = `image-container-${selectedImages.length}`;
     const imageSize = selectedImages.length === 1 ? 600 : 297.5;
     if (selectedImages.length === 0) {
-      return (
-        <div
-          className={containerClass}
-          style={{ width: '600px', height: '600px', backgroundColor: 'black' }}
-        />
-      );
+      return <div className={`${containerClass} w-[600px] h-[600px] bg-black`} />;
     }
     return (
       <div className={containerClass}>
@@ -239,7 +234,7 @@ const ImageContentPost = () => {
               >
                 {contentType === 'music'
                   ? '正しいアーティスト名を入力してください。'
-                  : '正しいアニメ名を入力してください。'}
+                  : '正しいアニメ名を入��してください。'}
               </Alert>
             </Snackbar>
           )}
@@ -299,7 +294,7 @@ const ImageContentPost = () => {
               />
             </div>
           </div>
-          <span style={{ color: '#2EA9DF' }}>
+          <span className="text-[#2EA9DF]">
             ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
           <div className="bg-black">{renderImages()}</div>
@@ -307,12 +302,7 @@ const ImageContentPost = () => {
             <button
               type="submit"
               onClick={handlePostAndRedirect}
-              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-xl focus:outline-none focus:ring-opacity-50"
-              style={{
-                backgroundColor: '#2EA9DF',
-                color: 'white',
-                borderRadius: '50px',
-              }}
+              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
             >
               ポストする
             </button>

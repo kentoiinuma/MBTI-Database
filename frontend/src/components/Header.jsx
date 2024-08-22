@@ -13,8 +13,13 @@ import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコン
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
-import StorageIcon from '@mui/icons-material/Storage'; // データベースアイコン
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'; // ホームアイコンをインポート
+import { styled } from '@mui/material/styles'; // Material-UIのスタイリング機能をインポート
+
+// LoginOutlinedIconをスタイリングしたコンポーネントを作成
+const StyledLoginIcon = styled(LoginOutlinedIcon)(({ theme }) => ({
+  width: '2rem',
+  height: '2rem',
+}));
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -80,18 +85,12 @@ const Header = ({ onSignIn }) => {
             alt="favicon"
             className="w-8 h-8 mr-2"
           />
-          <NavLink
-            to="/"
-            style={{
-              fontWeight: '600',
-              fontStyle: 'italic',
-            }}
-          >
-            <span style={{ color: '#7B90D2', fontSize: '1.4em' }}>M</span>
-            <span style={{ color: '#86C166', fontSize: '1.4em' }}>B</span>
-            <span style={{ color: '#A5DEE4', fontSize: '1.4em' }}>T</span>
-            <span style={{ color: '#FBE251', fontSize: '1.4em' }}>I</span>
-            <span style={{ color: '#2EA9DF', fontSize: '1.2em' }}>データベース</span>
+          <NavLink to="/" className="font-semibold italic">
+            <span className="text-[#7B90D2] text-[1.4em]">M</span>
+            <span className="text-[#86C166] text-[1.4em]">B</span>
+            <span className="text-[#A5DEE4] text-[1.4em]">T</span>
+            <span className="text-[#FBE251] text-[1.4em]">I</span>
+            <span className="text-[#2EA9DF] text-[1.2em]">データベース</span>
           </NavLink>
         </h1>
       </div>
@@ -100,7 +99,7 @@ const Header = ({ onSignIn }) => {
 
   // ヘッダーコンポーネントのレンダリング
   return (
-    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b border-[#2EA9DF]">
+    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b">
       {getTitle()}
       {isSignedIn ? (
         <>
@@ -129,9 +128,7 @@ const Header = ({ onSignIn }) => {
                   'aria-labelledby': 'basic-button',
                 }}
                 PaperProps={{
-                  style: {
-                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.25)', // 影のスタイルを薄く調整
-                  },
+                  className: 'shadow-md',
                 }}
               >
                 {/* プロフィールメニューアイテム */}
@@ -141,7 +138,7 @@ const Header = ({ onSignIn }) => {
                   to="/profile"
                   className="flex items-center"
                 >
-                  <AccountCircleOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <AccountCircleOutlinedIcon className="text-xl mr-2" />
                   {userProfile ? userProfile.username : 'Loading...'}
                 </MenuItem>
                 {/* アプリ情報メニューアイテム */}
@@ -151,7 +148,7 @@ const Header = ({ onSignIn }) => {
                   to="/about"
                   className="flex items-center"
                 >
-                  <InfoOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <InfoOutlinedIcon className="text-xl mr-2" />
                   このアプリについて
                 </MenuItem>
                 {/* お問い合わせメニューアイテム */}
@@ -161,7 +158,7 @@ const Header = ({ onSignIn }) => {
                   to="/contact"
                   className="flex items-center"
                 >
-                  <HelpOutlineOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <HelpOutlineOutlinedIcon className="text-xl mr-2" />
                   お問い合わせ
                 </MenuItem>
                 {/* 利用規約メニューアイテム */}
@@ -171,7 +168,7 @@ const Header = ({ onSignIn }) => {
                   to="/terms-of-service"
                   className="flex items-center"
                 >
-                  <GavelOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <GavelOutlinedIcon className="text-xl mr-2" />
                   利用規約
                 </MenuItem>
                 {/* プライバシーポリシーメニューアイテム */}
@@ -181,28 +178,8 @@ const Header = ({ onSignIn }) => {
                   to="/privacy-policy"
                   className="flex items-center"
                 >
-                  <PolicyOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <PolicyOutlinedIcon className="text-xl mr-2" />
                   プライバシーポリシー
-                </MenuItem>
-                {/* ホームメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={NavLink}
-                  to="/"
-                  className="flex items-center"
-                >
-                  <HomeOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
-                  ホーム
-                </MenuItem>
-                {/* データベースメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/database"
-                  className="flex items-center"
-                >
-                  <StorageIcon style={{ fontSize: '20px', marginRight: '8px' }} />
-                  データベース
                 </MenuItem>
                 {/* サインアウトメニューアイテム */}
                 <MenuItem
@@ -211,7 +188,7 @@ const Header = ({ onSignIn }) => {
                     handleClose();
                   }}
                 >
-                  <LogoutOutlinedIcon style={{ fontSize: '20px', marginRight: '8px' }} />
+                  <LogoutOutlinedIcon className="text-xl mr-2" />
                   サインアウト
                 </MenuItem>
               </Menu>
@@ -222,14 +199,13 @@ const Header = ({ onSignIn }) => {
         <div className="ml-auto flex items-center gap-2">
           <Link
             to="/about"
-            className={location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}
-            style={{ fontSize: '20px', color: '#2EA9DF' }}
+            className={`text-xl text-[#2EA9DF] ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
           >
             このアプリについて
           </Link>
           <div className="p-2 rounded-full hover:bg-gray-200">
             <SignInButton>
-              <LoginOutlinedIcon style={{ fontSize: '32px' }} />
+              <StyledLoginIcon />
             </SignInButton>
           </div>
         </div>

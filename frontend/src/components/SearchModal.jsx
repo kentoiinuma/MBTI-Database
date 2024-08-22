@@ -26,7 +26,7 @@ const SearchModal = ({
   // モーダルのUI部分
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
-      <div className="bg-white rounded-lg shadow-xl modal-width modal-height overflow-hidden">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl h-auto max-h-[90vh] overflow-hidden">
         <div className="flex justify-between items-center p-4">
           <h2 className="text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>{' '}
           {/* 検索クエリを表示 */}

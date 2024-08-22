@@ -13,11 +13,10 @@ import Contact from './Contact';
 import PostDetail from './PostDetail'; // PostDetailのインポート
 import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
-import Database from './database'; // データベースコンポーネントのインポート
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート
-  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング状態を取得
+  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング���態を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
   const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
@@ -37,7 +36,7 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // バックエンドにユーザー情報を送信して新規ユーーかどうかを確認
+      // バックエンドにユーザー情報を送して新規ユーーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -79,7 +78,7 @@ function MainContent() {
 
   // サインアウト処理を行う関数
   const handleSignOut = useCallback(() => {
-    // サインアウトのスナック��を表示
+    // サインアウトのスナックを表示
     // setSnackbarMessage('サインアウトしました！');
     // setSnackbarOpen(true);
   }, []);
@@ -118,14 +117,13 @@ function MainContent() {
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto">
           <Routes>
-            {/* 各ルートに対応するコンポーネントを設定 */}
+            {/* 各ルートに対応するコンポーネン���を設定 */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
             <Route path="/" element={<AllPosts />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/database" element={<Database />} />
             <Route path="/about" element={<AboutApp />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/post/:postId" element={<PostDetail />} />
@@ -135,10 +133,7 @@ function MainContent() {
         {/* フローティングアクションボタンを追加 */}
         {isSignedIn && (
           <button
-            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300"
-            style={{
-              boxShadow: '0 8px 12px -3px rgba(0, 0, 0, 0.2), 0 3px 5px -3px rgba(0, 0, 0, 0.2)',
-            }}
+            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300 shadow-lg"
             onClick={() => navigate('/post')}
           >
             <svg
