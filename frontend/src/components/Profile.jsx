@@ -137,7 +137,7 @@ const Profile = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="user-details flex items-center justify-between">
+      <div className="flex items-center justify-between pl-32">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -166,7 +166,7 @@ const Profile = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === userProfile.clerkId && (
-          <div className="mr-8 relative">
+          <div className="mr-32 relative">
             <div
               className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
@@ -259,11 +259,9 @@ const Profile = () => {
             {userPosts.map((post) => (
               <React.Fragment key={post.id}>
                 <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
-                  <div className="mt-5 ml-8">
-                    {renderUserDetails(post, post.created_at, post.id)}
-                  </div>
+                  <div className="mt-5">{renderUserDetails(post, post.created_at, post.id)}</div>
                   <div className="mb-5">
-                    <div className="text-xl pl-28 pr-16 w-full text-center">
+                    <div className="text-xl px-52 w-full text-center">
                       {userProfile.username}
                       {userMbtiType && `(${userMbtiType})`}
                       の好きな
@@ -287,25 +285,27 @@ const Profile = () => {
                       です！
                     </div>
                   </div>
-                  <div className="flex justify-start items-start mb-5">
-                    <div
-                      className={`${
-                        post.mediaWorks && post.mediaWorks.length === 2
-                          ? 'w-[500px] h-[247.5px]'
-                          : 'w-[500px] h-[500px]'
-                      } bg-black ml-[345px]`}
-                    >
-                      {post.mediaWorks && renderImages(post.mediaWorks)}
+                  <div className="relative w-full mb-5">
+                    <div className="flex justify-center">
+                      <div
+                        className={`${
+                          post.mediaWorks && post.mediaWorks.length === 2
+                            ? 'w-[500px] h-[247.5px]'
+                            : 'w-[500px] h-[500px]'
+                        } bg-black`}
+                      >
+                        {post.mediaWorks && renderImages(post.mediaWorks)}
+                      </div>
                     </div>
                     {currentUser?.id === userProfile.clerkId && (
                       <div
-                        className="text-right mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200"
+                        className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation();
                           shareToX(post);
                         }}
                       >
-                        <StyledXIcon className="cursor-pointer" />
+                        <StyledXIcon />
                       </div>
                     )}
                   </div>

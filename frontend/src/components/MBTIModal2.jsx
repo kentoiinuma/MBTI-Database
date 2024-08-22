@@ -337,7 +337,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
             <div className="flex justify-center gap-4">
               <button
                 type="submit"
-                className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
+                className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
               >
                 更新する
               </button>

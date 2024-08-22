@@ -208,7 +208,7 @@ const AllPosts = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pl-32">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -233,7 +233,7 @@ const AllPosts = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-8 relative">
+          <div className="mr-32 relative">
             <div
               className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
@@ -385,11 +385,11 @@ const AllPosts = () => {
                   }
                 }}
               >
-                <div className="mt-5 ml-8">
+                <div className="mt-5">
                   {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
                 </div>
                 <div className="mb-5">
-                  <div className="text-xl pl-28 pr-16 w-full text-center">
+                  <div className="text-xl px-52 w-full text-center">
                     {post.user.username}
                     {userMbtiTypes[post.user.clerkId]
                       ? `(${userMbtiTypes[post.user.clerkId]})`
@@ -415,19 +415,21 @@ const AllPosts = () => {
                     です！
                   </div>
                 </div>
-                <div className="flex justify-start items-start mb-5">
-                  <div
-                    className={`${
-                      mediaWorks[post.id] && mediaWorks[post.id].length === 2
-                        ? 'w-[500px] h-[247.5px]'
-                        : 'w-[500px] h-[500px]'
-                    } bg-black ml-[345px]`}
-                  >
-                    {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
+                <div className="relative w-full mb-5">
+                  <div className="flex justify-center">
+                    <div
+                      className={`${
+                        mediaWorks[post.id] && mediaWorks[post.id].length === 2
+                          ? 'w-[500px] h-[247.5px]'
+                          : 'w-[500px] h-[500px]'
+                      } bg-black`}
+                    >
+                      {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
+                    </div>
                   </div>
                   {currentUser?.id === post.user.clerkId && (
                     <div
-                      className="mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200 cursor-pointer"
+                      className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
                       onClick={(e) => {
                         e.stopPropagation();
                         shareToX(post);

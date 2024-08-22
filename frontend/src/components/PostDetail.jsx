@@ -171,7 +171,7 @@ const PostDetail = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pl-32">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -196,7 +196,7 @@ const PostDetail = () => {
           <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-8 relative">
+          <div className="mr-32 relative">
             <div
               className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
@@ -311,11 +311,9 @@ const PostDetail = () => {
         </div>
       ) : (
         <>
-          <div className="mt-5 mx-7">
-            {post?.user && renderUserDetails(post.user, post.createdAt)}
-          </div>
+          <div className="mt-5">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
           <div className="mb-5">
-            <div className="text-xl px-28 w-full text-center">
+            <div className="text-xl px-52 w-full text-center">
               {post.user.username}
               {userMbtiType && `(${userMbtiType})`}
               の好きな
@@ -331,15 +329,19 @@ const PostDetail = () => {
               です！
             </div>
           </div>
-          <div className="flex justify-start items-start mb-5">
-            <div
-              className={`w-[500px] ${mediaWorks.length === 2 ? 'h-[247.5px]' : 'h-[500px]'} bg-black ml-[345px]`}
-            >
-              {renderImages(mediaWorks)}
+          <div className="relative w-full mb-5">
+            <div className="flex justify-center">
+              <div
+                className={`${
+                  mediaWorks.length === 2 ? 'w-[500px] h-[247.5px]' : 'w-[500px] h-[500px]'
+                } bg-black`}
+              >
+                {renderImages(mediaWorks)}
+              </div>
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                className="mt-[450px] ml-[200px] p-3 rounded-full hover:bg-gray-200 cursor-pointer"
+                className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);
