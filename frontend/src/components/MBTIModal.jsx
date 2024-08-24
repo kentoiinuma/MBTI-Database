@@ -6,22 +6,22 @@ import Alert from '@mui/material/Alert';
 
 // MBTIのタイプを定義
 const MBTI_TYPES = [
-  'ESFP',
   'ESTP',
+  'ESFP',
+  'ISTP',
   'ISFP',
-  'ISTP', // Se
-  'ESFJ',
   'ESTJ',
+  'ESFJ',
+  'ISTJ',
   'ISFJ',
-  'ISTJ', // Si
-  'ENFP',
   'ENTP',
+  'ENFP',
+  'INTP',
   'INFP',
-  'INTP', // Ne
-  'ENFJ',
   'ENTJ',
+  'ENFJ',
+  'INTJ',
   'INFJ',
-  'INTJ', // Ni
 ];
 
 // MBTIModalコンポーネント

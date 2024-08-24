@@ -35,8 +35,9 @@ const StyledButton = styled(Button)(({ theme, selected }) => ({
   borderColor: '#2EA9DF',
   color: selected ? '#fff' : '#2EA9DF',
   '&:hover': {
-    backgroundColor: selected ? '#2387c1' : '#fff',
-    borderColor: '#2387c1',
+    backgroundColor: selected ? '#2387c1' : '#f0f0f0', // 非選択時のホバー色を薄いグレーに変更
+    borderColor: '#2EA9DF',
+    color: selected ? '#fff' : '#2EA9DF',
   },
   '&.MuiButton-outlined': {
     color: '#2EA9DF',
@@ -80,28 +81,28 @@ function Database() {
 
   // MBTIタイプの選択状態を管理するステート
   const [selectedTypes, setSelectedTypes] = useState([
-    'ESFP',
     'ESTP',
-    'ISFP',
+    'ESFP',
     'ISTP',
-    'ESFJ',
+    'ISFP',
     'ESTJ',
-    'ISFJ',
+    'ESFJ',
     'ISTJ',
-    'ENFP',
+    'ISFJ',
     'ENTP',
-    'INFP',
+    'ENFP',
     'INTP',
-    'ENFJ',
+    'INFP',
     'ENTJ',
-    'INFJ',
+    'ENFJ',
     'INTJ',
+    'INFJ',
   ]);
 
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
 
-  // 指標の選択状態を���理するステート
+  // 指標の選択状態を理するステート
   const [selectedIndicators, setSelectedIndicators] = useState({
     EI: '',
     SN: '',
@@ -184,27 +185,27 @@ function Database() {
       updateMBTITypes(newIndicators);
       return newIndicators;
     });
-    setSelectedFunctions([]); // 心理機能の選択を解除
+    setSelectedFunctions([]); // 心理機能選択を解除
   };
 
   const updateMBTITypes = (indicators) => {
     const filteredTypes = [
-      'ESFP',
       'ESTP',
-      'ISFP',
+      'ESFP',
       'ISTP',
-      'ESFJ',
+      'ISFP',
       'ESTJ',
-      'ISFJ',
+      'ESFJ',
       'ISTJ',
-      'ENFP',
+      'ISFJ',
       'ENTP',
-      'INFP',
+      'ENFP',
       'INTP',
-      'ENFJ',
+      'INFP',
       'ENTJ',
-      'INFJ',
+      'ENFJ',
       'INTJ',
+      'INFJ',
     ].filter((type) => {
       return (
         (!indicators.EI || type.includes(indicators.EI)) &&
@@ -265,7 +266,7 @@ function Database() {
 
   // 心理機能の配列を2つのグループに分ける
   const perceptionFunctions = ['Se', 'Si', 'Ne', 'Ni'];
-  const judgmentFunctions = ['Fe', 'Fi', 'Te', 'Ti'];
+  const judgmentFunctions = ['Te', 'Ti', 'Fe', 'Fi'];
 
   return (
     <ThemeProvider theme={theme}>
@@ -343,36 +344,26 @@ function Database() {
         </div>
 
         {/* MBTIタイプ選択ボタン */}
-        <div className="flex justify-center mt-6">
-          <ButtonGroup>
-            {[
-              'ESFP',
-              'ESTP',
-              'ISFP',
-              'ISTP',
-              'ESFJ',
-              'ESTJ',
-              'ISFJ',
-              'ISTJ',
-              'ENFP',
-              'ENTP',
-              'INFP',
-              'INTP',
-              'ENFJ',
-              'ENTJ',
-              'INFJ',
-              'INTJ',
-            ].map((type) => (
-              <StyledButton
-                key={type}
-                onClick={() => toggleType(type)}
-                variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
-                selected={selectedTypes.includes(type)}
-              >
-                {type}
-              </StyledButton>
-            ))}
-          </ButtonGroup>
+        <div className="flex flex-wrap justify-center mt-6 gap-4">
+          {[
+            ['ESTP', 'ESFP', 'ISTP', 'ISFP'],
+            ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'],
+            ['ENTP', 'ENFP', 'INTP', 'INFP'],
+            ['ENTJ', 'ENFJ', 'INTJ', 'INFJ'],
+          ].map((group, index) => (
+            <ButtonGroup key={index} className="mb-2">
+              {group.map((type) => (
+                <StyledButton
+                  key={type}
+                  onClick={() => toggleType(type)}
+                  variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
+                  selected={selectedTypes.includes(type)}
+                >
+                  {type}
+                </StyledButton>
+              ))}
+            </ButtonGroup>
+          ))}
         </div>
 
         {/* グラフ表示 */}

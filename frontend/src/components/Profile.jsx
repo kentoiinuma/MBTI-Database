@@ -442,21 +442,21 @@ const Profile = () => {
           </div>
           <div className="flex justify-between items-center mt-16 w-full">
             <div
-              className="flex-1 text-center cursor-pointer"
+              className="flex-1 text-center cursor-pointer sidebar-link"
               onClick={() => selectSection('posts')}
             >
               <span className="text-xl">ポスト</span>
               <div className={getSelectedStyle('posts')}></div>
             </div>
             <div
-              className="flex-1 text-center cursor-pointer"
+              className="flex-1 text-center cursor-pointer sidebar-link"
               onClick={() => selectSection('comments')}
             >
               <span className="text-xl">コメント</span>
               <div className={getSelectedStyle('comments')}></div>
             </div>
             <div
-              className="flex-1 text-center cursor-pointer"
+              className="flex-1 text-center cursor-pointer sidebar-link"
               onClick={() => selectSection('likes')}
             >
               <span className="text-xl">いいね</span>
