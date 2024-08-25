@@ -274,7 +274,7 @@ function Database() {
         {/* コンテンツタイプ選択ボタン */}
         <div className="flex justify-center mt-5 mb-5">
           <ButtonGroup>
-            {['アニメ', '音楽アーティスト'].map((type) => (
+            {['アニメ', '音楽'].map((type) => (
               <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}

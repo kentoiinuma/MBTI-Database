@@ -29,10 +29,8 @@ const MBTIModal = ({ onClose }) => {
   const { user } = useUser();
   const [selectedMBTI, setSelectedMBTI] = useState('');
   const [diagnosisMethod, setDiagnosisMethod] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [mbtiError, setMbtiError] = useState(false);
   const [methodError, setMethodError] = useState(false);
-  // フォームが送信されたかどうかを追跡する新しい状態変数を追加
   const [formSubmitted, setFormSubmitted] = useState(false);
 
   // APIのURLを環境に応じて設定
@@ -53,13 +51,9 @@ const MBTIModal = ({ onClose }) => {
     setDiagnosisMethod(event.target.value);
   };
 
-  const handleAgreementChange = (event) => {
-    setAgreedToTerms(event.target.checked);
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setFormSubmitted(true); // フォームが送信されたときに true に設定
+    setFormSubmitted(true);
     if (!selectedMBTI) {
       setMbtiError(true);
     } else {
@@ -70,7 +64,7 @@ const MBTIModal = ({ onClose }) => {
     } else {
       setMethodError(false);
     }
-    if (agreedToTerms && selectedMBTI && diagnosisMethod) {
+    if (selectedMBTI && diagnosisMethod) {
       const response = await fetch(`${API_URL}/api/v1/mbti`, {
         method: 'POST',
         headers: {
@@ -97,9 +91,6 @@ const MBTIModal = ({ onClose }) => {
         <h2 className="text-xl font-semibold mb-4 text-[#2EA9DF]">
           MBTIタイプと診断方法を選択してください。
         </h2>
-        {formSubmitted && agreedToTerms === false && (
-          <Alert severity="error">利用規約とプライバシーポリシーに同意してください。</Alert>
-        )}
         {mbtiError && <Alert severity="error">MBTIタイプを選択してください</Alert>}
         {methodError && <Alert severity="error">タイプ診断の方法を選択してください。</Alert>}
         <form onSubmit={handleSubmit}>
@@ -182,26 +173,6 @@ const MBTIModal = ({ onClose }) => {
               のセッションを通じて決定した
             </label>
           </fieldset>
-          <div className="mb-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                checked={agreedToTerms}
-                onChange={handleAgreementChange}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium">
-                <Link to="/terms-of-service" className="text-[#2EA9DF]">
-                  利用規約
-                </Link>
-                、
-                <Link to="/privacy-policy" className="text-[#2EA9DF]">
-                  プライバシーポリシー
-                </Link>
-                に同意する
-              </span>
-            </label>
-          </div>
           <div className="flex justify-center gap-4">
             <button
               type="submit"

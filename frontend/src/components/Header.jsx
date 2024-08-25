@@ -75,7 +75,6 @@ const Header = ({ onSignIn }) => {
     setAnchorEl(null);
   };
 
-  // 現在のパスに応じたタイトルを取得する関数
   const getTitle = () => {
     return (
       <div className="flex items-center">
@@ -93,124 +92,136 @@ const Header = ({ onSignIn }) => {
             <span className="text-[#2EA9DF] text-[1.2em]">データベース</span>
           </NavLink>
         </h1>
+        <p className="text-sm text-[#2EA9DF] hidden lg:block">
+          MBTIに紐付けて好きな作品を投稿できるWebアプリ
+        </p>
       </div>
     );
   };
 
   // ヘッダーコンポーネントのレンダリング
   return (
-    <header className="flex justify-between items-center px-4 py-2 bg-white text-black border-b">
-      {getTitle()}
-      {isSignedIn ? (
-        <>
-          <div className="flex items-center gap-4">
-            {/* ユーザーアバター */}
-            <div>
-              <button
-                aria-controls="basic-menu"
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
-              >
-                <img
-                  src={userProfile?.avatarUrl}
-                  alt="User avatar"
-                  className="h-11 w-11 object-cover rounded-full"
-                />
-              </button>
-              {/* ユーザーメニュー */}
-              <Menu
-                id="basic-menu"
-                anchorEl={anchorEl}
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'basic-button',
-                }}
-                PaperProps={{
-                  className: 'shadow-md',
-                }}
-              >
-                {/* プロフィールメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/profile"
-                  className="flex items-center"
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-white text-black z-50 ${
+          location.pathname !== '/' ? 'border-b' : ''
+        }`}
+      >
+        {getTitle()}
+        {isSignedIn ? (
+          <>
+            <div className="flex items-center gap-4">
+              {/* ユーザーアバター */}
+              <div>
+                <button
+                  aria-controls="basic-menu"
+                  aria-haspopup="true"
+                  aria-expanded={open ? 'true' : undefined}
+                  onClick={handleClick}
                 >
-                  <AccountCircleOutlinedIcon className="text-xl mr-2" />
-                  {userProfile ? userProfile.username : 'Loading...'}
-                </MenuItem>
-                {/* アプリ情報メニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/about"
-                  className="flex items-center"
-                >
-                  <InfoOutlinedIcon className="text-xl mr-2" />
-                  このアプリについて
-                </MenuItem>
-                {/* お問い合わせメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/contact"
-                  className="flex items-center"
-                >
-                  <HelpOutlineOutlinedIcon className="text-xl mr-2" />
-                  お問い合わせ
-                </MenuItem>
-                {/* 利用規約メニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/terms-of-service"
-                  className="flex items-center"
-                >
-                  <GavelOutlinedIcon className="text-xl mr-2" />
-                  利用規約
-                </MenuItem>
-                {/* プライバシーポリシーメニューアイテム */}
-                <MenuItem
-                  onClick={handleClose}
-                  component={Link}
-                  to="/privacy-policy"
-                  className="flex items-center"
-                >
-                  <PolicyOutlinedIcon className="text-xl mr-2" />
-                  プライバシーポリシー
-                </MenuItem>
-                {/* サインアウトメニューアイテム */}
-                <MenuItem
-                  onClick={() => {
-                    handleSignOut();
-                    handleClose();
+                  <img
+                    src={userProfile?.avatarUrl}
+                    alt="User avatar"
+                    className="h-11 w-11 object-cover rounded-full hover:brightness-90"
+                  />
+                </button>
+                {/* ユーザーメニュー */}
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleClose}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                  PaperProps={{
+                    className: 'shadow-md',
                   }}
                 >
-                  <LogoutOutlinedIcon className="text-xl mr-2" />
-                  サインアウト
-                </MenuItem>
-              </Menu>
+                  {/* プロフィールメニューアテム */}
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/profile"
+                    className="flex items-center"
+                  >
+                    <AccountCircleOutlinedIcon className="text-xl mr-2" />
+                    {userProfile ? userProfile.username : 'Loading...'}
+                  </MenuItem>
+                  {/* アプリ情報メニューアイテム */}
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/about"
+                    className="flex items-center"
+                  >
+                    <InfoOutlinedIcon className="text-xl mr-2" />
+                    このアプリについて
+                  </MenuItem>
+                  {/* お問合わせメニューアイテム */}
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/contact"
+                    className="flex items-center"
+                  >
+                    <HelpOutlineOutlinedIcon className="text-xl mr-2" />
+                    お問い合わせ
+                  </MenuItem>
+                  {/* 利用規約メニューアイテム */}
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/terms-of-service"
+                    className="flex items-center"
+                  >
+                    <GavelOutlinedIcon className="text-xl mr-2" />
+                    利用規約
+                  </MenuItem>
+                  {/* プライバシーポリシーメニューアイテム */}
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/privacy-policy"
+                    className="flex items-center"
+                  >
+                    <PolicyOutlinedIcon className="text-xl mr-2" />
+                    プライバシーポリシー
+                  </MenuItem>
+                  {/* サインアウトメニューアイテム */}
+                  <MenuItem
+                    onClick={() => {
+                      handleSignOut();
+                      handleClose();
+                    }}
+                  >
+                    <LogoutOutlinedIcon className="text-xl mr-2" />
+                    サインアウト
+                  </MenuItem>
+                </Menu>
+              </div>
             </div>
-          </div>
-        </>
-      ) : (
-        <div className="ml-auto flex items-center gap-2">
-          <Link
-            to="/about"
-            className={`text-xl text-[#2EA9DF] ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
-          >
-            このアプリについて
-          </Link>
-          <div className="p-2 rounded-full hover:bg-gray-200">
+          </>
+        ) : (
+          <div className="ml-auto flex items-center gap-2">
+            <Link
+              to="/about"
+              className={`text-xl text-[#2EA9DF] ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
+            >
+              このアプリについて
+            </Link>
             <SignInButton>
-              <StyledLoginIcon />
+              <span
+                className={`text-xl text-[#2EA9DF] ${location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'}`}
+              >
+                ログイン
+              </span>
             </SignInButton>
           </div>
-        </div>
-      )}
-    </header>
+        )}
+      </header>
+      <div className="h-12"></div> {/* ヘッダーの高さ分のスペーサー */}
+    </>
   );
 };
 

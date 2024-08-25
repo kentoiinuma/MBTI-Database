@@ -16,7 +16,7 @@ import { useUserContext } from '../contexts/UserContext'; // UserContextのイ�
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート
-  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング���態を取得
+  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング���を取得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
   const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
@@ -117,7 +117,7 @@ function MainContent() {
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto">
           <Routes>
-            {/* 各ルートに対応するコンポーネン���を設定 */}
+            {/* 各ルートに対応するコンポーネ���を設定 */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />

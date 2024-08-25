@@ -215,12 +215,12 @@ const MBTIModal = ({ onClose, onUpdate }) => {
         >
           {userProfile && (
             <Box className="flex items-center space-x-4 p-4">
-              <div className="avatar cursor-pointer" onClick={triggerFileSelect}>
+              <div className="avatar cursor-pointer group" onClick={triggerFileSelect}>
                 <div className="w-24 h-24 rounded-full mr-4 overflow-hidden relative">
                   <img
                     src={userProfile.avatarUrl}
                     alt="User avatar"
-                    className="w-full h-full object-cover brightness-50"
+                    className="w-full h-full object-cover brightness-75 group-hover:brightness-50 transition-all duration-300"
                     onClick={(e) => e.stopPropagation()}
                   />
                   <div className="absolute inset-0 flex items-center justify-center">
@@ -337,7 +337,7 @@ const MBTIModal = ({ onClose, onUpdate }) => {
             <div className="flex justify-center gap-4">
               <button
                 type="submit"
-                className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
+                className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
               >
                 更新する
               </button>

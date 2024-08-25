@@ -12,7 +12,6 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  CircularProgress,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -171,34 +170,36 @@ const PostDetail = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="flex items-center justify-between pl-32">
-        <div className="flex items-center">
+      <div className="md:flex md:items-center md:justify-between md:pt-8 md:pl-16 lg:pl-32">
+        <div className="md:flex md:items-center">
           <div
-            className="flex items-center cursor-pointer"
+            className="md:flex md:items-center md:cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="w-20 h-20 rounded-full overflow-hidden">
+            <div className="md:w-20 md:h-20 md:rounded-full md:overflow-hidden">
               <img
                 src={postUser.avatarUrl}
                 alt={`profileImage`}
-                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+                className="md:w-full md:h-full md:object-cover md:transition-all md:duration-300 md:hover:brightness-90"
               />
             </div>
-            <div className="ml-4">
+            <div className="md:ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
+                <span className="md:text-2xl md:hover:underline md:cursor-pointer">
+                  {postUser.username}
+                </span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
+          <span className="md:ml-4 md:hover:underline md:cursor-pointer">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-32 relative">
+          <div className="md:mr-16 lg:mr-32 md:relative">
             <div
-              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
+              className="md:hover:bg-gray-200 md:p-2 md:rounded-full md:inline-block md:cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
               <StyledMoreVertIcon />
@@ -306,14 +307,18 @@ const PostDetail = () => {
   return (
     <div>
       {loading ? (
-        <div className="flex justify-center items-center h-screen">
-          <CircularProgress />
+        <div className="md:flex md:items-center md:justify-center md:h-screen">
+          <div className="md:text-center">
+            <div className="md:loading md:loading-spinner md:loading-lg md:text-custom"></div>
+          </div>
         </div>
       ) : (
         <>
-          <div className="mt-5">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
-          <div className="mb-5">
-            <div className="text-xl px-52 w-full text-center">
+          <div className="md:mt-5">
+            {post?.user && renderUserDetails(post.user, post.createdAt)}
+          </div>
+          <div className="md:mb-5">
+            <div className="md:text-xl md:px-36 lg:px-40 md:w-full md:text-center">
               {post.user.username}
               {userMbtiType && `(${userMbtiType})`}
               の好きな
@@ -329,19 +334,21 @@ const PostDetail = () => {
               です！
             </div>
           </div>
-          <div className="relative w-full mb-5">
-            <div className="flex justify-center">
+          <div className="md:relative md:w-full md:mb-5">
+            <div className="md:flex md:justify-center">
               <div
                 className={`${
-                  mediaWorks.length === 2 ? 'w-[500px] h-[247.5px]' : 'w-[500px] h-[500px]'
-                } bg-black`}
+                  mediaWorks.length === 2
+                    ? 'md:w-[500px] md:h-[247.5px]'
+                    : 'md:w-[500px] md:h-[500px]'
+                } md:bg-black`}
               >
                 {renderImages(mediaWorks)}
               </div>
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
+                className="md:absolute md:bottom-0 md:p-3 md:rounded-full md:hover:bg-gray-200 md:cursor-pointer md:left-[700px] lg:left-[1250px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);
@@ -351,7 +358,7 @@ const PostDetail = () => {
               </div>
             )}
           </div>
-          <hr className="border-t border-[#2EA9DF] w-full" />
+          <hr className="md:border-t md:border-[#2EA9DF] md:w-full" />
           <Snackbar
             open={openSnackbar}
             autoHideDuration={2500}

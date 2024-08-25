@@ -56,7 +56,7 @@ const SearchModal = ({
           <img
             src={contentType === 'music' ? artist.images[0].url : anime.coverImage.large} // アーティストの画像またはアニメのカバー画像を表示
             alt={contentType === 'music' ? `Artist ${artist.name}` : `Anime ${anime.title.native}`}
-            className="max-w-full h-auto cursor-pointer"
+            className="max-w-full h-auto cursor-pointer transition duration-300 ease-in-out hover:brightness-90"
             onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し
           />
         </div>

@@ -186,7 +186,6 @@ const AllPosts = () => {
 
   const renderImages = (works) => {
     const containerClass = `image-container-${works.length}`;
-    const imageSize = works.length === 1 ? 500 : 247.5;
 
     return (
       <div className={containerClass}>
@@ -195,8 +194,9 @@ const AllPosts = () => {
             key={index}
             cloudName="dputyeqso"
             publicId={work.image}
-            width={imageSize}
-            height={imageSize}
+            className={`
+              ${works.length === 1 ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]' : 'w-[122.5px] h-[122.5px] md:w-[247.5px] md:h-[247.5px]'}
+            `}
           />
         ))}
       </div>
@@ -208,7 +208,7 @@ const AllPosts = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="flex items-center justify-between pl-32">
+      <div className="flex items-center justify-between md:pl-16 lg:pl-32">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -217,25 +217,27 @@ const AllPosts = () => {
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="w-20 h-20 rounded-full overflow-hidden">
+            <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
               <img
                 src={postUser.avatarUrl}
                 alt={`profileImage`}
                 className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
               />
             </div>
-            <div className="ml-4">
+            <div className="ml-2 md:ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
+                <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
+                  {postUser.username}
+                </span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
+          <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-32 relative">
+          <div className="md:mr-16 lg:mr-32 relative">
             <div
-              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
+              className="hover:bg-gray-200 md:p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
               <StyledMoreVertIcon />
@@ -388,8 +390,8 @@ const AllPosts = () => {
                 <div className="mt-5">
                   {post.user && renderUserDetails(post.user, post.createdAt, post.id)}
                 </div>
-                <div className="mb-5">
-                  <div className="text-xl px-52 w-full text-center">
+                <div className="mb-3 md:mb-5">
+                  <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
                     {post.user.username}
                     {userMbtiTypes[post.user.clerkId]
                       ? `(${userMbtiTypes[post.user.clerkId]})`
@@ -415,21 +417,15 @@ const AllPosts = () => {
                     です！
                   </div>
                 </div>
-                <div className="relative w-full mb-5">
+                <div className="relative w-full mb-3 md:mb-5">
                   <div className="flex justify-center">
-                    <div
-                      className={`${
-                        mediaWorks[post.id] && mediaWorks[post.id].length === 2
-                          ? 'w-[500px] h-[247.5px]'
-                          : 'w-[500px] h-[500px]'
-                      } bg-black`}
-                    >
+                    <div className="bg-black">
                       {mediaWorks[post.id] && renderImages(mediaWorks[post.id])}
                     </div>
                   </div>
                   {currentUser?.id === post.user.clerkId && (
                     <div
-                      className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
+                      className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
                       onClick={(e) => {
                         e.stopPropagation();
                         shareToX(post);
@@ -440,7 +436,7 @@ const AllPosts = () => {
                   )}
                 </div>
               </div>
-              <hr className="border-t border-[#2EA9DF] w-full" />
+              <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
             </React.Fragment>
           ))
         )}
@@ -449,14 +445,14 @@ const AllPosts = () => {
   };
 
   return (
-    <div>
+    <div className="px-4 md:px-0">
       <div className="fixed top-16 left-0 right-0 bg-white z-10">
-        <div className="flex justify-between items-center mt-16 w-full max-w-2xl mx-auto">
+        <div className="flex justify-between items-center mt-4 w-full max-w-xl mx-auto md:mt-8 md:max-w-2xl">
           <div
-            className="flex-1 text-center cursor-pointer sidebar-link"
+            className="flex-1 text-center cursor-pointer text-lg md:text-xl"
             onClick={() => selectSection('database')}
           >
-            <span className="text-xl">データベース</span>
+            <span>データベース</span>
             <div
               className={
                 selectedSection === 'database'
@@ -466,10 +462,10 @@ const AllPosts = () => {
             ></div>
           </div>
           <div
-            className="flex-1 text-center cursor-pointer sidebar-link"
+            className="flex-1 text-center cursor-pointer text-lg md:text-xl"
             onClick={() => selectSection('home')}
           >
-            <span className="text-xl">ホーム</span>
+            <span>ホーム</span>
             <div
               className={
                 selectedSection === 'home'
@@ -481,7 +477,7 @@ const AllPosts = () => {
         </div>
         <hr className="border-t border-[#91989F] w-full" />
       </div>
-      <div className="mt-32">{renderContent()}</div>
+      <div className="mt-20 md:mt-32">{renderContent()}</div>
       <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
         <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}

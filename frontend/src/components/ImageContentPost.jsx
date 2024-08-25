@@ -11,7 +11,7 @@ const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
   borderColor: '#2EA9DF',
   color: selected ? '#fff' : '#2EA9DF',
   '&:hover': {
-    backgroundColor: selected ? '#2387c1' : '#fff',
+    backgroundColor: selected ? '#2387c1' : '#f0f0f0',
     borderColor: '#2387c1',
   },
   '&.Mui-selected': {
@@ -212,7 +212,7 @@ const ImageContentPost = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 space-y-4">
+    <div className="flex flex-col items-center justify-center mt-12 space-y-4">
       {isLoading ? (
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -234,7 +234,7 @@ const ImageContentPost = () => {
               >
                 {contentType === 'music'
                   ? '正しいアーティスト名を入力してください。'
-                  : '正しいアニメ名を入��してください。'}
+                  : '正しいアニメ名を入力してください。'}
               </Alert>
             </Snackbar>
           )}
@@ -265,7 +265,7 @@ const ImageContentPost = () => {
               アニメ
             </StyledToggleButton>
             <StyledToggleButton value="music" aria-label="music">
-              音楽アーティスト
+              音楽
             </StyledToggleButton>
           </ToggleButtonGroup>
           <div className="flex items-center space-x-2">
@@ -302,7 +302,7 @@ const ImageContentPost = () => {
             <button
               type="submit"
               onClick={handlePostAndRedirect}
-              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
+              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
             >
               ポストする
             </button>

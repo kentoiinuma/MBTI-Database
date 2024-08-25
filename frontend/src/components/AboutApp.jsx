@@ -180,14 +180,14 @@ function AboutApp() {
         <div className="flex justify-center my-12">
           <button
             onClick={() => navigate('/post')}
-            className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
+            className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
           >
             ポストする
           </button>
         </div>
       ) : (
         <div className="flex justify-center my-12">
-          <SignInButton className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white">
+          <SignInButton className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300">
             ログインする
           </SignInButton>
         </div>
