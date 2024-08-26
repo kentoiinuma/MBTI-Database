@@ -103,14 +103,13 @@ const Profile = () => {
 
   const getSelectedStyle = (section) => {
     if (selectedSection === section) {
-      return 'md:border-b-4 md:border-[#2EA9DF] md:w-1/3 md:mx-auto md:rounded-lg';
+      return 'border-b-4 border-[#2EA9DF] w-1/2 mx-auto rounded-lg';
     }
     return '';
   };
 
   const renderImages = (works) => {
     const containerClass = `image-container-${works.length}`;
-    const imageSize = works.length === 1 ? 500 : 247.5;
 
     return (
       <div className={containerClass}>
@@ -119,8 +118,9 @@ const Profile = () => {
             key={index}
             cloudName="dputyeqso"
             publicId={work.image}
-            width={imageSize}
-            height={imageSize}
+            className={`
+              ${works.length === 1 ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]' : 'w-[122.5px] h-[122.5px] md:w-[247.5px] md:h-[247.5px]'}
+            `}
           />
         ))}
       </div>
@@ -137,38 +137,36 @@ const Profile = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="md:flex md:items-center md:justify-between md:pl-16 lg:pl-32">
-        <div className="md:flex md:items-center">
+      <div className="flex items-center justify-between md:pl-16 lg:pl-32">
+        <div className="flex items-center">
           <div
-            className="md:flex md:items-center md:cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/profile/${userProfile.clerkId || ''}`);
             }}
           >
-            <div className="avatar">
-              <div className="md:w-20 md:rounded-full md:overflow-hidden">
-                <img
-                  src={userProfile.avatarUrl || 'デフォルトのアバター画像URL'}
-                  alt={`profileImage`}
-                  className="md:w-full md:h-full md:object-cover md:transition-all md:duration-300 md:hover:brightness-90"
-                />
-              </div>
+            <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
+              <img
+                src={userProfile.avatarUrl || 'デフォルトのアバター画像URL'}
+                alt={`profileImage`}
+                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
+              />
             </div>
-            <div className="md:ml-4">
+            <div className="ml-2 md:ml-4">
               <h1>
-                <span className="md:text-2xl md:hover:underline md:cursor-pointer">
+                <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
                   {userProfile.username || 'Unknown User'}
                 </span>
               </h1>
             </div>
           </div>
-          <span className="md:ml-4 md:hover:underline md:cursor-pointer">{formattedDate}</span>
+          <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
         </div>
         {currentUser?.id === userProfile.clerkId && (
-          <div className="md:mr-16 lg:mr-32 md:relative">
+          <div className="md:mr-16 lg:mr-32 relative">
             <div
-              className="md:hover:bg-gray-200 md:p-2 md:rounded-full md:inline-block md:cursor-pointer"
+              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
               <StyledMoreVertIcon />
@@ -237,8 +235,8 @@ const Profile = () => {
           if (response.ok) {
             // 投稿が正常に削された場合、投稿リストからの投稿を削除
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
-            setOpenDialog(false); // ダイアログを閉じる
-            // ここでスナックバーを表示するなど処理を追加できます
+            setOpenDialog(false); // ダイログを閉じる
+            // ここでスナックバーを表示するなど処理追加できます
           } else {
             // エラーハンドリング
             console.error('Failed to delete the post');
@@ -254,138 +252,114 @@ const Profile = () => {
   const renderContent = () => {
     switch (selectedSection) {
       case 'posts':
-        return renderPosts();
+        return (
+          <div>
+            {userPosts.map((post) => (
+              <React.Fragment key={post.id}>
+                <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
+                  <div className="mt-5">{renderUserDetails(post, post.created_at, post.id)}</div>
+                  <div className="mb-3 md:mb-5">
+                    <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-52">
+                      {userProfile.username}
+                      {userMbtiType && `(${userMbtiType})`}
+                      の好きな
+                      {post.mediaWorks && post.mediaWorks[0] ? (
+                        <>
+                          {post.mediaWorks[0].media_type === 'anime'
+                            ? 'アニメ'
+                            : '音楽アーティスト'}
+                        </>
+                      ) : (
+                        ''
+                      )}
+                      は
+                      {post.mediaWorks &&
+                        post.mediaWorks
+                          .map(
+                            (work, index, array) =>
+                              `${work.title}${index < array.length - 1 ? '、' : ''}`
+                          )
+                          .join('')}
+                      です！
+                    </div>
+                  </div>
+                  <div className="relative w-full mb-3 md:mb-5">
+                    <div className="flex justify-center">
+                      <div className="bg-black">
+                        {post.mediaWorks && renderImages(post.mediaWorks)}
+                      </div>
+                    </div>
+                    {currentUser?.id === userProfile.clerkId && (
+                      <div
+                        className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          shareToX(post);
+                        }}
+                      >
+                        <StyledXIcon />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
+              </React.Fragment>
+            ))}
+          </div>
+        );
       case 'comments':
-        return renderComments();
+        return (
+          <div className="text-center mt-4 md:mt-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 inline-block"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.867 19.125h.008v.008h-.008v-.008Z"
+              />
+            </svg>
+            実装予定
+          </div>
+        );
       case 'likes':
-        return renderLikes();
+        return (
+          <div className="text-center mt-4 md:mt-8">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 inline-block"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.867 19.125h.008v.008h-.008v-.008Z"
+              />
+            </svg>
+            実装予定
+          </div>
+        );
       default:
         return null;
     }
-  };
-
-  const renderPosts = () => {
-    return (
-      <div>
-        {userPosts.map((post) => (
-          <React.Fragment key={post.id}>
-            <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
-              {renderUserDetails(post, post.created_at, post.id)}
-              {renderPostContent(post)}
-              {renderMediaWorks(post)}
-              {renderShareButton(post)}
-            </div>
-            <hr className="border-t border-[#2EA9DF] w-full" />
-          </React.Fragment>
-        ))}
-      </div>
-    );
-  };
-
-  const renderPostContent = (post) => {
-    return (
-      <div className="mb-3 md:mb-5">
-        <div className="text-base px-4 w-full text-center md:text-xl md:px-36 lg:px-52">
-          {userProfile.username}
-          {userMbtiType && `(${userMbtiType})`}
-          の好きな
-          {post.mediaWorks && post.mediaWorks[0] ? (
-            <>{post.mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト'}</>
-          ) : (
-            ''
-          )}
-          は
-          {post.mediaWorks &&
-            post.mediaWorks
-              .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
-              .join('')}
-          です！
-        </div>
-      </div>
-    );
-  };
-
-  const renderMediaWorks = (post) => {
-    return (
-      <div className="relative w-full mb-3 md:mb-5">
-        <div className="flex justify-center">
-          <div className={`${post.mediaWorks && post.mediaWorks.length === 2 ? 'w-[250px] h-[123.75px] md:w-[500px] md:h-[247.5px]' : 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]'} bg-black`}>
-            {post.mediaWorks && renderImages(post.mediaWorks)}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderShareButton = (post) => {
-    if (currentUser?.id === userProfile.clerkId) {
-      return (
-        <div
-          className="absolute bottom-0 right-0 p-2 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
-          onClick={(e) => {
-            e.stopPropagation();
-            shareToX(post);
-          }}
-        >
-          <StyledXIcon />
-        </div>
-      );
-    }
-    return null;
-  };
-
-  const renderComments = () => {
-    return (
-      <div className="text-center mt-8">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6 inline-block mr-2"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4.867 19.125h.008v.008h-.008v-.008Z"
-          />
-        </svg>
-        実装予定
-      </div>
-    );
-  };
-
-  const renderLikes = () => {
-    return (
-      <div className="text-center mt-8">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth={1.5}
-          stroke="currentColor"
-          className="w-6 h-6 inline-block mr-2"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M4.867 19.125h.008v.008h-.008v-.008Z"
-          />
-        </svg>
-        実装予定
-      </div>
-    );
   };
 
   const shareToX = (post) => {
@@ -416,7 +390,7 @@ const Profile = () => {
     <div className="flex flex-col w-full px-4 md:px-0">
       {userProfile && (
         <>
-          <div className="flex items-center justify-between w-full pt-4 md:pt-8 md:px-8">
+          <div className="flex items-center justify-between w-full pt-8 md:pt-8 md:px-8">
             <div className="avatar">
               <div className="w-16 h-16 rounded-full overflow-hidden md:w-24 md:h-24">
                 <img
@@ -481,7 +455,7 @@ const Profile = () => {
               <div className={getSelectedStyle('likes')}></div>
             </div>
           </div>
-          <hr className="border-t border-[#2EA9DF] w-full" />
+          <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
           {renderContent()}
         </>
       )}

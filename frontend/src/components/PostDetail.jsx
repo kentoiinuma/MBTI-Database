@@ -148,7 +148,6 @@ const PostDetail = () => {
 
   const renderImages = (works) => {
     const containerClass = `image-container-${works.length}`;
-    const imageSize = works.length === 1 ? 500 : 247.5;
 
     return (
       <div className={containerClass}>
@@ -157,8 +156,9 @@ const PostDetail = () => {
             key={index}
             cloudName="dputyeqso"
             publicId={work.image}
-            width={imageSize}
-            height={imageSize}
+            className={`
+              ${works.length === 1 ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]' : 'w-[122.5px] h-[122.5px] md:w-[247.5px] md:h-[247.5px]'}
+            `}
           />
         ))}
       </div>
@@ -170,36 +170,36 @@ const PostDetail = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="md:flex md:items-center md:justify-between md:pt-8 md:pl-16 lg:pl-32">
-        <div className="md:flex md:items-center">
+      <div className="flex items-center justify-between md:pl-16 lg:pl-32">
+        <div className="flex items-center">
           <div
-            className="md:flex md:items-center md:cursor-pointer"
+            className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="md:w-20 md:h-20 md:rounded-full md:overflow-hidden">
+            <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
               <img
                 src={postUser.avatarUrl}
                 alt={`profileImage`}
-                className="md:w-full md:h-full md:object-cover md:transition-all md:duration-300 md:hover:brightness-90"
+                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
               />
             </div>
-            <div className="md:ml-4">
+            <div className="ml-2 md:ml-4">
               <h1>
-                <span className="md:text-2xl md:hover:underline md:cursor-pointer">
+                <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
                   {postUser.username}
                 </span>
               </h1>
             </div>
           </div>
-          <span className="md:ml-4 md:hover:underline md:cursor-pointer">{formattedDate}</span>
+          <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="md:mr-16 lg:mr-32 md:relative">
+          <div className="md:mr-16 lg:mr-32 relative">
             <div
-              className="md:hover:bg-gray-200 md:p-2 md:rounded-full md:inline-block md:cursor-pointer"
+              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
             >
               <StyledMoreVertIcon />
@@ -305,20 +305,18 @@ const PostDetail = () => {
   };
 
   return (
-    <div>
+    <div className="px-4 md:px-0">
       {loading ? (
-        <div className="md:flex md:items-center md:justify-center md:h-screen">
-          <div className="md:text-center">
-            <div className="md:loading md:loading-spinner md:loading-lg md:text-custom"></div>
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-custom"></div>
           </div>
         </div>
       ) : (
         <>
-          <div className="md:mt-5">
-            {post?.user && renderUserDetails(post.user, post.createdAt)}
-          </div>
-          <div className="md:mb-5">
-            <div className="md:text-xl md:px-36 lg:px-40 md:w-full md:text-center">
+          <div className="mt-10">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
+          <div className="mb-3 md:mb-5">
+            <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
               {post.user.username}
               {userMbtiType && `(${userMbtiType})`}
               の好きな
@@ -334,21 +332,13 @@ const PostDetail = () => {
               です！
             </div>
           </div>
-          <div className="md:relative md:w-full md:mb-5">
-            <div className="md:flex md:justify-center">
-              <div
-                className={`${
-                  mediaWorks.length === 2
-                    ? 'md:w-[500px] md:h-[247.5px]'
-                    : 'md:w-[500px] md:h-[500px]'
-                } md:bg-black`}
-              >
-                {renderImages(mediaWorks)}
-              </div>
+          <div className="relative w-full mb-3 md:mb-5">
+            <div className="flex justify-center">
+              <div className="bg-black">{renderImages(mediaWorks)}</div>
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                className="md:absolute md:bottom-0 md:p-3 md:rounded-full md:hover:bg-gray-200 md:cursor-pointer md:left-[700px] lg:left-[1250px]"
+                className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);
@@ -358,7 +348,7 @@ const PostDetail = () => {
               </div>
             )}
           </div>
-          <hr className="md:border-t md:border-[#2EA9DF] md:w-full" />
+          <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
           <Snackbar
             open={openSnackbar}
             autoHideDuration={2500}

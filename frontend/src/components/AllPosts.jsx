@@ -449,7 +449,7 @@ const AllPosts = () => {
       <div className="fixed top-16 left-0 right-0 bg-white z-10">
         <div className="flex justify-between items-center mt-4 w-full max-w-xl mx-auto md:mt-8 md:max-w-2xl">
           <div
-            className="flex-1 text-center cursor-pointer text-lg md:text-xl"
+            className="flex-1 text-center cursor-pointer text-lg md:text-xl sidebar-link"
             onClick={() => selectSection('database')}
           >
             <span>データベース</span>
@@ -462,7 +462,7 @@ const AllPosts = () => {
             ></div>
           </div>
           <div
-            className="flex-1 text-center cursor-pointer text-lg md:text-xl"
+            className="flex-1 text-center cursor-pointer text-lg md:text-xl sidebar-link"
             onClick={() => selectSection('home')}
           >
             <span>ホーム</span>
