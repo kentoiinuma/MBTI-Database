@@ -270,9 +270,9 @@ function Database() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-full px-4 mx-auto md:max-w-7xl">
         {/* コンテンツタイプ選択ボタン */}
-        <div className="flex justify-center mt-5 mb-5">
+        <div className="flex justify-center mt-4 mb-4 md:mt-5 md:mb-5">
           <ButtonGroup>
             {['アニメ', '音楽'].map((type) => (
               <StyledButton
@@ -287,9 +287,9 @@ function Database() {
           </ButtonGroup>
         </div>
 
-        {/* 説明テキストを追加 */}
-        <div className="text-center mt-5 mb-5">
-          <p className="text-black mb-2">
+        {/* 説明テキスト */}
+        <div className="text-center mt-4 mb-4 md:mt-5 md:mb-5">
+          <p className="text-black mb-1 md:mb-2">
             興味のあるMBTI指標、心理機能、またはタイプを選んでください。
           </p>
           <p className="text-black">
@@ -298,9 +298,9 @@ function Database() {
         </div>
 
         {/* 指標選択ボタン */}
-        <div className="flex justify-center mt-6">
+        <div className="flex flex-wrap justify-center mt-4 md:mt-6">
           {['EI', 'SN', 'TF', 'JP'].map((group) => (
-            <ButtonGroup key={group} className="mx-2">
+            <ButtonGroup key={group} className="mx-1 mb-2 md:mx-2">
               {group.split('').map((letter) => (
                 <StyledButton
                   key={letter}
@@ -316,8 +316,8 @@ function Database() {
         </div>
 
         {/* 心理機能選択ボタン */}
-        <div className="flex justify-center mt-6">
-          <ButtonGroup className="mb-4 mx-2">
+        <div className="flex flex-wrap justify-center mt-4 md:mt-6">
+          <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
             {perceptionFunctions.map((func) => (
               <StyledButton
                 key={func}
@@ -329,7 +329,7 @@ function Database() {
               </StyledButton>
             ))}
           </ButtonGroup>
-          <ButtonGroup className="mb-4 mx-2">
+          <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
             {judgmentFunctions.map((func) => (
               <StyledButton
                 key={func}
@@ -344,7 +344,7 @@ function Database() {
         </div>
 
         {/* MBTIタイプ選択ボタン */}
-        <div className="flex flex-wrap justify-center mt-6 gap-4">
+        <div className="flex flex-wrap justify-center mt-4 gap-2 md:mt-6 md:gap-4">
           {[
             ['ESTP', 'ESFP', 'ISTP', 'ISFP'],
             ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'],
@@ -367,7 +367,7 @@ function Database() {
         </div>
 
         {/* グラフ表示 */}
-        <div className="my-8 w-full h-[600px]">
+        <div className="my-6 w-full h-[400px] md:my-8 md:h-[600px]">
           <Bar options={options} data={chartData} />
         </div>
       </div>

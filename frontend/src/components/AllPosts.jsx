@@ -446,7 +446,7 @@ const AllPosts = () => {
 
   return (
     <div className="px-4 md:px-0">
-      <div className="fixed top-16 left-0 right-0 bg-white z-10">
+      <div className="fixed top-16 md:top-12 left-0 right-0 bg-white z-10">
         <div className="flex justify-between items-center mt-4 w-full max-w-xl mx-auto md:mt-8 md:max-w-2xl">
           <div
             className="flex-1 text-center cursor-pointer text-lg md:text-xl sidebar-link"
@@ -477,7 +477,7 @@ const AllPosts = () => {
         </div>
         <hr className="border-t border-[#91989F] w-full" />
       </div>
-      <div className="mt-20 md:mt-32">{renderContent()}</div>
+      <div className="mt-20 md:mt-24">{renderContent()}</div>
       <Snackbar open={openSnackbar} autoHideDuration={2500} onClose={() => setOpenSnackbar(false)}>
         <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
           {snackbarMessage}

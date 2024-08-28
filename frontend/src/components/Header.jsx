@@ -1,11 +1,9 @@
-// frontend/src/components/Header.jsx
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // PropTypesをインポート
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined'; // 情報アイコン
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'; // ログアウトアイコン
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'; // アカウントアイコン
 import Menu from '@mui/material/Menu'; // メニューコンポーネント
@@ -14,6 +12,8 @@ import { useUserContext } from '../contexts/UserContext'; // UserContextをイ�
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
 import { styled } from '@mui/material/styles'; // Material-UIのスタイリング機能をインポート
+import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; // 使い方アイコンを追加
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'; // お問い合わせアイコンを追加
 
 // LoginOutlinedIconをスタイリングしたコンポーネントを作成
 const StyledLoginIcon = styled(LoginOutlinedIcon)(({ theme }) => ({
@@ -78,7 +78,7 @@ const Header = ({ onSignIn }) => {
   const getTitle = () => {
     return (
       <div className="flex items-center">
-        <h1 className="text-xl font-bold mr-4 flex items-center">
+        <h1 className="text-xl font-bold flex items-center">
           <img
             src={process.env.PUBLIC_URL + '/favicon.ico'}
             alt="favicon"
@@ -92,8 +92,8 @@ const Header = ({ onSignIn }) => {
             <span className="text-[#2EA9DF] text-[1.2em]">データベース</span>
           </NavLink>
         </h1>
-        <p className="text-sm text-[#2EA9DF] hidden lg:block">
-          MBTIに紐付けて好きな作品を投稿できるWebアプリ
+        <p className="text-sm ml-4 text-[#2EA9DF] hidden lg:block">
+          MBTIに紐付けて好きな作品を投稿できるアプリ
         </p>
       </div>
     );
@@ -155,8 +155,8 @@ const Header = ({ onSignIn }) => {
                     to="/about"
                     className="flex items-center"
                   >
-                    <InfoOutlinedIcon className="text-xl mr-2" />
-                    このアプリについて
+                    <HelpOutlineOutlinedIcon className="text-xl mr-2" />
+                    使い方
                   </MenuItem>
                   {/* お問合わせメニューアイテム */}
                   <MenuItem
@@ -165,7 +165,7 @@ const Header = ({ onSignIn }) => {
                     to="/contact"
                     className="flex items-center"
                   >
-                    <HelpOutlineOutlinedIcon className="text-xl mr-2" />
+                    <QuestionAnswerOutlinedIcon className="text-xl mr-2" />
                     お問い合わせ
                   </MenuItem>
                   {/* 利用規約メニューアイテム */}
@@ -203,12 +203,13 @@ const Header = ({ onSignIn }) => {
             </div>
           </>
         ) : (
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto flex flex-col md:flex-row items-center gap-2">
             <Link
               to="/about"
-              className={`text-xl text-[#2EA9DF] ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
+              className={`text-xl text-[#2EA9DF] flex items-center ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
             >
-              このアプリについて
+              <HelpOutlineIcon /> {/* 使い方アイコンを追加 */}
+              使い方
             </Link>
             <SignInButton>
               <span

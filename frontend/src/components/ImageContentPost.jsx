@@ -212,11 +212,11 @@ const ImageContentPost = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-12 space-y-4">
+    <div className="md:flex md:flex-col md:items-center md:justify-center md:mt-12 md:space-y-4">
       {isLoading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="loading loading-spinner loading-lg text-custom"></div>
+        <div className="md:flex md:items-center md:justify-center md:h-screen">
+          <div className="md:text-center">
+            <div className="md:loading md:loading-spinner md:loading-lg md:text-custom"></div>
           </div>
         </div>
       ) : (
@@ -268,15 +268,15 @@ const ImageContentPost = () => {
               音楽
             </StyledToggleButton>
           </ToggleButtonGroup>
-          <div className="flex items-center space-x-2">
-            <div className="relative w-full max-w-xs">
+          <div className="md:flex md:items-center md:space-x-2">
+            <div className="md:relative md:w-full md:max-w-xs">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-6 h-6 absolute left-3 top-1/2 transform -translate-y-1/2"
+                className="md:w-6 md:h-6 md:absolute md:left-3 md:top-1/2 md:transform md:-translate-y-1/2"
               >
                 <path
                   strokeLinecap="round"
@@ -287,22 +287,22 @@ const ImageContentPost = () => {
               <input
                 type="text"
                 placeholder={contentType === 'music' ? '好きな音楽アーティスト' : '好きなアニメ'}
-                className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
+                className="md:input md:input-bordered md:input-info md:pl-12 md:pr-4 md:py-2 md:w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
             </div>
           </div>
-          <span className="text-[#2EA9DF]">
+          <span className="md:text-[#2EA9DF]">
             ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
-          <div className="bg-black">{renderImages()}</div>
-          <div className="flex justify-center gap-4">
+          <div className="md:bg-black">{renderImages()}</div>
+          <div className="md:flex md:justify-center md:gap-4">
             <button
               type="submit"
               onClick={handlePostAndRedirect}
-              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
+              className="md:w-full md:inline-flex md:justify-center md:items-center md:px-4 md:py-2 md:font-bold md:rounded-full md:focus:outline-none md:focus:ring-opacity-50 md:bg-[#2EA9DF] md:text-white md:hover:bg-[#2589B4] md:transition-colors md:duration-300"
             >
               ポストする
             </button>
