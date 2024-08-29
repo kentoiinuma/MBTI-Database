@@ -193,7 +193,11 @@ const ImageContentPost = () => {
   const renderImages = () => {
     const containerClass = `image-container-${selectedImages.length}`;
     if (selectedImages.length === 0) {
-      return <div className={`${containerClass} w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-black`} />;
+      return (
+        <div
+          className={`${containerClass} w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-black`}
+        />
+      );
     }
     return (
       <div className={containerClass}>
