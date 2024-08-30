@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types'; // PropTypesをインポート
 import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
 import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコン
 import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'; // ログアウトアイコン
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'; // アカウントアイコン
@@ -11,15 +10,8 @@ import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコン
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
-import { styled } from '@mui/material/styles'; // Material-UIのスタイリング機能をインポート
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; // 使い方アイコンを追加
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'; // お問い合わせアイコンを追加
-
-// LoginOutlinedIconをスタイリングしたコンポーネントを作成
-const StyledLoginIcon = styled(LoginOutlinedIcon)(({ theme }) => ({
-  width: '2rem',
-  height: '2rem',
-}));
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {

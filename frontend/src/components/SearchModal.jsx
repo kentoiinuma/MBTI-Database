@@ -25,11 +25,11 @@ const SearchModal = ({
 
   // モーダルのUI部分
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 z-40 flex justify-center items-center p-4">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-2xl h-auto max-h-[90vh] overflow-hidden">
-        <div className="flex justify-between items-center p-4">
-          <h2 className="text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>{' '}
-          {/* 検索クエリを表示 */}
+        {/* モーダルの内容 */}
+        <div className="flex justify-between items-center p-2 md:p-4">
+          <h2 className="text-lg md:text-xl font-semibold">{`「${searchQuery}」の検索結果`}</h2>
           <button
             onClick={onClose} // 閉じるボタン。クリックでモーダルを閉じる。
             className="text-gray-600 hover:text-gray-800"
@@ -46,18 +46,17 @@ const SearchModal = ({
             </svg>
           </button>
         </div>
-        <div className="flex justify-between items-center px-8">
-          <h2 className="text-xl font-semibold">
+        <div className="flex justify-between items-center px-4 md:px-8">
+          <h2 className="text-lg md:text-xl font-semibold">
             {contentType === 'music' ? artist.name : anime.title.native}
-          </h2>{' '}
-          {/* アーティスト名またはアニメタイトルを表示 */}
+          </h2>
         </div>
-        <div className="px-8 pb-8 flex justify-center">
+        <div className="px-4 md:px-8 pb-8 flex justify-center">
           <img
-            src={contentType === 'music' ? artist.images[0].url : anime.coverImage.large} // アーティストの画像またはアニメのカバー画像を表示
+            src={contentType === 'music' ? artist.images[0].url : anime.coverImage.large}
             alt={contentType === 'music' ? `Artist ${artist.name}` : `Anime ${anime.title.native}`}
             className="max-w-full h-auto cursor-pointer transition duration-300 ease-in-out hover:brightness-90"
-            onClick={handleImageClick} // 画像クリックでhandleImageClickを呼び出し
+            onClick={handleImageClick}
           />
         </div>
       </div>

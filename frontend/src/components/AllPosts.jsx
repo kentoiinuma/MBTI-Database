@@ -48,18 +48,6 @@ const AllPosts = () => {
     setSelectedSection(section);
   };
 
-  const getSelectedStyle = (section) => {
-    if (selectedSection === section) {
-      return {
-        borderBottom: '4px solid #2EA9DF',
-        width: '50%',
-        margin: '0 auto',
-        borderRadius: '10px',
-      };
-    }
-    return {};
-  };
-
   const handleClick = (event, postId) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
