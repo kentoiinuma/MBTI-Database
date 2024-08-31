@@ -4,7 +4,6 @@ import Link from '@mui/material/Link';
 import { useUser, SignInButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 
 function AboutApp() {
   const { isSignedIn } = useUser();
@@ -36,7 +35,7 @@ function AboutApp() {
       <div className="flex items-start mt-2.5">
         <div className="flex-1">
           <p>
-            MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をなさないことが問題視れていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました！
+            MBTIは最終的には自分でタイプを決める必要がある主観的な心理検査なので、ユーザーの誤診によりデータベースや統計が意味をな��ないことが問題視れていますが、ユーザーの診断方法をデータベースに登録し、その診断方法をもとにデータベースの母集団をフィルタリングする機能を実装することで、少しでも誤診を考慮した上でデータベースを見やすくできるようにしました！
           </p>
           <ul>
             <li className="mt-5">

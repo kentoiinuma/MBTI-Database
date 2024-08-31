@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Image } from 'cloudinary-react';
-import MBTIModal from './MBTIModal2';
+import MBTIModal from './MBTIModal';
 import { useUser } from '@clerk/clerk-react';
 import { useUserContext } from '../contexts/UserContext';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -236,7 +236,7 @@ const Profile = () => {
             // 投稿が正常に削された場合、投稿リストからの投稿を削除
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイログを閉じる
-            // ここでスナックバーを表示するなど処理追加できます
+            // こスナックバーを表示するなど処理追加できます
           } else {
             // エラーハンドリング
             console.error('Failed to delete the post');
@@ -460,7 +460,38 @@ const Profile = () => {
         </>
       )}
       {showMBTIModal && (!clerkId || clerkId === currentUser?.id) && (
-        <MBTIModal onClose={() => setShowMBTIModal(false)} onUpdate={setMbtiType} />
+        <MBTIModal
+          onClose={() => setShowMBTIModal(false)}
+          onUpdate={(newMbtiType) => {
+            // MBTIタイプを更新するAPIリクエストを送信
+            fetch(`${API_URL}/api/v1/mbti/${currentUser.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                mbti_type: newMbtiType,
+                visibility: mbtiType.visibility, // visibilityも更新
+              }),
+            })
+              .then((res) => res.json())
+              .then((data) => {
+                // 更新後のMBTIタイプを状態に反映
+                setMbtiType(data.mbti_type); // data.mbti_typeのみをセット
+              })
+              .catch((error) => {
+                console.error('Error updating MBTI type:', error);
+              });
+          }}
+          initialMBTI={mbtiType}
+          initialVisibility={
+            mbtiType
+              ? mbtiType.visibility === 'is_public'
+                ? 'is_public'
+                : 'is_private'
+              : 'is_public'
+          } // initialVisibilityを渡す
+        />
       )}
       <Dialog
         open={openDialog}

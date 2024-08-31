@@ -52,7 +52,7 @@ gem 'clerk-sdk-ruby', require: 'clerk'
 
 # Added for dynamic OGP image generation
 gem 'imgkit'
-gem 'wkhtmltopdf-heroku', '2.1.6.0'
+gem 'wkhtmltopdf-heroku', '~> 2.12.6.0'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

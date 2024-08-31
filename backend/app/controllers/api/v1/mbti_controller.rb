@@ -24,7 +24,7 @@ module Api
 
         @mbti_type = MbtiType.find_by(user_id: user.id)
         if @mbti_type
-          render json: { mbti_type: @mbti_type.mbti_type, diagnosis_method: @mbti_type.diagnosis_method }
+          render json: { mbti_type: @mbti_type.mbti_type, visibility: @mbti_type.visibility }
         else
           render json: { mbti_type: nil, message: 'MBTI type not set' }, status: 200
         end
@@ -54,7 +54,7 @@ module Api
       end
 
       def mbti_params
-        params.require(:mbti).permit(:mbti_type, :diagnosis_method, :user_id)
+        params.require(:mbti).permit(:mbti_type, :visibility, :user_id)
       end
     end
   end
