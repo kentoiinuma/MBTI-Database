@@ -67,7 +67,7 @@ const PostDetail = () => {
   const { user: currentUser } = useUser();
   const { setPostUsername } = usePostUsername();
   const [loading, setLoading] = useState(true);
-  const [userMbtiType, setUserMbtiType] = useState(null);
+  const [mbtiType, setMbtiType] = useState(null); // mbtiTypeの状態を管理するuseStateを追加
 
   useEffect(() => {
     const fetchPostData = async () => {
@@ -93,7 +93,7 @@ const PostDetail = () => {
         const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${data.user.clerk_id}`);
         const mbtiData = await mbtiResponse.json();
         if (mbtiData.mbti_type) {
-          setUserMbtiType(mbtiData.mbti_type);
+          setMbtiType(mbtiData); // mbtiTypeの状態を更新
         }
       } catch (error) {
         console.error('Error fetching post:', error);
@@ -190,6 +190,9 @@ const PostDetail = () => {
               <h1>
                 <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
                   {postUser.username}
+                  {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
+                  {mbtiType?.visibility === 'is_public' && `(${mbtiType?.mbti_type})`}{' '}
+                  {/* mbtiType?.mbti_typeで表示 */}
                 </span>
               </h1>
             </div>
@@ -291,7 +294,8 @@ const PostDetail = () => {
 
     if (mediaWorks && mediaWorks[0]) {
       const mediaType = mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
-      const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
+      // visibilityがis_publicの場合のみMBTIタイプを表示
+      const mbtiTypeText = mbtiType?.visibility === 'is_public' ? `(${mbtiType?.mbti_type})` : ''; // mbtiType?.mbti_typeで表示
       artistText = `${post.user.username}${mbtiTypeText}の好きな${mediaType}は${mediaWorks
         .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
@@ -318,7 +322,9 @@ const PostDetail = () => {
           <div className="mb-3 md:mb-5">
             <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
               {post.user.username}
-              {userMbtiType && `(${userMbtiType})`}
+              {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
+              {mbtiType?.visibility === 'is_public' && `(${mbtiType?.mbti_type})`}{' '}
+              {/* mbtiType?.mbti_typeで表示 */}
               の好きな
               {mediaWorks[0] ? (
                 <>{mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト'}</>
@@ -338,7 +344,7 @@ const PostDetail = () => {
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
+                className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:left-[700px] lg:left-[1270px] w-12 h-12 flex items-center justify-center" // 親要素のdivにサイズとflexboxを追加
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);

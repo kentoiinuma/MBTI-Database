@@ -156,10 +156,10 @@ const AllPosts = () => {
               return response.json();
             })
             .then((data) => {
-              if (data.mbti_type) {
+              if (data) {
                 setUserMbtiTypes((prevTypes) => ({
                   ...prevTypes,
-                  [post.user.clerk_id]: data.mbti_type,
+                  [post.user.clerk_id]: data,
                 }));
               } else {
                 console.log(`MBTI type not set for user ${post.user.clerk_id}`);
@@ -318,9 +318,12 @@ const AllPosts = () => {
     if (mediaWorks[post.id] && mediaWorks[post.id][0]) {
       const mediaType =
         mediaWorks[post.id][0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
-      const mbtiType = userMbtiTypes[post.user.clerk_id]
-        ? `(${userMbtiTypes[post.user.clerk_id]})`
-        : '';
+      // visibilityがis_publicの場合のみMBTIタイプを表示
+      const mbtiType =
+        userMbtiTypes[post.user.clerkId] &&
+        userMbtiTypes[post.user.clerkId].visibility === 'is_public'
+          ? `(${userMbtiTypes[post.user.clerkId].mbti_type})`
+          : '';
       artistText = `${post.user.username}${mbtiType}の好きな${mediaType}は${mediaWorks[post.id]
         .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
@@ -381,9 +384,11 @@ const AllPosts = () => {
                 <div className="mb-3 md:mb-5">
                   <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
                     {post.user.username}
-                    {userMbtiTypes[post.user.clerkId]
-                      ? `(${userMbtiTypes[post.user.clerkId]})`
-                      : '(未設定)'}
+                    {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
+                    {userMbtiTypes[post.user.clerkId] &&
+                    userMbtiTypes[post.user.clerkId].visibility === 'is_public'
+                      ? `(${userMbtiTypes[post.user.clerkId].mbti_type})`
+                      : ''}
                     の好きな
                     {mediaWorks[post.id] && mediaWorks[post.id][0] ? (
                       <>
@@ -413,7 +418,7 @@ const AllPosts = () => {
                   </div>
                   {currentUser?.id === post.user.clerkId && (
                     <div
-                      className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
+                      className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:left-[700px] lg:left-[1270px] w-12 h-12 flex items-center justify-center"
                       onClick={(e) => {
                         e.stopPropagation();
                         shareToX(post);
