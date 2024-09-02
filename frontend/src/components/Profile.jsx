@@ -31,6 +31,7 @@ const StyledXIcon = styled(XIcon)({
 const Profile = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [mbtiType, setMbtiType] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // ローディング状態を追加
   const [showMBTIModal, setShowMBTIModal] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
   const [userMbtiType, setUserMbtiType] = useState(null);
@@ -70,7 +71,10 @@ const Profile = () => {
       fetch(`${API_URL}/api/v1/mbti/${targetClerkId}`)
         .then((response) => response.json())
         .then((data) => {
-          setMbtiType(data.mbti_type);
+          if (data.mbti_type) {
+            setMbtiType(data);
+          }
+          setIsLoading(false); // データ取得後にローディング状態を解除
           setUserMbtiType(data.mbti_type);
         });
 
@@ -403,7 +407,7 @@ const Profile = () => {
             <div className="ml-4 md:ml-8">
               <h1>
                 <span className="text-xl md:text-2xl">{userProfile.username}</span>{' '}
-                <span className="ml-2 md:ml-4">{mbtiType}</span>
+                <span className="ml-2 md:ml-4">{mbtiType?.mbti_type}</span>
               </h1>
             </div>
             <div className="ml-auto mb-4 md:mb-12 mr-4 md:mr-16 lg:mr-20">
@@ -459,10 +463,10 @@ const Profile = () => {
           {renderContent()}
         </>
       )}
-      {showMBTIModal && (!clerkId || clerkId === currentUser?.id) && (
+      {showMBTIModal && (!clerkId || clerkId === currentUser?.id) && !isLoading && (
         <MBTIModal
           onClose={() => setShowMBTIModal(false)}
-          onUpdate={(newMbtiType) => {
+          onUpdate={(newMbtiType, newVisibility) => {
             // MBTIタイプを更新するAPIリクエストを送信
             fetch(`${API_URL}/api/v1/mbti/${currentUser.id}`, {
               method: 'PUT',
@@ -471,26 +475,23 @@ const Profile = () => {
               },
               body: JSON.stringify({
                 mbti_type: newMbtiType,
-                visibility: mbtiType.visibility, // visibilityも更新
+                visibility: newVisibility,
               }),
             })
               .then((res) => res.json())
               .then((data) => {
-                // 更新後のMBTIタイプを状態に反映
-                setMbtiType(data.mbti_type); // data.mbti_typeのみをセット
+                // 更新後のMBTIタイプとvisibilityを状態に反映
+                setMbtiType({
+                  mbti_type: data.mbti_type,
+                  visibility: data.visibility,
+                });
               })
               .catch((error) => {
                 console.error('Error updating MBTI type:', error);
               });
           }}
-          initialMBTI={mbtiType}
-          initialVisibility={
-            mbtiType
-              ? mbtiType.visibility === 'is_public'
-                ? 'is_public'
-                : 'is_private'
-              : 'is_public'
-          } // initialVisibilityを渡す
+          initialMBTI={mbtiType ? mbtiType.mbti_type : ''}
+          initialVisibility={mbtiType ? mbtiType.visibility : 'is_public'}
         />
       )}
       <Dialog

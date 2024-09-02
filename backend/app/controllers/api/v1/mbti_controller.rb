@@ -54,7 +54,7 @@ module Api
       end
 
       def mbti_params
-        params.require(:mbti).permit(:mbti_type, :visibility, :user_id)
+        params.require(:mbti).permit(:mbti_type, :visibility)
       end
     end
   end

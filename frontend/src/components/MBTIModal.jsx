@@ -159,27 +159,27 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
         await uploadAvatar(avatarFile);
       }
 
-      // 初回登録か更新かを判断してAPIのエンドポイントとメソッドを変更
-      const method = initialMBTI ? 'PUT' : 'POST';
-      const endpoint = initialMBTI ? `${API_URL}/api/v1/mbti/${user.id}` : `${API_URL}/api/v1/mbti`;
+      // initialMBTI初回登録時の処理
+      if (!initialMBTI) {
+        const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            mbti_type: selectedMBTI,
+            visibility: visibility,
+            user_id: user.id,
+          }),
+        });
 
-      const mbtiResponse = await fetch(endpoint, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          mbti_type: selectedMBTI,
-          visibility: visibility, // visibilityを送信
-          user_id: user.id, // POSTの場合のみ必要
-        }),
-      });
-
-      if (!mbtiResponse.ok) {
-        console.error('Failed to update MBTI information');
-        return;
+        if (!mbtiResponse.ok) {
+          console.error('Failed to create MBTI information');
+          return;
+        }
       }
 
+      // ユーザー情報の更新
       const userResponse = await fetch(`${API_URL}/api/v1/users/${user.id}`, {
         method: 'PUT',
         headers: {
@@ -199,7 +199,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
         updateUserProfile(editableUsername, userProfile.avatarUrl);
       }
 
-      onUpdate(selectedMBTI);
+      onUpdate(selectedMBTI, visibility); // visibility を渡す
       onClose();
     }
   };
