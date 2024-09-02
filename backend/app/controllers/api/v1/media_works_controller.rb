@@ -53,11 +53,6 @@ module Api
         params[:mbti_types].split(',').map { |type| MbtiType.mbti_types[type] }
       end
 
-      # この関数は削除します
-      # def extract_diagnosis_methods
-      #   params[:diagnosis_methods].split(',').map { |method| MbtiType.diagnosis_methods[method] }
-      # end
-
       def extract_media_type
         MediaWork.media_types[params[:media_type]]
       end

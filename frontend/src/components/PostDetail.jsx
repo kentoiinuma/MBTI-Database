@@ -12,7 +12,6 @@ import {
   DialogContentText,
   DialogTitle,
   Button,
-  CircularProgress,
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
@@ -149,7 +148,6 @@ const PostDetail = () => {
 
   const renderImages = (works) => {
     const containerClass = `image-container-${works.length}`;
-    const imageSize = works.length === 1 ? 500 : 247.5;
 
     return (
       <div className={containerClass}>
@@ -158,8 +156,9 @@ const PostDetail = () => {
             key={index}
             cloudName="dputyeqso"
             publicId={work.image}
-            width={imageSize}
-            height={imageSize}
+            className={`
+              ${works.length === 1 ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]' : 'w-[122.5px] h-[122.5px] md:w-[247.5px] md:h-[247.5px]'}
+            `}
           />
         ))}
       </div>
@@ -171,7 +170,7 @@ const PostDetail = () => {
     const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
 
     return (
-      <div className="flex items-center justify-between pl-32">
+      <div className="flex items-center justify-between md:pl-16 lg:pl-32">
         <div className="flex items-center">
           <div
             className="flex items-center cursor-pointer"
@@ -180,23 +179,25 @@ const PostDetail = () => {
               navigate(`/profile/${postUser.clerkId}`);
             }}
           >
-            <div className="w-20 h-20 rounded-full overflow-hidden">
+            <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
               <img
                 src={postUser.avatarUrl}
                 alt={`profileImage`}
                 className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
               />
             </div>
-            <div className="ml-4">
+            <div className="ml-2 md:ml-4">
               <h1>
-                <span className="text-2xl hover:underline cursor-pointer">{postUser.username}</span>
+                <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
+                  {postUser.username}
+                </span>
               </h1>
             </div>
           </div>
-          <span className="ml-4 hover:underline cursor-pointer">{formattedDate}</span>
+          <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
         </div>
         {currentUser?.id === postUser.clerkId && (
-          <div className="mr-32 relative">
+          <div className="md:mr-16 lg:mr-32 relative">
             <div
               className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
               onClick={(event) => handleClick(event, postId)}
@@ -304,16 +305,18 @@ const PostDetail = () => {
   };
 
   return (
-    <div>
+    <div className="px-4 md:px-0">
       {loading ? (
-        <div className="flex justify-center items-center h-screen">
-          <CircularProgress />
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="loading loading-spinner loading-lg text-custom"></div>
+          </div>
         </div>
       ) : (
         <>
-          <div className="mt-5">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
-          <div className="mb-5">
-            <div className="text-xl px-52 w-full text-center">
+          <div className="mt-10">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
+          <div className="mb-3 md:mb-5">
+            <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
               {post.user.username}
               {userMbtiType && `(${userMbtiType})`}
               の好きな
@@ -329,19 +332,13 @@ const PostDetail = () => {
               です！
             </div>
           </div>
-          <div className="relative w-full mb-5">
+          <div className="relative w-full mb-3 md:mb-5">
             <div className="flex justify-center">
-              <div
-                className={`${
-                  mediaWorks.length === 2 ? 'w-[500px] h-[247.5px]' : 'w-[500px] h-[500px]'
-                } bg-black`}
-              >
-                {renderImages(mediaWorks)}
-              </div>
+              <div className="bg-black">{renderImages(mediaWorks)}</div>
             </div>
             {currentUser?.id === post.user.clerkId && (
               <div
-                className="absolute left-[1250px] bottom-0 p-3 rounded-full hover:bg-gray-200 cursor-pointer"
+                className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
                 onClick={(e) => {
                   e.stopPropagation();
                   shareToX(post);
@@ -351,7 +348,7 @@ const PostDetail = () => {
               </div>
             )}
           </div>
-          <hr className="border-t border-[#2EA9DF] w-full" />
+          <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
           <Snackbar
             open={openSnackbar}
             autoHideDuration={2500}

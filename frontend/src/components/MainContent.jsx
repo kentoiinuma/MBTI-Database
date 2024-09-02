@@ -16,7 +16,7 @@ import { useUserContext } from '../contexts/UserContext'; // UserContextのイ�
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート
-  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディング���態を取得
+  const { isSignedIn, user, loading } = useUser(); // ユーザーのサインイン状態、ユーザー情報、ローディングを得
   const [snackbarOpen, setSnackbarOpen] = useState(false); // スナックバーの表示状態
   // const [snackbarMessage, setSnackbarMessage] = useState(''); // スナックバーのメッセージ（現在は使用していないためコメントアウト）
   const { setUserUpdated } = useUserContext(); // UserContextからsetUserUpdatedを取得
@@ -117,7 +117,7 @@ function MainContent() {
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto">
           <Routes>
-            {/* 各ルートに対応するコンポーネン���を設定 */}
+            {/* 各ルートに対応するンポーネを設定 */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
@@ -128,12 +128,12 @@ function MainContent() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/post/:postId" element={<PostDetail />} />
           </Routes>
-          {showMBTIModal && <MBTIModal onClose={handleCloseModal} />}
+          {showMBTIModal && <MBTIModal onClose={handleCloseModal} onUpdate={() => {}} />}
         </main>
-        {/* フローティングアクションボタンを追加 */}
+        {/* フローティングアクションボタ�� */}
         {isSignedIn && (
           <button
-            className="fixed bottom-8 right-8 p-3 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300 shadow-lg"
+            className="fixed bottom-6 right-6 p-2 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300 shadow-lg md:bottom-8 md:right-8 md:p-3"
             onClick={() => navigate('/post')}
           >
             <svg
@@ -142,7 +142,7 @@ function MainContent() {
               viewBox="0 0 24 24"
               strokeWidth={2.0}
               stroke="currentColor"
-              className="w-12 h-12"
+              className="w-11 h-11 md:w-12 md:h-12"
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
             </svg>

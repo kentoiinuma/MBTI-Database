@@ -35,8 +35,9 @@ const StyledButton = styled(Button)(({ theme, selected }) => ({
   borderColor: '#2EA9DF',
   color: selected ? '#fff' : '#2EA9DF',
   '&:hover': {
-    backgroundColor: selected ? '#2387c1' : '#fff',
-    borderColor: '#2387c1',
+    backgroundColor: selected ? '#2387c1' : '#f0f0f0', // 非選択時のホバー色を薄いグレーに変更
+    borderColor: '#2EA9DF',
+    color: selected ? '#fff' : '#2EA9DF',
   },
   '&.MuiButton-outlined': {
     color: '#2EA9DF',
@@ -80,28 +81,28 @@ function Database() {
 
   // MBTIタイプの選択状態を管理するステート
   const [selectedTypes, setSelectedTypes] = useState([
-    'ESFP',
     'ESTP',
-    'ISFP',
+    'ESFP',
     'ISTP',
-    'ESFJ',
+    'ISFP',
     'ESTJ',
-    'ISFJ',
+    'ESFJ',
     'ISTJ',
-    'ENFP',
+    'ISFJ',
     'ENTP',
-    'INFP',
+    'ENFP',
     'INTP',
-    'ENFJ',
+    'INFP',
     'ENTJ',
-    'INFJ',
+    'ENFJ',
     'INTJ',
+    'INFJ',
   ]);
 
   // コンテンツタイプを管理するステート
   const [contentType, setContentType] = useState('アニメ');
 
-  // 指標の選択状態を���理するステート
+  // 指標の選択状態を理するステート
   const [selectedIndicators, setSelectedIndicators] = useState({
     EI: '',
     SN: '',
@@ -184,27 +185,27 @@ function Database() {
       updateMBTITypes(newIndicators);
       return newIndicators;
     });
-    setSelectedFunctions([]); // 心理機能の選択を解除
+    setSelectedFunctions([]); // 心理機能選択を解除
   };
 
   const updateMBTITypes = (indicators) => {
     const filteredTypes = [
-      'ESFP',
       'ESTP',
-      'ISFP',
+      'ESFP',
       'ISTP',
-      'ESFJ',
+      'ISFP',
       'ESTJ',
-      'ISFJ',
+      'ESFJ',
       'ISTJ',
-      'ENFP',
+      'ISFJ',
       'ENTP',
-      'INFP',
+      'ENFP',
       'INTP',
-      'ENFJ',
+      'INFP',
       'ENTJ',
-      'INFJ',
+      'ENFJ',
       'INTJ',
+      'INFJ',
     ].filter((type) => {
       return (
         (!indicators.EI || type.includes(indicators.EI)) &&
@@ -265,15 +266,15 @@ function Database() {
 
   // 心理機能の配列を2つのグループに分ける
   const perceptionFunctions = ['Se', 'Si', 'Ne', 'Ni'];
-  const judgmentFunctions = ['Fe', 'Fi', 'Te', 'Ti'];
+  const judgmentFunctions = ['Te', 'Ti', 'Fe', 'Fi'];
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="w-full max-w-7xl mx-auto">
+      <div className="w-full max-w-full px-4 mx-auto md:max-w-7xl">
         {/* コンテンツタイプ選択ボタン */}
-        <div className="flex justify-center mt-5 mb-5">
+        <div className="flex justify-center mt-4 mb-4 md:mt-5 md:mb-5">
           <ButtonGroup>
-            {['アニメ', '音楽アーティスト'].map((type) => (
+            {['アニメ', '音楽'].map((type) => (
               <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}
@@ -286,9 +287,9 @@ function Database() {
           </ButtonGroup>
         </div>
 
-        {/* 説明テキストを追加 */}
-        <div className="text-center mt-5 mb-5">
-          <p className="text-black mb-2">
+        {/* 説明テキスト */}
+        <div className="text-center mt-4 mb-4 md:mt-5 md:mb-5">
+          <p className="text-black mb-1 md:mb-2">
             興味のあるMBTI指標、心理機能、またはタイプを選んでください。
           </p>
           <p className="text-black">
@@ -297,9 +298,9 @@ function Database() {
         </div>
 
         {/* 指標選択ボタン */}
-        <div className="flex justify-center mt-6">
+        <div className="flex flex-wrap justify-center mt-4 md:mt-6">
           {['EI', 'SN', 'TF', 'JP'].map((group) => (
-            <ButtonGroup key={group} className="mx-2">
+            <ButtonGroup key={group} className="mx-1 mb-2 md:mx-2">
               {group.split('').map((letter) => (
                 <StyledButton
                   key={letter}
@@ -315,8 +316,8 @@ function Database() {
         </div>
 
         {/* 心理機能選択ボタン */}
-        <div className="flex justify-center mt-6">
-          <ButtonGroup className="mb-4 mx-2">
+        <div className="flex flex-wrap justify-center mt-4 md:mt-6">
+          <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
             {perceptionFunctions.map((func) => (
               <StyledButton
                 key={func}
@@ -328,7 +329,7 @@ function Database() {
               </StyledButton>
             ))}
           </ButtonGroup>
-          <ButtonGroup className="mb-4 mx-2">
+          <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
             {judgmentFunctions.map((func) => (
               <StyledButton
                 key={func}
@@ -343,40 +344,30 @@ function Database() {
         </div>
 
         {/* MBTIタイプ選択ボタン */}
-        <div className="flex justify-center mt-6">
-          <ButtonGroup>
-            {[
-              'ESFP',
-              'ESTP',
-              'ISFP',
-              'ISTP',
-              'ESFJ',
-              'ESTJ',
-              'ISFJ',
-              'ISTJ',
-              'ENFP',
-              'ENTP',
-              'INFP',
-              'INTP',
-              'ENFJ',
-              'ENTJ',
-              'INFJ',
-              'INTJ',
-            ].map((type) => (
-              <StyledButton
-                key={type}
-                onClick={() => toggleType(type)}
-                variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
-                selected={selectedTypes.includes(type)}
-              >
-                {type}
-              </StyledButton>
-            ))}
-          </ButtonGroup>
+        <div className="flex flex-wrap justify-center mt-4 gap-2 md:mt-6 md:gap-4">
+          {[
+            ['ESTP', 'ESFP', 'ISTP', 'ISFP'],
+            ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'],
+            ['ENTP', 'ENFP', 'INTP', 'INFP'],
+            ['ENTJ', 'ENFJ', 'INTJ', 'INFJ'],
+          ].map((group, index) => (
+            <ButtonGroup key={index} className="mb-2">
+              {group.map((type) => (
+                <StyledButton
+                  key={type}
+                  onClick={() => toggleType(type)}
+                  variant={selectedTypes.includes(type) ? 'contained' : 'outlined'}
+                  selected={selectedTypes.includes(type)}
+                >
+                  {type}
+                </StyledButton>
+              ))}
+            </ButtonGroup>
+          ))}
         </div>
 
         {/* グラフ表示 */}
-        <div className="my-8 w-full h-[600px]">
+        <div className="my-6 w-full h-[400px] md:my-8 md:h-[600px]">
           <Bar options={options} data={chartData} />
         </div>
       </div>

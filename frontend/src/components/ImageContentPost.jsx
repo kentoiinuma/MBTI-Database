@@ -11,7 +11,7 @@ const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
   borderColor: '#2EA9DF',
   color: selected ? '#fff' : '#2EA9DF',
   '&:hover': {
-    backgroundColor: selected ? '#2387c1' : '#fff',
+    backgroundColor: selected ? '#2387c1' : '#f0f0f0',
     borderColor: '#2387c1',
   },
   '&.Mui-selected': {
@@ -192,9 +192,12 @@ const ImageContentPost = () => {
 
   const renderImages = () => {
     const containerClass = `image-container-${selectedImages.length}`;
-    const imageSize = selectedImages.length === 1 ? 600 : 297.5;
     if (selectedImages.length === 0) {
-      return <div className={`${containerClass} w-[600px] h-[600px] bg-black`} />;
+      return (
+        <div
+          className={`${containerClass} w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-black`}
+        />
+      );
     }
     return (
       <div className={containerClass}>
@@ -203,8 +206,9 @@ const ImageContentPost = () => {
             key={index}
             cloudName="dputyeqso"
             publicId={imagePair.url}
-            width={imageSize}
-            height={imageSize}
+            className={`
+              ${selectedImages.length === 1 ? 'w-[300px] h-[300px] md:w-[500px] md:h-[500px]' : 'w-[147.5px] h-[147.5px] md:w-[247.5px] md:h-[247.5px]'}
+            `}
           />
         ))}
       </div>
@@ -212,7 +216,7 @@ const ImageContentPost = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 space-y-4">
+    <div className="flex flex-col items-center justify-center space-y-4 my-10">
       {isLoading ? (
         <div className="flex items-center justify-center h-screen">
           <div className="text-center">
@@ -234,7 +238,7 @@ const ImageContentPost = () => {
               >
                 {contentType === 'music'
                   ? '正しいアーティスト名を入力してください。'
-                  : '正しいアニメ名を入��してください。'}
+                  : '正しいアニメ名を入力してください。'}
               </Alert>
             </Snackbar>
           )}
@@ -265,11 +269,11 @@ const ImageContentPost = () => {
               アニメ
             </StyledToggleButton>
             <StyledToggleButton value="music" aria-label="music">
-              音楽アーティスト
+              音楽
             </StyledToggleButton>
           </ToggleButtonGroup>
           <div className="flex items-center space-x-2">
-            <div className="relative w-full max-w-xs">
+            <div className="relative w-full">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -294,15 +298,15 @@ const ImageContentPost = () => {
               />
             </div>
           </div>
-          <span className="text-[#2EA9DF]">
+          <span className="text-[#2EA9DF] text-[13px] md:text-base">
             ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
           </span>
           <div className="bg-black">{renderImages()}</div>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center">
             <button
               type="submit"
               onClick={handlePostAndRedirect}
-              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white"
+              className="w-full inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
             >
               ポストする
             </button>

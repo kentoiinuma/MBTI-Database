@@ -12,12 +12,13 @@ class MbtiType < ApplicationRecord
     ENFJ: 12, ENTJ: 13, INFJ: 14, INTJ: 15 # Ni
   }
 
-  # 診断方法を逆の順番に定義
-  enum diagnosis_method: {
-    self_assessment: 0, official_assessment: 5
-  }
+  # visibilityの定義を変更
+  enum visibility: {
+    is_private: 0,
+    is_public: 1
+  }, _prefix: true
 
   # バリデーションの追加
   validates :mbti_type, presence: true
-  validates :diagnosis_method, presence: true
+  validates :visibility, presence: true
 end
