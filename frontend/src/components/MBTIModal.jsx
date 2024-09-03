@@ -40,6 +40,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
   const { updateUserProfile } = useUserContext();
   // visibilityの状態を管理
   const [visibility, setVisibility] = useState(initialVisibility); // デフォルトは公開
+  const [isLoading, setIsLoading] = useState(true);
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -52,38 +53,42 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
 
   useEffect(() => {
     if (user) {
-      fetch(`${API_URL}/api/v1/users/${user.id}`)
-        .then((response) => response.json())
-        .then((data) => {
+      Promise.all([
+        fetch(`${API_URL}/api/v1/users/${user.id}`).then((response) => response.json()),
+        !initialMBTI
+          ? fetch(`${API_URL}/api/v1/mbti/${user.id}`).then((response) => response.json())
+          : Promise.resolve(null),
+      ])
+        .then(([userData, mbtiData]) => {
           setUserProfile({
-            username: data.username,
-            avatarUrl: data.avatar_url,
+            username: userData.username,
+            avatarUrl: userData.avatar_url,
           });
-          setEditableUsername(data.username);
-        });
+          setEditableUsername(userData.username);
 
-      // 初回表示時のみMBTIタイプと診断方法を読み込む
-      if (!initialMBTI) {
-        fetch(`${API_URL}/api/v1/mbti/${user.id}`)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            if (data.mbti_type) {
-              setSelectedMBTI(data.mbti_type);
+          if (mbtiData) {
+            if (mbtiData.mbti_type) {
+              setSelectedMBTI(mbtiData.mbti_type);
             }
-            if (data.visibility) {
-              // visibilityを取得
-              setVisibility(data.visibility);
+            if (mbtiData.visibility) {
+              setVisibility(mbtiData.visibility);
             }
-          })
-          .catch((error) =>
-            console.error("Failed to load user's MBTI type and diagnosis method", error)
-          );
-      }
+          }
+
+          setIsLoading(false);
+        })
+        .catch((error) => {
+          console.error('Failed to load user data', error);
+          setIsLoading(false);
+        });
     }
   }, [user, API_URL, initialMBTI, initialVisibility]);
 
   const handleClose = (event) => {
+    // 初期登録時（initialMBTIが空文字）はモーダルを閉じないようにする
+    if (!initialMBTI) {
+      return;
+    }
     if (event.target.id === 'modal-content') {
       return;
     }
@@ -204,6 +209,16 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+        <div className="text-center">
+          <div className="loading loading-spinner loading-lg text-custom"></div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <div
@@ -212,7 +227,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
       >
         <div
           id="modal-content"
-          className="bg-white p-6 rounded-lg shadow-xl max-w-lg mx-auto border-[#2EA9DF]"
+          className="bg-white p-4 rounded-lg shadow-xl max-w-xs mx-4 border-[#2EA9DF] md:p-6 md:max-w-lg md:mx-auto"
           onClick={(e) => e.stopPropagation()}
         >
           {userProfile && (
@@ -246,7 +261,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                   type="text"
                   value={editableUsername}
                   onChange={handleUsernameChange}
-                  className="text-xl border py-1 px-3 shadow-sm focus:outline-none rounded-md bg-white focus:border-[#2EA9DF]"
+                  className="text-base border py-1 px-3 shadow-sm focus:outline-none rounded-md bg-white focus:border-[#2EA9DF] md:text-xl w-full"
                 />
               </div>
             </Box>
@@ -254,8 +269,10 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
 
           {/* 初回登録時のみ表示 */}
           {!initialMBTI && (
-            <p className="text-center font-semibold mb-2 text-[#2EA9DF]">
-              MBTIタイプと公開設定を選択してください。
+            <p className="text-center font-semibold mb-2 text-[#2EA9DF] md:whitespace-nowrap">
+              MBTIタイプと公開設定を
+              <br className="md:hidden" /> {/* md以上の画面では改行しない */}
+              選択してください。
             </p>
           )}
 
