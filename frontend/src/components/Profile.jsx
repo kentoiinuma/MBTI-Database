@@ -237,7 +237,7 @@ const Profile = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // 投稿が正常に削された場合、投稿リストからの投稿を削除
+            // 投稿が正常に削さ���た場合、投稿リストからの投稿を削
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイログを閉じる
             // こスナックバーを表示するなど処理追加できます
@@ -265,7 +265,8 @@ const Profile = () => {
                   <div className="mb-3 md:mb-5">
                     <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-52">
                       {userProfile.username}
-                      {userMbtiType && `(${userMbtiType})`}
+                      {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
+                      {userMbtiType && mbtiType?.visibility === 'is_public' && `(${userMbtiType})`}
                       の好きな
                       {post.mediaWorks && post.mediaWorks[0] ? (
                         <>
@@ -295,7 +296,7 @@ const Profile = () => {
                     </div>
                     {currentUser?.id === userProfile.clerkId && (
                       <div
-                        className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:p-3 md:left-[700px] lg:left-[1250px]"
+                        className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:left-[700px] lg:left-[1270px] w-12 h-12 flex items-center justify-center"
                         onClick={(e) => {
                           e.stopPropagation();
                           shareToX(post);
@@ -372,7 +373,9 @@ const Profile = () => {
 
     if (post.mediaWorks && post.mediaWorks[0]) {
       const mediaType = post.mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
-      const mbtiTypeText = userMbtiType ? `(${userMbtiType})` : '';
+      // visibilityがis_publicの場合のみMBTIタイプを表示
+      const mbtiTypeText =
+        userMbtiType && mbtiType?.visibility === 'is_public' ? `(${userMbtiType})` : '';
       artistText = `${userProfile.username}${mbtiTypeText}の好きな${mediaType}は${post.mediaWorks
         .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
