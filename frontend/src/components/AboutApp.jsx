@@ -45,7 +45,6 @@ function AboutApp() {
                   href="https://mentuzzle.com/shindan/report/16type"
                   target="_blank"
                   rel="noopener noreferrer"
-                  c
                   className="text-[#2EA9DF] hover:underline"
                 >
                   おすすめの16タイプ診断サービス
