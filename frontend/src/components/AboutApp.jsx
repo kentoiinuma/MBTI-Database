@@ -14,14 +14,22 @@ function AboutApp() {
           <span className="text-[#86C166] text-[1.3em]">B</span>
           <span className="text-[#A5DEE4] text-[1.3em]">T</span>
           <span className="text-[#FBE251] text-[1.3em]">I</span>
-          <span className="text-[#2EA9DF] text-[1.1em]">データベース</span>
-          <br className="md:hidden" /> {/* md以上の画面サイズでは非表示 */}
-          <span className="text-[#2EA9DF] text-[0.9em]">とは？</span>
+          <span className="text-[#2EA9DF] text-[0.9em]">
+            <span className="text-[1.1em]">タイプ</span>
+            <span className="text-gray-700">に紐づけて</span>
+            <br className="md:hidden" />
+            <span className="text-[1.1em]">好き</span>
+            <span className="text-gray-700">を共有するアプリ</span>
+          </span>
         </h1>
 
         <div className="mb-12 text-center">
-          <p className="text-lg text-gray-800">
-            MBTIタイプに紐付けて好きな作品を投稿することにより、MBTIタイプごとの好みをデータベース化して見ることができるWedアプリケーションです！(現在、アニメと音楽アーティストの投稿ができます。)
+          <p className="text-lg text-gray-700">
+            MBTIデータベースとは、MBTIタイプに紐付けて好きな作品を共有するwebアプリです！
+            <br />
+            <span className="mt-1 inline-block">
+              投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
+            </span>
           </p>
         </div>
 
@@ -39,12 +47,44 @@ function AboutApp() {
                   rel="noopener noreferrer"
                   className="text-[#2EA9DF] hover:underline"
                 >
-                  おすすめのMBTI診断サイト
+                  おすすめの16タイプ診断サービス
+                </a>
+              </p>
+              <p className="mt-2">
+                <a
+                  href="https://ja.wikipedia.org/wiki/MBTI"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#2EA9DF] hover:underline"
+                >
+                  MBTIとは？
                 </a>
               </p>
               <p className="mt-2 text-gray-600">
-                心理機能について詳しくは
-                <br /> Se Si Ne Ni Te Ti Fe Fi
+                心理機能について
+                <br />
+                {[
+                  { text: 'Se', url: 'http://rinnsyou.com/archives/339' },
+                  { text: 'Si', url: 'http://rinnsyou.com/archives/341' },
+                  { text: 'Ne', url: 'http://rinnsyou.com/archives/345' },
+                  { text: 'Ni', url: 'http://rinnsyou.com/archives/347' },
+                  { text: 'Te', url: 'http://rinnsyou.com/archives/327' },
+                  { text: 'Ti', url: 'http://rinnsyou.com/archives/329' },
+                  { text: 'Fe', url: 'http://rinnsyou.com/archives/333' },
+                  { text: 'Fi', url: 'http://rinnsyou.com/archives/335' },
+                ].map((item, index) => (
+                  <React.Fragment key={item.text}>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[#2EA9DF] hover:underline"
+                    >
+                      {item.text}
+                    </a>
+                    {index < 7 && ' '}
+                  </React.Fragment>
+                ))}
               </p>
               <p className="text-gray-600 mt-2">
                 ※より正確な診断結果を得るには
@@ -66,6 +106,7 @@ function AboutApp() {
             description={
               <>
                 <p>1~4つの好きなアニメや音楽アーティストのイメージ画像を投稿してみましょう！</p>
+                <p>※現在、アニメと音楽アーティストの投稿ができます。</p>
                 <p className="mt-2">
                   また、XにMBTIタイプと共に好きな作品を共有することにより、簡易的な自己紹介ができます。
                 </p>
@@ -76,7 +117,13 @@ function AboutApp() {
 
           <StepCard
             title="データベースの閲覧"
-            description="グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見てみましょう！"
+            description={
+              <>
+                <p>
+                  グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見てみましょう！
+                </p>
+              </>
+            }
             imageSrc="/database-filtering.webp"
           />
         </div>
@@ -112,7 +159,7 @@ function StepCard({ step, title, description, imageSrc, children }) {
           {' '}
           {/* テキスト要素の幅を1/2に */}
           <div className="mb-4">
-            <h4 className="text-xl font-semibold text-gray-800">{title}</h4>
+            <h4 className="text-xl font-semibold text-gray-700">{title}</h4>
           </div>
           <p className="text-gray-700 mb-4">{description}</p>
           {children}

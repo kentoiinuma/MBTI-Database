@@ -298,9 +298,14 @@ const ImageContentPost = () => {
               />
             </div>
           </div>
-          <span className="text-[#2EA9DF] text-[13px] md:text-base">
-            ※ 音楽アーティスト、アニメの投稿はそれぞれ1回のみです。
-          </span>
+          <div className="flex flex-col items-center space-y-1 text-center">
+            <span className="text-gray-600 px-12 text-[13px] md:text-base">
+              1~4つの好きなアニメ・音楽アーティストのイメージ画像を投稿してみましょう！
+            </span>
+            <span className="text-gray-600 px-12 text-[13px] md:text-base">
+              ※ アニメ、音楽アーティストの投稿はそれぞれ1回のみです。
+            </span>
+          </div>
           <div className="bg-black">{renderImages()}</div>
           <div className="flex justify-center">
             <button

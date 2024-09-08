@@ -85,7 +85,7 @@ const Header = ({ onSignIn }) => {
           </NavLink>
         </h1>
         <p className="text-sm ml-4 text-[#2EA9DF] hidden lg:block">
-          MBTIに紐付けて好きな作品を投稿できるアプリ
+          MBTIタイプに紐づけて好きを共有するアプリ
         </p>
       </div>
     );
