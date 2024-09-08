@@ -279,10 +279,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
           {mbtiError && <Alert severity="error">MBTIタイプを選択してください</Alert>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label
-                htmlFor="mbti-select"
-                className="block text-sm font-medium mb-1 text-[#2EA9DF]"
-              >
+              <label htmlFor="mbti-select" className="block text-sm font-semibold mb-1">
                 MBTIタイプ
               </label>
               <select
@@ -298,11 +295,19 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                   </option>
                 ))}
               </select>
+              <p className="mt-1 text-sm">
+                <a
+                  href="https://mentuzzle.com/shindan/report/16type"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#2EA9DF] hover:underline"
+                >
+                  おすすめの16タイプ診断サービス
+                </a>
+              </p>
             </div>
             <fieldset className="mb-4">
-              <legend className="text-sm font-medium mb-1 text-[#2EA9DF]">
-                MBTIタイプの公開設定
-              </legend>
+              <legend className="text-sm font-semibold mb-1">MBTIタイプの公開設定</legend>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center">
                   <input
