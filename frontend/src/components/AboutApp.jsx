@@ -17,6 +17,7 @@ function AboutApp() {
           <span className="text-[#2EA9DF] text-[0.9em]">
             <span className="text-[1.1em]">タイプ</span>
             <span className="text-gray-700">に紐づけて</span>
+            <br className="md:hidden" />
             <span className="text-[1.1em]">好き</span>
             <span className="text-gray-700">を共有するアプリ</span>
           </span>
@@ -46,11 +47,21 @@ function AboutApp() {
                   rel="noopener noreferrer"
                   className="text-[#2EA9DF] hover:underline"
                 >
-                  おすすめの16タイプ診断サイト
+                  おすすめの16タイプ診断サービス
+                </a>
+              </p>
+              <p className="mt-2">
+                <a
+                  href="https://ja.wikipedia.org/wiki/MBTI"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#2EA9DF] hover:underline"
+                >
+                  MBTIとは？
                 </a>
               </p>
               <p className="mt-2 text-gray-600">
-                心理機能について詳しくは
+                心理機能について
                 <br />
                 {[
                   { text: 'Se', url: 'http://rinnsyou.com/archives/339' },
@@ -95,6 +106,7 @@ function AboutApp() {
             description={
               <>
                 <p>1~4つの好きなアニメや音楽アーティストのイメージ画像を投稿してみましょう！</p>
+                <p>※現在、アニメと音楽アーティストの投稿ができます。</p>
                 <p className="mt-2">
                   また、XにMBTIタイプと共に好きな作品を共有することにより、簡易的な自己紹介ができます。
                 </p>
@@ -110,7 +122,6 @@ function AboutApp() {
                 <p>
                   グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見てみましょう！
                 </p>
-                <p className="mt-2">※現在、アニメと音楽アーティストの投稿ができます。</p>
               </>
             }
             imageSrc="/database-filtering.webp"

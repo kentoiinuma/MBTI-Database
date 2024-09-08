@@ -288,12 +288,9 @@ function Database() {
         </div>
 
         {/* 説明テキスト */}
-        <div className="text-center mt-4 mb-4 md:mt-5 md:mb-5">
-          <p className="text-black mb-1 md:mb-2">
-            興味のあるMBTI指標、心理機能、またはタイプを選んでください。
-          </p>
-          <p className="text-black">
-            選択したボタンに基づいてデータベースがフィルタリングされ、結果がグラフに反映されます。
+        <div className="text-center mx-0 mt-4 mb-4 md:mx-16 md:mt-5 md:mb-5">
+          <p>
+            グラフで表されたデータベースをフィルタリングして、気になる4つの指標・心理機能・MBTIタイプの好きな作品を見てみましょう！
           </p>
         </div>
 
