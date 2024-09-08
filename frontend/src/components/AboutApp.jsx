@@ -14,14 +14,21 @@ function AboutApp() {
           <span className="text-[#86C166] text-[1.3em]">B</span>
           <span className="text-[#A5DEE4] text-[1.3em]">T</span>
           <span className="text-[#FBE251] text-[1.3em]">I</span>
-          <span className="text-[#2EA9DF] text-[1.1em]">データベース</span>
-          <br className="md:hidden" /> {/* md以上の画面サイズでは非表示 */}
-          <span className="text-[#2EA9DF] text-[0.9em]">とは？</span>
+          <span className="text-[#2EA9DF] text-[0.9em]">
+            <span className="text-[1.1em]">タイプ</span>
+            <span className="text-gray-700">に紐づけて</span>
+            <span className="text-[1.1em]">好き</span>
+            <span className="text-gray-700">を共有するアプリ</span>
+          </span>
         </h1>
 
         <div className="mb-12 text-center">
-          <p className="text-lg text-gray-800">
-            MBTIタイプに紐付けて好きな作品を投稿することにより、MBTIタイプごとの好みをデータベース化して見ることができるWedアプリケーションです！(現在、アニメと音楽アーティストの投稿ができます。)
+          <p className="text-lg text-gray-700">
+            MBTIデータベースとは、MBTIタイプに紐付けて好きな作品を共有するwebアプリです！
+            <br />
+            <span className="mt-1 inline-block">
+              投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
+            </span>
           </p>
         </div>
 
@@ -98,7 +105,14 @@ function AboutApp() {
 
           <StepCard
             title="データベースの閲覧"
-            description="グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見てみましょう！"
+            description={
+              <>
+                <p>
+                  グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見てみましょう！
+                </p>
+                <p className="mt-2">※現在、アニメと音楽アーティストの投稿ができます。</p>
+              </>
+            }
             imageSrc="/database-filtering.webp"
           />
         </div>
@@ -134,7 +148,7 @@ function StepCard({ step, title, description, imageSrc, children }) {
           {' '}
           {/* テキスト要素の幅を1/2に */}
           <div className="mb-4">
-            <h4 className="text-xl font-semibold text-gray-800">{title}</h4>
+            <h4 className="text-xl font-semibold text-gray-700">{title}</h4>
           </div>
           <p className="text-gray-700 mb-4">{description}</p>
           {children}
