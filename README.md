@@ -15,6 +15,11 @@ MBTIは個人の指向によってタイプを分類する類型論です。そ�
 
 ## メイン機能の使い方
 
+| MBTIタイプの登録 | 好きな作品の投稿とX共有 | データベースの閲覧 |
+|------------------|------------------------|-------------------|
+| [![Image from Gyazo](https://i.gyazo.com/e652d874443276e429eaf289504f3f58.png)](https://gyazo.com/e652d874443276e429eaf289504f3f58) | [![Image from Gyazo](https://i.gyazo.com/9258e5671cf51f19bf3654ee50b98d4e.jpg)](https://gyazo.com/9258e5671cf51f19bf3654ee50b98d4e) | [![Image from Gyazo](https://i.gyazo.com/e323440e74b83a257f6bd66bd6e51e1a.png)](https://gyazo.com/e323440e74b83a257f6bd66bd6e51e1a) |
+| - サインアップ後、モーダルが表示されるので、MBTIタイプを登録してください。<br>- [おすすめの16タイプ診断サービス](https://mentuzzle.com/shindan/report/16type)を利用して、自分のタイプを確認できます。<br>- [MBTIとは？](https://ja.wikipedia.org/wiki/MBTI)<br>- 心理機能について詳しく知りたい方は、以下のリンクを参照してください：<br>[Se](http://rinnsyou.com/archives/339) [Si](http://rinnsyou.com/archives/341) [Ne](http://rinnsyou.com/archives/345) [Ni](http://rinnsyou.com/archives/347) [Te](http://rinnsyou.com/archives/327) [Ti](http://rinnsyou.com/archives/329) [Fe](http://rinnsyou.com/archives/333) [Fi](http://rinnsyou.com/archives/335)<br>- より正確な診断結果を得るには[MBTI公式セッション](https://jppjapan.com)を受講する必要があります。 | - 1~4つの好きなアニメや音楽アーティストのイメージ画像を投稿できます。<br>- 現在、アニメと音楽アーティストの投稿が可能です。<br>- XにMBTIタイプと共に好きな作品を共有することで、簡易的な自己紹介ができます。 | - グラフで表示されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を閲覧できます。
+
 ## 使用技術一覧
 | カテゴリ | 使用技術 | バージョン |
 |----------|----------|------------|
