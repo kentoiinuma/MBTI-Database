@@ -130,7 +130,7 @@ function MainContent() {
           </Routes>
           {showMBTIModal && <MBTIModal onClose={handleCloseModal} onUpdate={() => {}} />}
         </main>
-        {/* フローティングアクションボタ�� */}
+        {/* フローティングアクションボタン */}
         {isSignedIn && (
           <button
             className="fixed bottom-6 right-6 p-2 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300 shadow-lg md:bottom-8 md:right-8 md:p-3"

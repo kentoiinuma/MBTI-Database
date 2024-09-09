@@ -237,7 +237,7 @@ const Profile = () => {
       })
         .then((response) => {
           if (response.ok) {
-            // 投稿が正常に削さ���た場合、投稿リストからの投稿を削
+            // 投稿が正常に削除された場合、投稿リストからの投稿を削除
             setUserPosts(userPosts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false); // ダイログを閉じる
             // こスナックバーを表示するなど処理追加できます
