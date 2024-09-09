@@ -1,6 +1,5 @@
-[![Image from Gyazo](https://i.gyazo.com/a434a3eb199372854425ab7bab7870b7.png)](https://gyazo.com/a434a3eb199372854425ab7bab7870b7)
-
 # [MBTIデータベース](https://www.mbti-database.com/)
+[![Image from Gyazo](https://i.gyazo.com/a434a3eb199372854425ab7bab7870b7.png)](https://gyazo.com/a434a3eb199372854425ab7bab7870b7)
 [MBTIデータベース](https://www.mbti-database.com/)は、MBTIタイプに紐付けて好きな作品を共有するwebアプリです。
 投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
 
