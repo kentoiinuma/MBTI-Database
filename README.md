@@ -1,11 +1,9 @@
 # [MBTIデータベース](https://www.mbti-database.com/)
 [![Image from Gyazo](https://i.gyazo.com/658c850fedea3db773a8125bef23ca9c.png)](https://gyazo.com/658c850fedea3db773a8125bef23ca9c)
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-CC0000?style=for-the-badge&logo=ruby-on-rails&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Heroku](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Rails](https://img.shields.io/badge/rails-%23CC0000.svg?style=for-the-badge&logo=ruby-on-rails&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 [MBTIデータベース](https://www.mbti-database.com/)は、MBTIタイプに紐付けて好きな作品を共有するwebアプリです。
 
@@ -16,7 +14,7 @@
 ## サービスへの想い
 MBTIタイプごとの好みの作品について、インターネット上で語られることが多くありますが、それらは個人の主観に基づいていることが多く、信頼性に欠けるという課題を感じていました。
 
-同時に、私の中にユーザーが自分の好きな作品を気軽に共有できる場を提供したいという思いもあり、MBTIタイプに紐付けて作品を共有することで、単なる作品の共有にとどまらず、MBTIタイプごとの好みの傾向を考える手助けになるのではないかと考え、MBTIデータベースの構想に至りました。
+同時に、私の中にユーザーが自分の好きな作品を気軽に共有できる場を提供したいという思いもあり、MBTIタイプに紐付けて作品を共有することで、単なる作品の共有にとどまらず、MBTIタイプごとの好みの傾向を考える手助け��なるのではないかと考え、MBTIデータベースの構想に至りました。
 
 ## メイン機能の使い方
 | MBTIタイプの登録 | 好きな作品の投稿とX共有 | データベースの閲覧 |
@@ -39,3 +37,4 @@ MBTIタイプごとの好みの作品について、インターネット上で�
 
 ## ER図
 [![Image from Gyazo](https://i.gyazo.com/7c7c0e13a781987107f8f823a364d1bc.png)](https://gyazo.com/7c7c0e13a781987107f8f823a364d1bc)
+
