@@ -1,5 +1,12 @@
 # [MBTIデータベース](https://www.mbti-database.com/)
 [![Image from Gyazo](https://i.gyazo.com/658c850fedea3db773a8125bef23ca9c.png)](https://gyazo.com/658c850fedea3db773a8125bef23ca9c)
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Ruby on Rails](https://img.shields.io/badge/Ruby_on_Rails-CC0000?style=for-the-badge&logo=ruby-on-rails&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
+![Heroku](https://img.shields.io/badge/Heroku-430098?style=for-the-badge&logo=heroku&logoColor=white)
+
 [MBTIデータベース](https://www.mbti-database.com/)は、MBTIタイプに紐付けて好きな作品を共有するwebアプリです。
 
 投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
