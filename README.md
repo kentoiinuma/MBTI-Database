@@ -22,12 +22,12 @@ MBTIは個人の指向によってタイプを分類する類型論です。そ�
 | フロントエンド | React | 18.2.0 |
 | バックエンド | Ruby / Ruby on Rails (APIモード) | 3.2.2 / 7.0.8 |
 | CSSフレームワーク | Tailwind CSS / daisyUI / MUI | 3.3.6 / 3.8.3 / 5.15.5 |
-| API | Anilist API / Spotify Web API | - |
-| 認証 | Clerk | - |
-| 画像加工 | Cloudinary / imgkit | - |
-| グラフ | react-chartjs-2 | - |
-| インフラ | Heroku | - |
-| データベース | PostgreSQL | - |
+| API | Anilist API / Spotify Web API ||
+| 認証 | Clerk ||
+| 画像加工 | Cloudinary / imgkit ||
+| グラフ | react-chartjs-2 ||
+| インフラ | Heroku ||
+| データベース | PostgreSQL ||
 
 ## ER図
 [![Image from Gyazo](https://i.gyazo.com/7c7c0e13a781987107f8f823a364d1bc.png)](https://gyazo.com/7c7c0e13a781987107f8f823a364d1bc)
