@@ -5,12 +5,7 @@
 
 [MBTIとは？](https://ja.wikipedia.org/wiki/MBTI)
 
-## サービスへの思い
-インターネットでMBTIタイプごとの好みの作品について語る人が多く見られたのですが、あくまでその人の主観に依存するため、説得力が発信者の信用に基づいてしまうことに課題を感じました。
-そこで、実際にデータを取って確かめたいという思いから、このサービスを作成しました。
-
 ## メイン機能の使い方
-
 | MBTIタイプの登録 | 好きな作品の投稿とX共有 | データベースの閲覧 |
 |------------------|------------------------|-------------------|
 | [![Image from Gyazo](https://i.gyazo.com/e652d874443276e429eaf289504f3f58.png)](https://gyazo.com/e652d874443276e429eaf289504f3f58) | [![Image from Gyazo](https://i.gyazo.com/9258e5671cf51f19bf3654ee50b98d4e.jpg)](https://gyazo.com/9258e5671cf51f19bf3654ee50b98d4e) | [![Image from Gyazo](https://i.gyazo.com/e323440e74b83a257f6bd66bd6e51e1a.png)](https://gyazo.com/e323440e74b83a257f6bd66bd6e51e1a) |
