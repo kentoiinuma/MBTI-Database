@@ -51,6 +51,9 @@ const SearchModal = ({
             {contentType === 'music' ? artist.name : anime.title.native}
           </h2>
         </div>
+        <p className="text-sm text-gray-600 px-4 md:px-8 mt-1">
+          ※イメージ画像を1クリックして追加してください。
+        </p>
         <div className="px-4 md:px-8 pb-8 flex justify-center">
           <img
             src={contentType === 'music' ? artist.images[0].url : anime.coverImage.large}
