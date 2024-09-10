@@ -153,8 +153,10 @@ const Header = ({ onSignIn }) => {
                   {/* お問合わせメニューアイテム */}
                   <MenuItem
                     onClick={handleClose}
-                    component={Link}
-                    to="/contact"
+                    component={'a'} // Linkからaに変更
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSeuIOHxpmTYuldKbl9mbiAGMy6DI4bvoT7_SfeO18jCNqPIhA/viewform?usp=sf_link" // Google FormsのURLを指定
+                    target="_blank" // 別タブで開く
+                    rel="noopener noreferrer" // セキュリティ対策
                     className="flex items-center"
                   >
                     <QuestionAnswerOutlinedIcon className="text-xl mr-2" />
