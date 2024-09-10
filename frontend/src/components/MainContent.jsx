@@ -9,7 +9,6 @@ import AllPosts from './AllPosts';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
-import Contact from './Contact';
 import PostDetail from './PostDetail'; // PostDetailのインポート
 import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
 import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
@@ -125,7 +124,6 @@ function MainContent() {
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/about" element={<AboutApp />} />
-            <Route path="/contact" element={<Contact />} />
             <Route path="/post/:postId" element={<PostDetail />} />
           </Routes>
           {showMBTIModal && <MBTIModal onClose={handleCloseModal} onUpdate={() => {}} />}
