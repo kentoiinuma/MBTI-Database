@@ -50,16 +50,6 @@ function AboutApp() {
                   おすすめの16タイプ診断サービス
                 </a>
               </p>
-              <p className="mt-2">
-                <a
-                  href="https://ja.wikipedia.org/wiki/MBTI"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[#2EA9DF] hover:underline"
-                >
-                  MBTIとは？
-                </a>
-              </p>
               <p className="mt-2 text-gray-600">
                 心理機能について
                 <br />
