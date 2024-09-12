@@ -258,7 +258,7 @@ const Profile = () => {
       case 'posts':
         return (
           <div>
-            {userPosts.map((post) => (
+            {[...userPosts].reverse().map((post) => (
               <React.Fragment key={post.id}>
                 <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
                   <div className="mt-5">{renderUserDetails(post, post.created_at, post.id)}</div>
