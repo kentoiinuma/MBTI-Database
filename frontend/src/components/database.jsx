@@ -100,7 +100,7 @@ function Database() {
   ]);
 
   // コンテンツタイプを管理するステート
-  const [contentType, setContentType] = useState('アニメ');
+  const [contentType, setContentType] = useState('音楽');
 
   // 指標の選択状態を理するステート
   const [selectedIndicators, setSelectedIndicators] = useState({
@@ -274,7 +274,7 @@ function Database() {
         {/* コンテンツタイプ選択ボタン */}
         <div className="flex justify-center mt-4 mb-4 md:mt-5 md:mb-5">
           <ButtonGroup>
-            {['アニメ', '音楽'].map((type) => (
+            {['音楽', 'アニメ'].map((type) => (
               <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}
