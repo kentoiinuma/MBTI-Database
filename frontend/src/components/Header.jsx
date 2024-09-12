@@ -84,7 +84,7 @@ const Header = ({ onSignIn }) => {
             <span className="text-[#2EA9DF] text-[1.2em]">データベース</span>
           </NavLink>
         </h1>
-        <p className="text-sm ml-4 text-[#2EA9DF] hidden lg:block">
+        <p className="text-sm ml-4 text-[#2EA9DF] hidden md:block">
           MBTIタイプに紐づけて好きを共有するアプリ
         </p>
       </div>
