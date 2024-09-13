@@ -52,7 +52,7 @@ const SearchModal = ({
           </h2>
         </div>
         <p className="text-sm text-gray-600 px-4 md:px-8 mt-1">
-          ※イメージ画像を1クリックして追加してください。
+          ※イメージを1クリックして追加してください。
         </p>
         <div className="px-4 md:px-8 pb-8 flex justify-center">
           <img
