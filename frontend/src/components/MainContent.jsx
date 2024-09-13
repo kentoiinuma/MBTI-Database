@@ -111,7 +111,7 @@ function MainContent() {
   }, []);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen text-gray-800">
       <div className="flex flex-col flex-1 relative">
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto">

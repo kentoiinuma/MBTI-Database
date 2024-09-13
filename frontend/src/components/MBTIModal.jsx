@@ -253,7 +253,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
               </div>
               <input type="file" id="avatarUpload" className="hidden" onChange={handleFileChange} />
               <div className="flex flex-col">
-                <label htmlFor="username" className="text-gray-700 mb-1">
+                <label htmlFor="username" className="mb-1">
                   名前
                 </label>
                 <input
@@ -318,10 +318,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                     onChange={handleVisibilityChange}
                     className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
-                  <label
-                    htmlFor="is_public"
-                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
+                  <label htmlFor="is_public" className="ml-2 text-sm font-medium">
                     公開
                   </label>
                 </div>
@@ -334,10 +331,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                     onChange={handleVisibilityChange}
                     className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
-                  <label
-                    htmlFor="is_private"
-                    className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >
+                  <label htmlFor="is_private" className="ml-2 text-sm font-medium">
                     非公開
                   </label>
                 </div>
