@@ -16,15 +16,15 @@ function AboutApp() {
           <span className="text-[#FBE251] text-[1.3em]">I</span>
           <span className="text-[#2EA9DF] text-[0.9em]">
             <span className="text-[1.1em]">タイプ</span>
-            <span className="text-gray-700">に紐づけて</span>
+            <span className="text-gray-800">に紐づけて</span>
             <br className="md:hidden" />
             <span className="text-[1.1em]">好き</span>
-            <span className="text-gray-700">を共有するアプリ</span>
+            <span className="text-gray-800">を共有するアプリ</span>
           </span>
         </h1>
 
         <div className="mb-12 text-center">
-          <p className="text-lg text-gray-700">
+          <p className="text-lg">
             MBTIデータベースは、MBTIタイプに紐付けて好きな作品を共有するwebアプリです！
             <br />
             <span className="mt-1 inline-block">
@@ -50,7 +50,7 @@ function AboutApp() {
                   おすすめの16タイプ診断サービス
                 </a>
               </p>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2">
                 心理機能について
                 <br />
                 {[
@@ -76,7 +76,7 @@ function AboutApp() {
                   </React.Fragment>
                 ))}
               </p>
-              <p className="text-gray-600 mt-2">
+              <p className="mt-2">
                 ※より正確な診断結果を得るには
                 <a
                   href="https://jppjapan.com"
@@ -143,20 +143,14 @@ function StepCard({ step, title, description, imageSrc, children }) {
   return (
     <div className="bg-white shadow-lg rounded-lg overflow-hidden">
       <div className="p-6 md:flex md:items-center md:space-x-6">
-        {' '}
-        {/* md以上の画面サイズでflexboxを適用 */}
         <div className="md:w-2/3 mb-6 md:mb-0 lg:mx-16">
-          {' '}
-          {/* テキスト要素の幅を1/2に */}
           <div className="mb-4">
-            <h4 className="text-xl font-semibold text-gray-700">{title}</h4>
+            <h4 className="text-xl font-semibold">{title}</h4>
           </div>
-          <p className="text-gray-700 mb-4">{description}</p>
+          <p className="mb-4">{description}</p>
           {children}
         </div>
         <div className="md:w-1/3">
-          {' '}
-          {/* imageSrcの幅を1/2に */}
           <div className="relative h-auto w-full max-w-[300px] mx-auto md:mx-0">
             <img
               src={imageSrc}
