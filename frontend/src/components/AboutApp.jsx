@@ -95,7 +95,7 @@ function AboutApp() {
             title="好きな作品の投稿とX共有"
             description={
               <>
-                <p>1~4つの好きなアニメや音楽アーティストのイメージ画像を投稿してみましょう！</p>
+                <p>1~4つの好きなアニメや音楽アーティストのイメージを投稿してみましょう！</p>
                 <p>※現在、アニメと音楽アーティストの投稿ができます。</p>
                 <p className="mt-2">
                   また、XにMBTIタイプと共に好きな作品を共有することにより、簡易的な自己紹介ができます。
@@ -121,6 +121,12 @@ function AboutApp() {
         {isSignedIn ? (
           <div className="flex justify-center my-12">
             <button
+              onClick={() => navigate('/home')}
+              className="mr-2 px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
+            >
+              ホームへ
+            </button>
+            <button
               onClick={() => navigate('/post')}
               className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
             >
@@ -129,6 +135,12 @@ function AboutApp() {
           </div>
         ) : (
           <div className="flex justify-center my-12">
+            <button
+              onClick={() => navigate('/home')}
+              className="mr-2 px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
+            >
+              ホームへ
+            </button>
             <SignInButton className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300">
               ログインする
             </SignInButton>

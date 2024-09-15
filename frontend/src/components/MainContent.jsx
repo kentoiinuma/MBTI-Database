@@ -35,7 +35,7 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // バックエンドにユーザー情報を送して新規ユーーかどうかを確認
+      // バックエンドにユーザー情報を送して新規ユーザーかどうかを確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -51,7 +51,7 @@ function MainContent() {
       // setSnackbarMessage('サインインしました！');
       // setSnackbarOpen(true);
 
-      // 新規ユーザーの合のみ、ユーザーネームとアイコンURLを送信
+      // 新規ユーザーのみ、ユーザーネームとアイコンURLを送信
       if (data.is_new_user) {
         // 新規ユーザーの場合はMBTIモーダルを表示
         setShowMBTIModal(true);
@@ -88,7 +88,7 @@ function MainContent() {
       if (isSignedIn && user) {
         handleSignIn();
       } else if (!isSignedIn) {
-        // サインアウトの処理を行う前に、以前はサインインしていかどうかを確認
+        // サインアウトの処理を行う前に、以前はサインインしていたかどうかを確認
         const wasSignedIn = localStorage.getItem('wasSignedIn') === 'true';
         if (wasSignedIn) {
           handleSignOut();
@@ -111,16 +111,17 @@ function MainContent() {
   }, []);
 
   return (
-    <div className="flex h-screen text-gray-800">
+    <div className="flex h-screen text-gray-800 bg-off-white">
       <div className="flex flex-col flex-1 relative">
         <Header onSignIn={handleSignIn} />
         <main className="flex-1 overflow-auto">
           <Routes>
-            {/* 各ルートに対応するンポーネを設定 */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
-            <Route path="/" element={<AllPosts />} />
+            {/* 以下のRouteを修正 */}
+            <Route path="/" element={isSignedIn ? <AllPosts /> : <AboutApp />} />
+            <Route path="/home" element={<AllPosts />} /> {/* 追加: 常にAllPostsを表示 */}
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/about" element={<AboutApp />} />
