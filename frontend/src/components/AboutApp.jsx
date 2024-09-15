@@ -1,9 +1,7 @@
 import React from 'react';
-import { useUser, SignInButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 
 function AboutApp() {
-  const { isSignedIn } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -118,34 +116,14 @@ function AboutApp() {
           />
         </div>
 
-        {isSignedIn ? (
-          <div className="flex justify-center my-12">
-            <button
-              onClick={() => navigate('/home')}
-              className="mr-2 px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
-            >
-              ホームへ
-            </button>
-            <button
-              onClick={() => navigate('/post')}
-              className="inline-flex justify-center items-center px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
-            >
-              ポストする
-            </button>
-          </div>
-        ) : (
-          <div className="flex justify-center my-12">
-            <button
-              onClick={() => navigate('/home')}
-              className="mr-2 px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
-            >
-              ホームへ
-            </button>
-            <SignInButton className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300">
-              ログインする
-            </SignInButton>
-          </div>
-        )}
+        <div className="flex justify-center my-12">
+          <button
+            onClick={() => navigate('/home')}
+            className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
+          >
+            ホームへ
+          </button>
+        </div>
       </div>
     </div>
   );

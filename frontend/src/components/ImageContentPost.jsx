@@ -176,7 +176,7 @@ const ImageContentPost = () => {
     setIsLoading(false);
     if (postResult) {
       console.log('Post success state set to true');
-      navigate('/', { state: { postSuccess: true } });
+      navigate('/home', { state: { postSuccess: true } });
     } else {
       setCustomAlertVisible(true); // 投稿に失敗した場合もアラートを表示
     }
