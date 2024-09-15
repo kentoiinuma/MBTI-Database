@@ -10,8 +10,8 @@ import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコン
 import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
-import HelpOutlineIcon from '@mui/icons-material/HelpOutline'; // 使い方アイコンを追加
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'; // お問い合わせアイコンを追加
+import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコンを追加
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -95,7 +95,7 @@ const Header = ({ onSignIn }) => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-off-white text-black z-50 ${
+        className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-off-white text-black z-10 ${
           location.pathname !== '/' ? 'border-b' : ''
         }`}
       >
@@ -197,18 +197,12 @@ const Header = ({ onSignIn }) => {
             </div>
           </>
         ) : (
-          <div className="ml-auto flex flex-col md:flex-row items-center gap-2">
-            <Link
-              to="/about"
-              className={`text-xl text-[#2EA9DF] flex items-center ${location.pathname === '/about' ? 'sidebar-link active' : 'sidebar-link'}`}
-            >
-              <HelpOutlineIcon /> {/* 使い方アイコンを追加 */}
-              使い方
-            </Link>
+          <div className="ml-auto flex flex-col md:flex-row items-center">
             <SignInButton>
               <span
-                className={`text-xl text-[#2EA9DF] ${location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'}`}
+                className={`text-xl text-[#2EA9DF] ${location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'} flex items-center`}
               >
+                <LoginOutlinedIcon /> {/* ログインアイコンを追加 */}
                 ログイン
               </span>
             </SignInButton>

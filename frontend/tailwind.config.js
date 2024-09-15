@@ -8,7 +8,7 @@ module.exports = {
       },
       colors: {
         custom: '#2EA9DF', // カスタムカラーを追加
-        'off-white': '#fefefe',  // より白に近い色
+        'off-white': '#fefefe', // より白に近い色
       },
     },
   },
