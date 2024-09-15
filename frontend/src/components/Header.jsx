@@ -11,7 +11,6 @@ import { useUserContext } from '../contexts/UserContext'; // UserContextをイ�
 import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
 import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
 import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'; // お問い合わせアイコンを追加
-import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined'; // ログインアイコンを追加
 
 // Headerコンポーネントの定義
 const Header = ({ onSignIn }) => {
@@ -76,7 +75,7 @@ const Header = ({ onSignIn }) => {
             alt="favicon"
             className="w-8 h-8 mr-2"
           />
-          <NavLink to="/" className="font-semibold italic">
+          <NavLink to="/home" className="font-semibold italic">
             <span className="text-[#7B90D2] text-[1.4em]">M</span>
             <span className="text-[#86C166] text-[1.4em]">B</span>
             <span className="text-[#A5DEE4] text-[1.4em]">T</span>
@@ -144,7 +143,7 @@ const Header = ({ onSignIn }) => {
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to="/about"
+                    to="/"
                     className="flex items-center"
                   >
                     <HelpOutlineOutlinedIcon className="text-xl mr-2" />
@@ -198,11 +197,14 @@ const Header = ({ onSignIn }) => {
           </>
         ) : (
           <div className="ml-auto flex flex-col md:flex-row items-center">
+            <Link to="/" className={`text-xl text-[#2EA9DF] flex items-center`}>
+              <HelpOutlineOutlinedIcon /> {/* 変更：HelpOutlineOutlinedIconを使用 */}
+              使い方
+            </Link>
             <SignInButton>
               <span
                 className={`text-xl text-[#2EA9DF] ${location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'} flex items-center`}
               >
-                <LoginOutlinedIcon /> {/* ログインアイコンを追加 */}
                 ログイン
               </span>
             </SignInButton>
