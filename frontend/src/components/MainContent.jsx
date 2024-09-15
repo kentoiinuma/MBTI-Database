@@ -119,12 +119,10 @@ function MainContent() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/profile/:clerkId" element={<Profile />} />
             <Route path="/post" element={<ImageContentPost />} />
-            {/* 以下のRouteを修正 */}
-            <Route path="/" element={isSignedIn ? <AllPosts /> : <AboutApp />} />
-            <Route path="/home" element={<AllPosts />} /> {/* 追加: 常にAllPostsを表示 */}
+            <Route path="/" element={<AboutApp />} />
+            <Route path="/home" element={<AllPosts />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/about" element={<AboutApp />} />
             <Route path="/post/:postId" element={<PostDetail />} />
           </Routes>
           {showMBTIModal && <MBTIModal onClose={handleCloseModal} onUpdate={() => {}} />}
