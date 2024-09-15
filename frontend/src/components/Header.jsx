@@ -95,7 +95,7 @@ const Header = ({ onSignIn }) => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-white text-black z-50 ${
+        className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-off-white text-black z-50 ${
           location.pathname !== '/' ? 'border-b' : ''
         }`}
       >

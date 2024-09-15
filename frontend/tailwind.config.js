@@ -8,6 +8,7 @@ module.exports = {
       },
       colors: {
         custom: '#2EA9DF', // カスタムカラーを追加
+        'off-white': '#fefefe',  // より白に近い色
       },
     },
   },
@@ -15,4 +16,5 @@ module.exports = {
     extend: {},
   },
   plugins: [require('daisyui')],
+  darkMode: 'class', // または 'media'
 };

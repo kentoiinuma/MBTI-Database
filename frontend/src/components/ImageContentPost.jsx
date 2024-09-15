@@ -291,7 +291,7 @@ const ImageContentPost = () => {
               <input
                 type="text"
                 placeholder={contentType === 'music' ? '好きな音楽アーティスト' : '好きなアニメ'}
-                className="input input-bordered input-info pl-12 pr-4 py-2 w-full"
+                className="input bg-off-white input-bordered input-info pl-12 pr-4 py-2 w-full"
                 onKeyPress={handleSearch}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}

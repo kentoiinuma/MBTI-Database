@@ -316,7 +316,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                     value="is_public"
                     checked={visibility === 'is_public'}
                     onChange={handleVisibilityChange}
-                    className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent focus:ring-2"
                   />
                   <label htmlFor="is_public" className="ml-2 text-sm font-medium">
                     公開
@@ -329,7 +329,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
                     value="is_private"
                     checked={visibility === 'is_private'}
                     onChange={handleVisibilityChange}
-                    className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent dark:focus:ring-transparent dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 text-[#2EA9DF] bg-gray-100 border-gray-300 focus:ring-0 focus:ring-offset-0 focus:ring-transparent focus:ring-2"
                   />
                   <label htmlFor="is_private" className="ml-2 text-sm font-medium">
                     非公開
