@@ -95,7 +95,7 @@ const Header = ({ onSignIn }) => {
     <>
       <header
         className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-off-white text-black z-10 ${
-          location.pathname !== '/' ? 'border-b' : ''
+          location.pathname !== '/home' ? 'border-b' : ''
         }`}
       >
         {getTitle()}
@@ -197,8 +197,8 @@ const Header = ({ onSignIn }) => {
           </>
         ) : (
           <div className="ml-auto flex flex-col md:flex-row items-center">
-            <Link to="/" className={`text-xl text-[#2EA9DF] flex items-center`}>
-              <HelpOutlineOutlinedIcon /> {/* 変更：HelpOutlineOutlinedIconを使用 */}
+            <Link to="/" className={`text-xl text-[#2EA9DF] md:mr-2 flex items-center`}>
+              <HelpOutlineOutlinedIcon />
               使い方
             </Link>
             <SignInButton>
