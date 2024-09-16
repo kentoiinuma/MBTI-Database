@@ -1,14 +1,14 @@
 # [MBTIデータベース](https://www.mbti-database.com/)
 [![Image from Gyazo](https://i.gyazo.com/658c850fedea3db773a8125bef23ca9c.png)](https://gyazo.com/658c850fedea3db773a8125bef23ca9c)
 
-[MBTIデータベース](https://www.mbti-database.com/)は、MBTIタイプに紐づけて好きな作品を共有するwebアプリです。
+[MBTIデータベース](https://www.mbti-database.com/)は、MBTIタイプに紐づけて好きな作品を共有するWebアプリです。
 
 投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるMBTIタイプの好きな作品を見ることができます。
 
 [MBTIとは？](https://ja.wikipedia.org/wiki/MBTI)
 
 ## サービスへの想い
-MBTIタイプごとの好みについて、インターネット上で語られることが多く見られたのですが、それらは個人の主観に基づいていることが多く、信頼性できるのかわからないという課題を感じていました。
+MBTIタイプごとの好みについて、インターネット上で語られることが多く見られたのですが、それらは個人の主観に基づいていることが多く、信頼できるのかわからないという課題を感じていました。
 
 同時に、私の中に自分の好きな作品を気軽に共有できる場を提供したいという思いもあり、MBTIタイプに紐づけて作品を共有することで、単なる作品の共有にとどまらず、MBTIタイプごとの好みを考える手助けになるのではないかと考え、[MBTIデータベース](https://www.mbti-database.com/)の構想に至りました。
 
@@ -28,7 +28,7 @@ MBTIタイプごとの好みについて、インターネット上で語られ�
 | 認証 | Clerk ||
 | 画像加工 | Cloudinary / imgkit ||
 | グラフ | react-chartjs-2 ||
-| インフラ | Heroku ||
+| インフラ | Heroku | 9.2.1 |
 | データベース | PostgreSQL ||
 
 ## ER図
