@@ -100,7 +100,7 @@ function Database() {
   ]);
 
   // コンテンツタイプを管理するステート
-  const [contentType, setContentType] = useState('音楽');
+  const [contentType, setContentType] = useState('アニメ');
 
   // 指標の選択状態を理するステート
   const [selectedIndicators, setSelectedIndicators] = useState({
@@ -268,13 +268,35 @@ function Database() {
   const perceptionFunctions = ['Se', 'Si', 'Ne', 'Ni'];
   const judgmentFunctions = ['Te', 'Ti', 'Fe', 'Fi'];
 
+  // グラフの高さを計算する関数
+  const calculateChartHeight = () => {
+    const baseHeight = 400; // 基本の高さ（ピクセル）
+    const additionalHeightPerData = 30; // データ点1つあたりの追加高さ（ピクセル）
+    const calculatedHeight = baseHeight + chartData.labels.length * additionalHeightPerData;
+    return calculatedHeight;
+  };
+
+  // グラフの高さをステートとして管理
+  const [chartHeight, setChartHeight] = useState(calculateChartHeight());
+
+  // データが変更されたときに高さを再計算
+  useEffect(() => {
+    setChartHeight(calculateChartHeight());
+  }, [chartData.labels.length]);
+
+  // レスポンシブ対応のためにウィンドウサイズに応じた最大高さを設定
+  const responsiveHeight = () => {
+    const maxHeight = window.innerHeight * 0.8; // 画面高さの80%を最大とする
+    return Math.min(chartHeight, maxHeight);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <div className="w-full max-w-full px-4 mx-auto md:max-w-7xl">
         {/* コンテンツタイプ選択ボタン */}
         <div className="flex justify-center mt-4 mb-4 md:mt-5 md:mb-5">
           <ButtonGroup>
-            {['音楽', 'アニメ'].map((type) => (
+            {['アニメ', '音楽'].map((type) => (
               <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}
@@ -364,7 +386,7 @@ function Database() {
         </div>
 
         {/* グラフ表示 */}
-        <div className="my-6 w-full h-[400px] md:my-8 md:h-[600px]">
+        <div className="my-6 w-full" style={{ height: `${responsiveHeight()}px` }}>
           <Bar options={options} data={chartData} />
         </div>
       </div>

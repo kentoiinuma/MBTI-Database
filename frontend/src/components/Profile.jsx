@@ -382,7 +382,7 @@ const Profile = () => {
 
       const hashtag = '#MBTIデータベース';
       const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-        artistText + '\n' + hashtag + '\n'
+        artistText + '\n\n' + hashtag + '\n'
       )}&url=${encodeURIComponent(ogPageUrl)}`;
       window.open(shareUrl, '_blank');
     }
@@ -410,7 +410,9 @@ const Profile = () => {
             <div className="ml-4 md:ml-8">
               <h1>
                 <span className="text-xl md:text-2xl">{userProfile.username}</span>{' '}
-                <span className="ml-2 md:ml-4">{mbtiType?.mbti_type}</span>
+                <span className="ml-2 md:ml-4">
+                  {mbtiType?.visibility === 'is_public' && mbtiType.mbti_type}
+                </span>
               </h1>
             </div>
             <div className="ml-auto mb-4 md:mb-12 mr-4 md:mr-16 lg:mr-20">

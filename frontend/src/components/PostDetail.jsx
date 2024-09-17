@@ -190,9 +190,6 @@ const PostDetail = () => {
               <h1>
                 <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
                   {postUser.username}
-                  {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
-                  {mbtiType?.visibility === 'is_public' && `(${mbtiType?.mbti_type})`}{' '}
-                  {/* mbtiType?.mbti_typeで表示 */}
                 </span>
               </h1>
             </div>
@@ -303,7 +300,7 @@ const PostDetail = () => {
 
     const hashtag = '#MBTIデータベース';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n' + hashtag + '\n'
+      artistText + '\n\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
