@@ -275,7 +275,7 @@ const AllPosts = () => {
                 <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
-                    ポストを完全に削除しますか？
+                    ポストを完全に削除���ますか？
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -331,7 +331,7 @@ const AllPosts = () => {
 
     const hashtag = '#MBTIデータベース';
     const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n' + hashtag + '\n'
+      artistText + '\n\n' + hashtag + '\n'
     )}&url=${encodeURIComponent(ogPageUrl)}`;
     window.open(shareUrl, '_blank');
   };
