@@ -23,7 +23,7 @@ MBTIタイプごとの好みについて、インターネット上で語られ�
 |----------|----------|------------|
 | フロントエンド | React | 18.2.0 |
 | バックエンド | Ruby / Ruby on Rails (APIモード) | 3.2.2 / 7.0.8 |
-| CSSフレームワーク | Tailwind CSS / daisyUI / MUI | 3.3.6 / 3.8.3 / 5.15.5 |
+| CSSフレームワーク | Tailwind CSS / MUI | 3.3.6 / 5.15.5 |
 | API | Anilist API / Spotify Web API ||
 | 認証 | Clerk ||
 | 画像加工 | Cloudinary / imgkit ||

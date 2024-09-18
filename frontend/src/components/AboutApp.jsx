@@ -23,7 +23,7 @@ function AboutApp() {
 
         <div className="mb-12 text-center">
           <p className="text-lg">
-            MBTIデータベースは、MBTIタイプに紐付けて好きな作品を共有するwebアプリです！
+            MBTIデータベースは、MBTIタイプに紐付けて好きな作品を共有するWebアプリです！
             <br />
             <span className="mt-1 inline-block">
               投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
