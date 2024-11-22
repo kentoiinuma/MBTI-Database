@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_21_052110) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_21_082131) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,12 +25,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_21_052110) do
 
   create_table "comments", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.bigint "perception_group_id", null: false
     t.integer "parent_comment_id"
     t.text "text", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["perception_group_id"], name: "index_comments_on_perception_group_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
@@ -75,12 +73,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_21_052110) do
     t.index ["post_id"], name: "index_ogp_images_on_post_id"
   end
 
-  create_table "perception_groups", force: :cascade do |t|
-    t.integer "perception_group", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "post_likes", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "post_id", null: false
@@ -107,7 +99,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_21_052110) do
 
   add_foreign_key "comment_likes", "comments"
   add_foreign_key "comment_likes", "users"
-  add_foreign_key "comments", "perception_groups"
   add_foreign_key "comments", "users"
   add_foreign_key "mbti_types", "users"
   add_foreign_key "media_works", "posts"
