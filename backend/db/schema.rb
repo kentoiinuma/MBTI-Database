@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_21_082131) do
-  # These are extensions that must be enabled in order to support this database
+ActiveRecord::Schema[7.0].define(version: 2024_11_22_050911) do
   enable_extension "plpgsql"
 
   create_table "comment_likes", force: :cascade do |t|
@@ -38,7 +37,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_21_082131) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "visibility", default: 0, null: false
-    t.index ["user_id"], name: "index_mbti_types_on_user_id"
+    t.index ["user_id"], name: "index_mbti_types_on_user_id", unique: true
   end
 
   create_table "media_works", force: :cascade do |t|

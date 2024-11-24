@@ -19,6 +19,7 @@ class MbtiType < ApplicationRecord
   }, _prefix: true
 
   # バリデーションの追加
+  validates :user_id, uniqueness: true
   validates :mbti_type, presence: true
   validates :visibility, presence: true
 end
