@@ -22,4 +22,5 @@ class MbtiType < ApplicationRecord
   validates :user_id, uniqueness: true
   validates :mbti_type, presence: true
   validates :visibility, presence: true
+  validates :mbti_type, inclusion: { in: mbti_types.keys }
 end

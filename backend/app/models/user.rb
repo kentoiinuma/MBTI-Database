@@ -3,12 +3,12 @@
 # ユーザーを表すモデル
 class User < ApplicationRecord
   # 関連付け
-  has_many :posts
-  has_one :mbti_type
-  has_many :post_likes
-  has_many :comment_likes
-  has_many :notifications
-  has_many :comments
+  has_many :posts, dependent: :destroy
+  has_one :mbti_type, dependent: :destroy
+  has_many :post_likes, dependent: :destroy
+  has_many :comment_likes, dependent: :destroy
+  has_many :notifications, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   # バリデーション
   validates :clerk_id, presence: true

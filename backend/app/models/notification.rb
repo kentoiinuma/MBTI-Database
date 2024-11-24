@@ -11,4 +11,7 @@ class Notification < ApplicationRecord
 
   # enumの定義
   enum notification_type: { like: 0, comment: 1 }
+
+  # 追加するバリデーション
+  validates :notification_type, inclusion: { in: notification_types.keys }
 end

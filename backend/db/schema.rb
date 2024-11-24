@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_22_050911) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_24_101504) do
+  # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "comment_likes", force: :cascade do |t|
@@ -28,6 +29,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_050911) do
     t.text "text", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["parent_comment_id"], name: "index_comments_on_parent_comment_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
@@ -98,6 +100,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_22_050911) do
 
   add_foreign_key "comment_likes", "comments"
   add_foreign_key "comment_likes", "users"
+  add_foreign_key "comments", "comments", column: "parent_comment_id"
   add_foreign_key "comments", "users"
   add_foreign_key "mbti_types", "users"
   add_foreign_key "media_works", "posts"

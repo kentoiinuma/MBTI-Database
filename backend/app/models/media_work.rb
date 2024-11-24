@@ -11,4 +11,5 @@ class MediaWork < ApplicationRecord
   # バリデーション
   validates :title, presence: true
   validates :image, presence: true
+  validates :media_type, inclusion: { in: media_types.keys }
 end
