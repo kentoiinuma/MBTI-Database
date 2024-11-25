@@ -2,9 +2,7 @@
 
 require 'cloudinary'
 
-# API V1 名前空間のルートモジュール
 module Api
-  # V1 名前空間のルートモジュール
   module V1
     # 画像に関連するアクションを処理するコントローラー
     class ImagesController < ApplicationController

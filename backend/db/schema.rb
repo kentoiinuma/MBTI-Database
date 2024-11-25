@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_24_101504) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_24_194306) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -25,7 +25,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_24_101504) do
 
   create_table "comments", force: :cascade do |t|
     t.bigint "user_id", null: false
-    t.integer "parent_comment_id"
+    t.bigint "parent_comment_id"
     t.text "text", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -57,7 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_24_101504) do
     t.bigint "user_id", null: false
     t.bigint "post_id", null: false
     t.bigint "comment_id", null: false
-    t.integer "related_for_id", null: false
+    t.bigint "related_for_id", null: false
     t.integer "notification_type", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# MBTIタイプに関連するアクションを処理するコントローラー
 module Api
-  # V1 名前空間のルートモジュール
   module V1
     # MBTIタイプに関連するアクションを処理するコントローラー
     class MbtiController < ApplicationController

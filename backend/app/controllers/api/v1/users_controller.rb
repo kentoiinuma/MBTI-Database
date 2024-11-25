@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# API V1 名前空間のルートモジュール
 module Api
-  # V1 名前空間のルートモジュール
   module V1
     # clerkユーザーに関連するアクションを処理するコントローラー
     class UsersController < ApplicationController

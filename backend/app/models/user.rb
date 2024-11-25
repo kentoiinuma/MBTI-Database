@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-# ユーザーを表すモデル
+# ユーザーを扱うモデル
 class User < ApplicationRecord
-  # 関連付け
   has_many :posts, dependent: :destroy
   has_one :mbti_type, dependent: :destroy
   has_many :post_likes, dependent: :destroy
@@ -10,7 +9,6 @@ class User < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :comments, dependent: :destroy
 
-  # バリデーション
   validates :clerk_id, presence: true
   validates :username, presence: true
   validates :avatar_url, presence: true

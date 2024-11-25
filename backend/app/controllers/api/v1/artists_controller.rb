@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# API V1 名前空間のルートモジュール
 module Api
-  # V1 名前空間のルートモジュール
   module V1
     # アーティストに関連する情報を扱うコントローラー
     class ArtistsController < ApplicationController

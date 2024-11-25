@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-# API V1 名前空間のルートモジュール
 module Api
-  # V1 名前空間のルートモジュール
   module V1
     # 投稿に関連するアクションを処理するコントローラー
     class PostsController < ApplicationController
