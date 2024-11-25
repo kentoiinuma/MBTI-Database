@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       put '/mbti/:user_id', to: 'mbti#update'
       get '/spotify/auth', to: 'spotify#auth'
       get '/spotify/callback', to: 'spotify#callback'
-      get '/spotify/search/:artist_name', to: 'artists#search'
+      get '/spotify/search/:artist_name', to: 'spotify#search'
       post '/upload_image', to: 'images#upload'
       post '/posts', to: 'posts#create'
       get '/posts', to: 'posts#index'

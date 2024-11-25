@@ -2,7 +2,7 @@
 
 module Api
   module V1
-    # clerkユーザーに関連するアクションを処理するコントローラー
+    # clerkユーザーに関連する処理をするコントローラー
     class UsersController < ApplicationController
       # 特定のユーザーの情報を表示するアクション
       def show

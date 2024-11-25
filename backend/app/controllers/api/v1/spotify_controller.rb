@@ -2,8 +2,8 @@
 
 module Api
   module V1
-    # アーティストに関連する情報を扱うコントローラー
-    class ArtistsController < ApplicationController
+    # Spotifyに関連する情報を扱うコントローラー
+    class SpotifyController < ApplicationController
       # アーティストを検索して結果を返すアクション
       def search
         artist_name = params[:artist_name]
@@ -11,7 +11,7 @@ module Api
         artist = spotify_service.search_artist(artist_name)
 
         if artist
-          render json: { artist: }
+          render json: { artist: artist }
         else
           render json: { error: 'Artist not found' }, status: :not_found
         end

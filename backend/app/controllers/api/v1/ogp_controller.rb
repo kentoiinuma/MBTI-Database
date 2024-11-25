@@ -2,6 +2,7 @@
 
 module Api
   module V1
+    # OGP画像を生成するコントローラー
     class OgpController < ActionController::Base
       include ActionView::Layouts
       include ActionView::Rendering

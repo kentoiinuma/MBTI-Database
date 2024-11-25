@@ -35,7 +35,7 @@ function MainContent() {
   // サインイン処理を行う関数
   const handleSignIn = useCallback(async () => {
     if (user) {
-      // バックエンドにユーザー情報を送して新規ユーザーかどうかを確認
+      // バックエンドにユーザー情報を送信して新規ユーザーか確認
       const response = await fetch(`${API_URL}/api/v1/registrations`, {
         method: 'POST',
         headers: {
@@ -47,29 +47,10 @@ function MainContent() {
       });
       const data = await response.json();
 
-      // スナックバーを表示（すべてのユーザーのサインイン時）
-      // setSnackbarMessage('サインインしました！');
-      // setSnackbarOpen(true);
-
-      // 新規ユーザーのみ、ユーザーネームとアイコンURLを送信
+      // 新規ユーザーの場合の処理
       if (data.is_new_user) {
         // 新規ユーザーの場合はMBTIモーダルを表示
         setShowMBTIModal(true);
-
-        // ユーザーネームとアイコンURLをバックエンドに送信
-        await fetch(`${API_URL}/api/v1/registrations`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            clerk_user_id: user.id,
-            username: user.firstName + ' ' + user.lastName, // Clerkからユーザーネームを組み立てる
-            profile_image_url: user.profileImageUrl, // ClerkからユーザーアイコンのURLを取得
-          }),
-        });
-
-        // 新規ユーザー登録後にUserContextの状態を更新
         setUserUpdated(true);
       }
     }

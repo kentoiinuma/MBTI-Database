@@ -2,9 +2,9 @@
 
 module Api
   module V1
-    # ユーザー登録に関連するアクションを処理するコントローラー
+    # ユーザー登録に関連する情報を扱うコントローラー
     class RegistrationsController < ApplicationController
-      # ユーザーを作成または更新する
+      # 新規ユーザー作成
       def create
         clerk_user_id = params[:clerk_user_id]
 
@@ -18,25 +18,25 @@ module Api
 
       private
 
-      # ユーザーを検索または初期化する
+      # Clerkからユーザーデータを取得し、設定
       def find_or_initialize_user(clerk_user_id)
         clerk = Clerk::SDK.new
         clerk_user = clerk.users.find(clerk_user_id)
 
         user = User.find_or_initialize_by(clerk_id: clerk_user_id)
-        user.username = clerk_user['username'] # 修正: ハッシュから値を取得
 
-        # Clerkから取得したアイコンURLを使用してCloudinaryにアップロードし、URLを取得
-        uploaded_image = Cloudinary::Uploader.upload(clerk_user['profile_image_url']) # 修正: ハッシュから値を取得
-        user.avatar_url = uploaded_image['secure_url'] # CloudinaryからのセキュアURLを保存
+        user.username = clerk_user['username']
+
+        uploaded_image = Cloudinary::Uploader.upload(clerk_user['profile_image_url'])
+        user.avatar_url = uploaded_image['secure_url'] 
 
         user
       end
 
-      # ユーザーを保存する
+      # 新規ユーザーかどうかをレスポンスとして返す
+      # 新規ユーザーの場合、保存
       def save_user(user)
-        is_new_user = user.new_record?
-        if is_new_user
+        if user.new_record?
           if user.save
             render json: { status: 'ok', is_new_user: true }
           else
@@ -44,7 +44,6 @@ module Api
                                  user.errors.full_messages)
           end
         else
-          # 新規レコードでない場合は、保存せずに既存ユーザーであることを示すレスポンスを返す
           render json: { status: 'ok', is_new_user: false }
         end
       end
