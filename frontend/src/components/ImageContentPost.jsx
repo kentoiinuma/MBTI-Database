@@ -38,7 +38,7 @@ const ImageContentPost = () => {
   const [customAlertVisible, setCustomAlertVisible] = useState(false);
   const [artistNotFound, setArtistNotFound] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [contentType, setContentType] = useState('anime'); // 'music'から'anime'に変更
+  const [contentType, setContentType] = useState('anime');
 
   let API_URL;
   if (window.location.origin === 'http://localhost:3001') {
@@ -81,24 +81,9 @@ const ImageContentPost = () => {
     }
   };
 
-  const handleImageSelect = async (imageUrl, title) => {
-    const response = await fetch(`${API_URL}/api/v1/upload_image`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ imageUrl }),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      const uploadedImageUrl = data.url;
-      if (!selectedImages.some((image) => image.title === title)) {
-        setSelectedImages((prevImages) =>
-          [...prevImages, { url: uploadedImageUrl, title }].slice(0, 4)
-        );
-      }
-    } else {
-      console.error('Image upload failed');
+  const handleImageSelect = (imageUrl, title) => {
+    if (!selectedImages.some((image) => image.title === title)) {
+      setSelectedImages((prevImages) => [...prevImages, { url: imageUrl, title }].slice(0, 4));
     }
     setInputValue('');
     setModalOpen(false);
@@ -170,7 +155,7 @@ const ImageContentPost = () => {
     if (existingPost) {
       setCustomAlertVisible(true);
       setIsLoading(false);
-      return; // ここで処理を終了
+      return;
     }
     const postResult = await handlePost();
     setIsLoading(false);
@@ -178,7 +163,7 @@ const ImageContentPost = () => {
       console.log('Post success state set to true');
       navigate('/home', { state: { postSuccess: true } });
     } else {
-      setCustomAlertVisible(true); // 投稿に失敗した場合もアラートを表示
+      setCustomAlertVisible(true);
     }
   };
 

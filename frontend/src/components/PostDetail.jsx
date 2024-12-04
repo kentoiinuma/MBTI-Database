@@ -135,7 +135,7 @@ const PostDetail = () => {
             setOpenSnackbar(true);
             setSnackbarMessage('ポストを削除ました！');
             // ポスト削除にAllPostsコンポーネントに遷移する
-            window.location.href = '/';
+            window.location.href = '/home';
           } else {
             console.error('Failed to delete the post');
           }

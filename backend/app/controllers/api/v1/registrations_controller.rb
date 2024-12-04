@@ -4,7 +4,7 @@ module Api
   module V1
     # ユーザー登録に関連する情報を扱うコントローラー
     class RegistrationsController < ApplicationController
-      # 新規ユーザー作成
+      # ユーザーを新規登録する
       def create
         clerk_user_id = params[:clerk_user_id]
 
@@ -18,7 +18,7 @@ module Api
 
       private
 
-      # Clerkからユーザーデータを取得し、設定
+      # Clerkからユーザーデータを取得し、設定する
       def find_or_initialize_user(clerk_user_id)
         clerk = Clerk::SDK.new
         clerk_user = clerk.users.find(clerk_user_id)
@@ -34,7 +34,7 @@ module Api
       end
 
       # 新規ユーザーかどうかをレスポンスとして返す
-      # 新規ユーザーの場合、保存
+      # 新規ユーザーの場合、保存する
       def save_user(user)
         if user.new_record?
           if user.save

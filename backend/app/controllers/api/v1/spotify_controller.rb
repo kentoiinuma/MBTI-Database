@@ -4,7 +4,7 @@ module Api
   module V1
     # Spotifyに関連する情報を扱うコントローラー
     class SpotifyController < ApplicationController
-      # アーティストを検索して結果を返すアクション
+      # アーティストを検索して結果を返す
       def search
         artist_name = params[:artist_name]
         spotify_service = SpotifyService.new

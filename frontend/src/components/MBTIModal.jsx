@@ -174,7 +174,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
           body: JSON.stringify({
             mbti_type: selectedMBTI,
             visibility: visibility,
-            user_id: user.id,
+            clerk_id: user.id,
           }),
         });
 

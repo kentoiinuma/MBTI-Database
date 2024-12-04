@@ -4,51 +4,60 @@ module Api
   module V1
     # メディア作品に関連するアクションを処理するコントローラー
     class MediaWorksController < ApplicationController
-      # 新しいメディア作品をデータベースに保存します。
-      # 成功した場合、作成されたメディア作品のIDを含むJSONを返します。
-      # 失敗した場合、エラーメッセージを含むJSONを返します。
+      before_action :set_post, only: :index
+
+      # メディア作品を作成する
       def create
-        media_work = MediaWork.new(media_work_params)
+        upload_result = upload_image(params[:image])
 
-        if media_work.save
-          render json: { id: media_work.id }
+        media_work = MediaWork.create(media_work_params.merge(image: upload_result['url']))
+
+        if media_work.persisted?
+          render json: { id: media_work.id }, status: :created
         else
-          render json: { error: media_work.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: media_work.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
-      # 特定のpost_idに関連するメディア作品を取得します。
-      # post_idが指定されていない場合は、エラーメッセージを返します。
+      # 特定の投稿のメディア作品を取得する
       def index
-        if params[:post_id]
-          media_works = MediaWork.where(post_id: params[:post_id])
-          render json: media_works
-        else
-          render json: { error: 'post_id is required' }, status: :bad_request
-        end
+        media_works = @post.media_works
+        render json: media_works
       end
 
-      # MBTIタイプと診断方法に基づいて、メディア作品のタイトルとその出現回数の統計情報を提供します。
+      # MBTIタイプとメディアタイプに基づいた統計情報を取得する
       def statistics
         mbti_types = extract_mbti_types
         media_type = extract_media_type
 
-        user_ids = MbtiType.where(mbti_type: mbti_types).pluck(:user_id)
-        post_ids = Post.where(user_id: user_ids).pluck(:id)
-        titles = MediaWork.where(post_id: post_ids, media_type: media_type).group(:title).count
+        titles = MediaWork.joins(post: { user: :mbti_type })
+                          .where(mbti_types: { mbti_type: mbti_types })
+                          .where(media_type: media_type)
+                          .group(:title)
+                          .count
+
         render json: titles
       end
 
       private
 
-      # メディア作品を作成するために必要なパラメータを検証し、許可します。
+      def set_post
+        @post = Post.find_by(id: params[:post_id])
+        unless @post
+          render json: { error: 'Post not found' }, status: :not_found
+        end
+      end
+
       def media_work_params
         params.permit(:post_id, :title, :image, :media_type)
       end
 
-      # リクエストからMBTIタイプを抽出し、対応する内部表現に変換します。
+      def upload_image(image_url)
+        Cloudinary::Uploader.upload(image_url, width: 600, height: 600, crop: 'fill')
+      end
+
       def extract_mbti_types
-        params[:mbti_types].split(',').map { |type| MbtiType.mbti_types[type] }
+        params[:mbti_types].to_s.split(',').map { |type| MbtiType.mbti_types[type] }
       end
 
       def extract_media_type

@@ -2,58 +2,53 @@
 
 module Api
   module V1
-    # clerkユーザーに関連する処理をするコントローラー
+    # ユーザーに関連する情報を扱うコントローラー
     class UsersController < ApplicationController
-      # 特定のユーザーの情報を表示するアクション
+      before_action :set_user, only: [:show, :update_name, :upload_avatar]
+
+      # 特定のユーザーの情報を取得する
       def show
-        user = User.find_by(clerk_id: params[:id])
-        if user
-          render_user(user)
-        else
-          render json: { error: 'User not found' }, status: :not_found
-        end
+        render_user(@user)
       end
 
-      # ユーザーネームを更新するアクション
+      # ユーザーネームを更新する
       def update_name
-        user = User.find_by(clerk_id: params[:id])
-        if user.update(user_params)
-          render_user(user)
+        if @user.update(user_params)
+          render_user(@user)
         else
-          render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
+          render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
       end
 
-      # ユーザーのアバター画像をアップロードするアクション
+      # ユーザーのアバターを更新する
       def upload_avatar
-        user = User.find_by(clerk_id: params[:id])
-        if user
-          # Cloudinaryに画像をアップロードし、URLを取得
-          uploaded_image = Cloudinary::Uploader.upload(params[:avatar].tempfile.path) # 修正箇所
-          if uploaded_image['url']
-            # アップロードされた画像のURLでユーザーのavatar_urlを更新
-            user.update(avatar_url: uploaded_image['url'])
-            render_user(user)
-          else
-            render json: { error: 'Failed to upload image' }, status: :unprocessable_entity
-          end
+        uploaded_image = Cloudinary::Uploader.upload(params[:avatar].tempfile.path)
+        if uploaded_image['url']
+          @user.update(avatar_url: uploaded_image['url'])
+          render_user(@user)
         else
-          render json: { error: 'User not found' }, status: :not_found
+          render json: { error: 'Failed to upload image' }, status: :unprocessable_entity
         end
       end
 
       private
 
-      # ユーザーの情報をJSON形式でレンダリングする
+      def set_user
+        @user = User.find_by(clerk_id: params[:id])
+        unless @user
+          render json: { error: 'User not found' }, status: :not_found
+          return
+        end
+      end
+
       def render_user(user)
         render json: {
           username: user.username,
           avatar_url: user.avatar_url,
-          clerk_id: user.clerk_id # 追加: clerk_idをJSONレスポンスに含める
+          clerk_id: user.clerk_id
         }
       end
 
-      # ストロングパラメーター
       def user_params
         params.require(:user).permit(:username, :avatar_url)
       end

@@ -78,12 +78,12 @@ const Profile = () => {
           setUserMbtiType(data.mbti_type);
         });
 
-      fetch(`${API_URL}/api/v1/posts?user_id=${targetClerkId}`)
+      fetch(`${API_URL}/api/v1/users/${targetClerkId}/posts`)
         .then((response) => response.json())
         .then((posts) => {
           setUserPosts(posts);
           posts.forEach((post) => {
-            fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
+            fetch(`${API_URL}/api/v1/posts/${post.id}/media_works`)
               .then((response) => response.json())
               .then((mediaWorks) => {
                 setUserPosts((prevPosts) =>
@@ -485,7 +485,7 @@ const Profile = () => {
             })
               .then((res) => res.json())
               .then((data) => {
-                // 更新後のMBTIタイプとvisibilityを状態に反映
+                // 更新後のMBTIイプとvisibilityを状態に反映
                 setMbtiType({
                   mbti_type: data.mbti_type,
                   visibility: data.visibility,
