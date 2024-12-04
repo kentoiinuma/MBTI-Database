@@ -22,13 +22,13 @@ Rails.application.routes.draw do
       get    '/posts',                    to: 'posts#index'
       get    '/posts/:id',                to: 'posts#show'
       delete '/posts/:id',                to: 'posts#destroy'
-      get '/users/:clerk_id/posts',        to: 'posts#user_posts'
+      get '/users/:clerk_id/posts',       to: 'posts#user_posts'
 
       # メディア作品関連
       # --------------------------------
-      post '/media_works',                          to: 'media_works#create'
-      get  '/posts/:post_id/media_works',           to: 'media_works#index'
-      get  '/media_works/statistics',               to: 'media_works#statistics'
+      post '/media_works',               to: 'media_works#create'
+      get  '/posts/:post_id/media_works', to: 'media_works#index'
+      get  '/media_works/statistics',    to: 'media_works#statistics'
 
       # 外部API連携
       # --------------------------------
@@ -37,8 +37,8 @@ Rails.application.routes.draw do
 
       # OGP関連
       # --------------------------------
-      get '/ogp/:id',                     to: 'ogp#show'
-      get '/ogp_page/:id',                to: 'ogp#page'
+      get '/ogp/:post_id',                to: 'ogp#show'
+      get '/ogp_page/:post_id',           to: 'ogp#page'
     end
   end
 end

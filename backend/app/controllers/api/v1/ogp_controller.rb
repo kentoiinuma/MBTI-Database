@@ -8,7 +8,7 @@ module Api
       include ActionView::Rendering
 
       def show
-        @post = Post.find(params[:id])
+        @post = Post.find(params[:post_id])
         @media_works = @post.media_works
 
         html = render_to_string(
@@ -34,7 +34,7 @@ module Api
       end
 
       def page
-        @post = Post.find(params[:id])
+        @post = Post.find(params[:post_id])
         @ogp_image = @post.ogp_image
 
         render layout: false

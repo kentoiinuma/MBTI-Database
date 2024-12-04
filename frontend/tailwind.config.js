@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        69: '17.25rem', // 65の値を追加（65 * 0.25 = 16.25rem）
+        69: '17.25rem', 
       },
       colors: {
-        custom: '#2EA9DF', // カスタムカラーを追加
-        'off-white': '#fefefe', // より白に近い色
+        custom: '#2EA9DF', 
+        'off-white': '#fefefe', 
       },
     },
   },
@@ -16,5 +16,5 @@ module.exports = {
     extend: {},
   },
   plugins: [require('daisyui')],
-  darkMode: 'class', // または 'media'
+  darkMode: 'class', 
 };

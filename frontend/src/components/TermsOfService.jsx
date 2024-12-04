@@ -1,4 +1,3 @@
-// frontend/src/components/TermsOfService.jsx
 import React from 'react';
 
 const TermsOfService = () => {

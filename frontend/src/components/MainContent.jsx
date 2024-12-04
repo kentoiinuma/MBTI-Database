@@ -1,17 +1,17 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { useUser } from '@clerk/clerk-react'; // Clerkを使ったユーザー認証のためのフック
+import { useUser } from '@clerk/clerk-react'; 
 import Header from './Header';
-import MBTIModal from './MBTIModal'; // MBTIモーダルのインポート
+import MBTIModal from './MBTIModal'; 
 import Profile from './Profile';
 import ImageContentPost from './ImageContentPost';
 import AllPosts from './AllPosts';
 import TermsOfService from './TermsOfService';
 import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
-import PostDetail from './PostDetail'; // PostDetailのインポート
-import { Snackbar, Alert } from '@mui/material'; // MUI SnackbarとAlertのインポート
-import { useUserContext } from '../contexts/UserContext'; // UserContextのインポート
+import PostDetail from './PostDetail'; 
+import { Snackbar, Alert } from '@mui/material'; 
+import { useUserContext } from '../contexts/UserContext'; 
 
 function MainContent() {
   const [showMBTIModal, setShowMBTIModal] = useState(false); // MBTIモーダルの表示態を管理するステート

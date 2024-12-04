@@ -15,20 +15,20 @@
 /* アーティストの画像が3枚のときのスタイル */
 .image-container-3 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2等分のカラム */
-  grid-template-rows: auto auto; /* 2行 */
-  place-items: center; /* 中央揃え */
-  gap: 5px; /* 画像間の隙間 */
+  grid-template-columns: repeat(2, 1fr); 
+  grid-template-rows: auto auto; 
+  place-items: center; 
+  gap: 5px; 
 }
 
 .image-container-3 img:first-child,
 .image-container-3 img:nth-child(2) {
-  grid-row: 1; /* 1枚目と2枚目の画像は最初の行に配置 */
+  grid-row: 1;
 }
 
 .image-container-3 img:last-child {
-  grid-row: 2; /* 3枚目の画像は次の行に配置 */
-  grid-column: 1 / span 2; /* 両方のカラムにまたがる */
+  grid-row: 2;
+  grid-column: 1 / span 2;
 }
 
 /* アーティストの画像が4枚のときのスタイル */
@@ -44,7 +44,7 @@
 }
 
 .sidebar-link {
-  display: block; /* ブロックレベル要素に変更 */
+  display: block; 
   font-size: 1.3em;
   border-radius: 10px;
 }

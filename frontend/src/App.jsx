@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ClerkProvider } from '@clerk/clerk-react';
-import { UserProvider } from './contexts/UserContext'; // UserProviderをインポート
+import { UserProvider } from './contexts/UserContext'; 
 import { PostUsernameProvider } from './components/PostDetail';
 import MainContent from './components/MainContent';
 import './App.css';
