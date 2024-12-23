@@ -1,12 +1,10 @@
-// .eslintrc.js
-
 module.exports = {
   env: {
     browser: true,
     es2021: true,
-    jest: true, // Jest's environment added
+    jest: true,
   },
-  extends: ['react-app', 'react-app/jest'],
+  extends: ['react-app', 'react-app/jest', 'plugin:prettier/recommended'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -16,15 +14,13 @@ module.exports = {
   },
   plugins: ['react', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
     'react/react-in-jsx-scope': 'off',
     camelcase: 'off',
     'react/prop-types': 'off',
-    // その他のカスタムルール
   },
   settings: {
     react: {
-      version: 'detect', // React version set to auto-detect
+      version: 'detect',
     },
   },
 };

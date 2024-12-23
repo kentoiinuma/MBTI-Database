@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        69: '17.25rem', 
+        69: '17.25rem',
       },
       colors: {
-        custom: '#2EA9DF', 
-        'off-white': '#fefefe', 
+        custom: '#2EA9DF',
+        'off-white': '#fefefe',
       },
     },
   },
@@ -16,5 +16,5 @@ module.exports = {
     extend: {},
   },
   plugins: [require('daisyui')],
-  darkMode: 'class', 
+  darkMode: 'class',
 };

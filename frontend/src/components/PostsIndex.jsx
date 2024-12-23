@@ -28,7 +28,7 @@ const StyledXIcon = styled(XIcon)({
   fontSize: 40,
 });
 
-const AllPosts = () => {
+const PostsIndex = () => {
   const [posts, setPosts] = useState([]);
   const [mediaWorks, setMediaWorks] = useState({});
   const location = useLocation();
@@ -202,7 +202,7 @@ const AllPosts = () => {
             className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/profile/${postUser.clerkId}`);
+              navigate(`/users/${postUser.clerkId}`);
             }}
           >
             <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
@@ -374,7 +374,7 @@ const AllPosts = () => {
               <div
                 onClick={(e) => {
                   if (!anchorEl) {
-                    navigate(`/post/${post.id}`);
+                    navigate(`/posts/${post.id}`);
                   }
                 }}
               >
@@ -480,4 +480,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default PostsIndex;

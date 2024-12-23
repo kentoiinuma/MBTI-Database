@@ -34,7 +34,7 @@ class SpotifyService
     access_token = authenticate
     headers = {
       'Authorization' => "Bearer #{access_token}",
-      'Accept-Language' => 'ja' 
+      'Accept-Language' => 'ja'
     }
     params = {
       q: artist_name,

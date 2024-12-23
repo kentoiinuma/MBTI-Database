@@ -5,7 +5,7 @@ require 'json'
 
 # Anilist APIへの接続を提供するサービス
 class AnilistService
-  GRAPHQL_ENDPOINT = 'https://graphql.anilist.co'.freeze
+  GRAPHQL_ENDPOINT = 'https://graphql.anilist.co'
 
   # 指定されたアニメタイトルでAnilistを検索し、結果を返す
   def search(anime_title)
@@ -33,15 +33,13 @@ class AnilistService
 
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Content-Type'] = 'application/json'
-    request.body = { query: query, variables: variables }.to_json
+    request.body = { query:, variables: }.to_json
 
     response = http.request(request)
 
-    if response.is_a?(Net::HTTPSuccess)
-      data = JSON.parse(response.body)
-      data['data']['Page']['media']
-    else
-      nil
-    end
+    return unless response.is_a?(Net::HTTPSuccess)
+
+    data = JSON.parse(response.body)
+    data['data']['Page']['media']
   end
 end

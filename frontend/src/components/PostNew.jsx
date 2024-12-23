@@ -26,7 +26,7 @@ const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
   },
 }));
 
-const ImageContentPost = () => {
+const PostNew = () => {
   const { user } = useUser();
   const [isModalOpen, setModalOpen] = useState(false);
   const [artist, setArtist] = useState(null);
@@ -161,7 +161,7 @@ const ImageContentPost = () => {
     setIsLoading(false);
     if (postResult) {
       console.log('Post success state set to true');
-      navigate('/home', { state: { postSuccess: true } });
+      navigate('/posts', { state: { postSuccess: true } });
     } else {
       setCustomAlertVisible(true);
     }
@@ -314,4 +314,4 @@ const ImageContentPost = () => {
   );
 };
 
-export default ImageContentPost;
+export default PostNew;

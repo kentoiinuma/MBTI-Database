@@ -15,10 +15,10 @@
 /* アーティストの画像が3枚のときのスタイル */
 .image-container-3 {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  grid-template-rows: auto auto; 
-  place-items: center; 
-  gap: 5px; 
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  place-items: center;
+  gap: 5px;
 }
 
 .image-container-3 img:first-child,
@@ -44,15 +44,11 @@
 }
 
 .sidebar-link {
-  display: block; 
+  display: block;
   font-size: 1.3em;
   border-radius: 10px;
 }
 
 .sidebar-link:hover {
   background-color: rgba(0, 0, 0, 0.08);
-}
-
-.sidebar-link.active {
-  font-weight: bold;
 }

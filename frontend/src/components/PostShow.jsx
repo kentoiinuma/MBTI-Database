@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
 import {
@@ -19,23 +19,6 @@ import XIcon from '@mui/icons-material/X';
 import { useUser } from '@clerk/clerk-react';
 import { styled } from '@mui/material/styles';
 
-// PostUsernameContextの作成
-const PostUsernameContext = createContext();
-
-// PostUsernameProviderコンポーネントの定義
-export const PostUsernameProvider = ({ children }) => {
-  const [postUsername, setPostUsername] = useState('');
-
-  return (
-    <PostUsernameContext.Provider value={{ postUsername, setPostUsername }}>
-      {children}
-    </PostUsernameContext.Provider>
-  );
-};
-
-// usePostUsernameカスタムフックのエクト
-export const usePostUsername = () => useContext(PostUsernameContext);
-
 let API_URL;
 if (window.location.origin === 'http://localhost:3001') {
   API_URL = 'http://localhost:3000';
@@ -53,7 +36,7 @@ const StyledXIcon = styled(XIcon)({
   fontSize: 40,
 });
 
-const PostDetail = () => {
+const PostShow = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
@@ -65,7 +48,6 @@ const PostDetail = () => {
   const [deletePostId, setDeletePostId] = useState(null);
   const open = Boolean(anchorEl);
   const { user: currentUser } = useUser();
-  const { setPostUsername } = usePostUsername();
   const [loading, setLoading] = useState(true);
   const [mbtiType, setMbtiType] = useState(null); // mbtiTypeの状態を管理するuseStateを追加
 
@@ -86,7 +68,6 @@ const PostDetail = () => {
           createdAt: data.created_at,
         });
         setMediaWorks(data.media_works);
-        setPostUsername(data.user.username);
         setLoading(false);
 
         // ユーザーのMBTIタイプを取得
@@ -102,7 +83,7 @@ const PostDetail = () => {
     };
 
     fetchPostData();
-  }, [postId, setPostUsername]);
+  }, [postId]);
 
   const handleClick = (event, postId) => {
     setAnchorEl(event.currentTarget);
@@ -134,8 +115,8 @@ const PostDetail = () => {
             setOpenDialog(false);
             setOpenSnackbar(true);
             setSnackbarMessage('ポストを削除ました！');
-            // ポスト削除にAllPostsコンポーネントに遷移する
-            window.location.href = '/home';
+            // ポスを/homeから/postsに更新
+            window.location.href = '/posts';
           } else {
             console.error('Failed to delete the post');
           }
@@ -176,7 +157,8 @@ const PostDetail = () => {
             className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/profile/${postUser.clerkId}`);
+              // パスを/profileから/usersに更新
+              navigate(`/users/${postUser.clerkId}`);
             }}
           >
             <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
@@ -367,4 +349,4 @@ const PostDetail = () => {
   );
 };
 
-export default PostDetail;
+export default PostShow;
