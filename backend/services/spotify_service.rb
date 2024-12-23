@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# app/services/spotify_service.rb
-
 require 'base64'
 require 'net/http'
 
@@ -36,7 +34,7 @@ class SpotifyService
     access_token = authenticate
     headers = {
       'Authorization' => "Bearer #{access_token}",
-      'Accept-Language' => 'ja' # Added Accept-Language header
+      'Accept-Language' => 'ja'
     }
     params = {
       q: artist_name,
@@ -46,7 +44,6 @@ class SpotifyService
 
     response = get_request("#{SPOTIFY_API_ENDPOINT}/search", params, headers)
     response_body = JSON.parse(response.body)
-    puts "Response Body: #{response_body}" # Log the response body
 
     response_body['artists']['items'].first
   end

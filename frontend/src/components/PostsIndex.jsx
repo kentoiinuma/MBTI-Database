@@ -28,7 +28,7 @@ const StyledXIcon = styled(XIcon)({
   fontSize: 40,
 });
 
-const AllPosts = () => {
+const PostsIndex = () => {
   const [posts, setPosts] = useState([]);
   const [mediaWorks, setMediaWorks] = useState({});
   const location = useLocation();
@@ -79,7 +79,7 @@ const AllPosts = () => {
             setPosts(posts.filter((post) => post.id !== deletePostId));
             setOpenDialog(false);
             setOpenSnackbar(true);
-            setSnackbarMessage('ポストを除しました！');
+            setSnackbarMessage('ポストを削除しました！');
           } else {
             console.error('Failed to delete the post');
           }
@@ -100,7 +100,7 @@ const AllPosts = () => {
   }
 
   useEffect(() => {
-    fetch(`${API_URL}/api/v1/posts/all`)
+    fetch(`${API_URL}/api/v1/posts`)
       .then((response) => response.json())
       .then((data) => {
         setPosts(
@@ -139,7 +139,7 @@ const AllPosts = () => {
               );
             });
 
-          fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
+          fetch(`${API_URL}/api/v1/posts/${post.id}/media_works`)
             .then((response) => response.json())
             .then((media) => {
               setMediaWorks((prev) => ({
@@ -202,7 +202,7 @@ const AllPosts = () => {
             className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/profile/${postUser.clerkId}`);
+              navigate(`/users/${postUser.clerkId}`);
             }}
           >
             <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
@@ -275,7 +275,7 @@ const AllPosts = () => {
                 <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
                 <DialogContent>
                   <DialogContentText id="alert-dialog-description">
-                    ポストを完全に削除���ますか？
+                    ポストを完全に削除しますか？
                   </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -374,7 +374,7 @@ const AllPosts = () => {
               <div
                 onClick={(e) => {
                   if (!anchorEl) {
-                    navigate(`/post/${post.id}`);
+                    navigate(`/posts/${post.id}`);
                   }
                 }}
               >
@@ -480,4 +480,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default PostsIndex;

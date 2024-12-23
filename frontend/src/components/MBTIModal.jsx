@@ -34,12 +34,11 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
   const { user } = useUser();
   const [selectedMBTI, setSelectedMBTI] = useState(initialMBTI);
   const [mbtiError, setMbtiError] = useState(false);
-  const [userProfile, setUserProfile] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [editableUsername, setEditableUsername] = useState('');
   const [avatarFile, setAvatarFile] = useState(null);
-  const { updateUserProfile } = useUserContext();
-  // visibilityの状態を管理
-  const [visibility, setVisibility] = useState(initialVisibility); // デフォルトは公開
+  const { updateProfile } = useUserContext();
+  const [visibility, setVisibility] = useState(initialVisibility);
   const [isLoading, setIsLoading] = useState(true);
 
   let API_URL;
@@ -60,7 +59,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
           : Promise.resolve(null),
       ])
         .then(([userData, mbtiData]) => {
-          setUserProfile({
+          setProfile({
             username: userData.username,
             avatarUrl: userData.avatar_url,
           });
@@ -85,7 +84,6 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
   }, [user, API_URL, initialMBTI, initialVisibility]);
 
   const handleClose = (event) => {
-    // 初期登録時（initialMBTIが空文字）はモーダルを閉じないようにする
     if (!initialMBTI) {
       return;
     }
@@ -103,7 +101,6 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
     setEditableUsername(event.target.value);
   };
 
-  // visibilityの変更を処理するハンドラ
   const handleVisibilityChange = (event) => {
     setVisibility(event.target.value);
   };
@@ -115,8 +112,8 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setUserProfile({
-          ...userProfile,
+        setProfile({
+          ...profile,
           avatarUrl: reader.result,
         });
       };
@@ -136,8 +133,8 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
       });
       const data = await response.json();
       if (response.ok) {
-        setUserProfile({
-          ...userProfile,
+        setProfile({
+          ...profile,
           avatarUrl: data.avatar_url,
         });
       } else {
@@ -174,7 +171,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
           body: JSON.stringify({
             mbti_type: selectedMBTI,
             visibility: visibility,
-            user_id: user.id,
+            clerk_id: user.id,
           }),
         });
 
@@ -201,7 +198,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
         console.error('Failed to update user information');
         return;
       } else {
-        updateUserProfile(editableUsername, userProfile.avatarUrl);
+        updateProfile(editableUsername, profile.avatarUrl);
       }
 
       onUpdate(selectedMBTI, visibility); // visibility を渡す
@@ -230,12 +227,12 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
           className="bg-white p-4 rounded-lg shadow-xl max-w-xs mx-4 border-[#2EA9DF] md:p-6 md:max-w-lg md:mx-auto"
           onClick={(e) => e.stopPropagation()}
         >
-          {userProfile && (
+          {profile && (
             <Box className="flex items-center space-x-4 p-4">
               <div className="avatar cursor-pointer group" onClick={triggerFileSelect}>
                 <div className="w-24 h-24 rounded-full mr-4 overflow-hidden relative">
                   <img
-                    src={userProfile.avatarUrl}
+                    src={profile.avatarUrl}
                     alt="User avatar"
                     className="w-full h-full object-cover brightness-75 group-hover:brightness-50 transition-all duration-300"
                     onClick={(e) => e.stopPropagation()}
@@ -338,8 +335,7 @@ const MBTIModal = ({ onClose, onUpdate, initialMBTI = '', initialVisibility = 'i
               </div>
               <p className="text-sm mt-2">
                 非公開にすると自分のMBTIタイプが他のユーザーから見えなくなります。
-              </p>{' '}
-              {/* 説明を追加 */}
+              </p>
             </fieldset>
             <div className="flex justify-center gap-4">
               <button

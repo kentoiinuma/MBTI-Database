@@ -19,8 +19,8 @@ const Header = ({ onSignIn }) => {
   const { signOut } = useClerk(); // サインアウト関数を取得
   const [anchorEl, setAnchorEl] = useState(null); // メニューのアンカー要素の状態
   const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
-  const [userProfile, setUserProfile] = useState(null); // ユーザープロファイルの状態
-  const { userUpdated, setUserUpdated } = useUserContext(); // UserContextから状態を取得
+  const [profile, setProfile] = useState(null); // ユーザープロファイルの状態（userProfileからprofileに変更）
+  const { isProfileUpdated, setIsProfileUpdated } = useUserContext(); // UserContextから状態を取得（userUpdatedからisProfileUpdatedへ変更）
   const location = useLocation(); // useLocationフックを使用して現在のlocationを取得
 
   // APIのURLを設定
@@ -37,18 +37,22 @@ const Header = ({ onSignIn }) => {
   useEffect(() => {
     const clerkId = user?.id;
     if (clerkId) {
-      // userUpdatedがtrueの場合にのみフェッチを実行
-      fetch(`${API_URL}/api/v1/users/${clerkId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setUserProfile({
-            username: data.username,
-            avatarUrl: data.avatar_url,
+      if (isProfileUpdated || profile === null) {
+        fetch(`${API_URL}/api/v1/users/${clerkId}`)
+          .then((response) => response.json())
+          .then((data) => {
+            setProfile({
+              username: data.username,
+              avatarUrl: data.avatar_url,
+            });
+            setIsProfileUpdated(false); // フェッチ後に状態をリセット
+          })
+          .catch((error) => {
+            console.error('Error fetching profile:', error);
           });
-          setUserUpdated(false); // フェッチ後に状態をリセット
-        });
+      }
     }
-  }, [API_URL, user, userUpdated, setUserUpdated]); // userUpdatedとsetUserUpdatedを依存配列に追加
+  }, [API_URL, user, isProfileUpdated]);
 
   // サインアウト処理
   const handleSignOut = async () => {
@@ -75,7 +79,7 @@ const Header = ({ onSignIn }) => {
             alt="favicon"
             className="w-8 h-8 mr-2"
           />
-          <NavLink to="/home" className="font-semibold italic">
+          <NavLink to="/posts" className="font-semibold italic">
             <span className="text-[#7B90D2] text-[1.4em]">M</span>
             <span className="text-[#86C166] text-[1.4em]">B</span>
             <span className="text-[#A5DEE4] text-[1.4em]">T</span>
@@ -95,7 +99,7 @@ const Header = ({ onSignIn }) => {
     <>
       <header
         className={`fixed top-0 left-0 right-0 flex justify-between items-center px-4 py-2 bg-off-white text-black z-20 ${
-          location.pathname !== '/home' ? 'border-b' : ''
+          location.pathname !== '/posts' ? 'border-b' : ''
         }`}
       >
         {getTitle()}
@@ -111,7 +115,7 @@ const Header = ({ onSignIn }) => {
                   onClick={handleClick}
                 >
                   <img
-                    src={userProfile?.avatarUrl}
+                    src={profile?.avatarUrl}
                     alt="User avatar"
                     className="h-11 w-11 object-cover rounded-full hover:brightness-90"
                   />
@@ -129,15 +133,15 @@ const Header = ({ onSignIn }) => {
                     className: 'shadow-md',
                   }}
                 >
-                  {/* プロフィールメニューアテム */}
+                  {/* プロフィールメニューアイテム */}
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to="/profile"
+                    to="/users"
                     className="flex items-center"
                   >
                     <AccountCircleOutlinedIcon className="text-xl mr-2" />
-                    {userProfile ? userProfile.username : 'Loading...'}
+                    {profile ? profile.username : 'Loading...'}
                   </MenuItem>
                   {/* アプリ情報メニューアイテム */}
                   <MenuItem
@@ -153,9 +157,9 @@ const Header = ({ onSignIn }) => {
                   <MenuItem
                     onClick={handleClose}
                     component={'a'} // Linkからaに変更
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSeuIOHxpmTYuldKbl9mbiAGMy6DI4bvoT7_SfeO18jCNqPIhA/viewform?usp=sf_link" // Google FormsのURLを指定
-                    target="_blank" // 別タブで開く
-                    rel="noopener noreferrer" // セキュリティ対策
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSeuIOHxpmTYuldKbl9mbiAGMy6DI4bvoT7_SfeO18jCNqPIhA/viewform?usp=sf_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="flex items-center"
                   >
                     <QuestionAnswerOutlinedIcon className="text-xl mr-2" />
@@ -165,7 +169,7 @@ const Header = ({ onSignIn }) => {
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to="/terms-of-service"
+                    to="/terms"
                     className="flex items-center"
                   >
                     <GavelOutlinedIcon className="text-xl mr-2" />
@@ -175,7 +179,7 @@ const Header = ({ onSignIn }) => {
                   <MenuItem
                     onClick={handleClose}
                     component={Link}
-                    to="/privacy-policy"
+                    to="/privacy"
                     className="flex items-center"
                   >
                     <PolicyOutlinedIcon className="text-xl mr-2" />
@@ -203,7 +207,9 @@ const Header = ({ onSignIn }) => {
             </Link>
             <SignInButton>
               <span
-                className={`text-xl text-[#2EA9DF] ${location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'} flex items-center`}
+                className={`text-xl text-[#2EA9DF] ${
+                  location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'
+                } flex items-center`}
               >
                 ログイン
               </span>

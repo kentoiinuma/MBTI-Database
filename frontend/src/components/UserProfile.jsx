@@ -28,8 +28,8 @@ const StyledXIcon = styled(XIcon)({
   fontSize: 40,
 });
 
-const Profile = () => {
-  const [userProfile, setUserProfile] = useState(null);
+const UserProfile = () => {
+  const [profile, setProfile] = useState(null);
   const [mbtiType, setMbtiType] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // ローディング状態を追加
   const [showMBTIModal, setShowMBTIModal] = useState(false);
@@ -37,7 +37,7 @@ const Profile = () => {
   const [userMbtiType, setUserMbtiType] = useState(null);
 
   const { user: currentUser } = useUser();
-  const { userUpdated } = useUserContext();
+  const { isProfileUpdated } = useUserContext();
   const { clerkId } = useParams();
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ const Profile = () => {
       fetch(`${API_URL}/api/v1/users/${targetClerkId}`)
         .then((response) => response.json())
         .then((data) => {
-          setUserProfile({
+          setProfile({
             username: data.username,
             avatarUrl: data.avatar_url,
             clerkId: data.clerk_id,
@@ -78,12 +78,12 @@ const Profile = () => {
           setUserMbtiType(data.mbti_type);
         });
 
-      fetch(`${API_URL}/api/v1/posts?user_id=${targetClerkId}`)
+      fetch(`${API_URL}/api/v1/users/${targetClerkId}/posts`)
         .then((response) => response.json())
         .then((posts) => {
           setUserPosts(posts);
           posts.forEach((post) => {
-            fetch(`${API_URL}/api/v1/media_works?post_id=${post.id}`)
+            fetch(`${API_URL}/api/v1/posts/${post.id}/media_works`)
               .then((response) => response.json())
               .then((mediaWorks) => {
                 setUserPosts((prevPosts) =>
@@ -97,7 +97,7 @@ const Profile = () => {
           // エラーハンドリングを行う（例：エラーメッセージを表示する）
         });
     }
-  }, [API_URL, currentUser, clerkId, userUpdated]);
+  }, [API_URL, currentUser, clerkId, isProfileUpdated]);
 
   const [selectedSection, setSelectedSection] = useState('posts');
 
@@ -132,8 +132,8 @@ const Profile = () => {
   };
 
   const renderUserDetails = (post, createdAt, postId) => {
-    if (!userProfile) {
-      console.error('userProfile is undefined', { postId, createdAt });
+    if (!profile) {
+      console.error('profile is undefined', { postId, createdAt });
       return null;
     }
 
@@ -147,12 +147,12 @@ const Profile = () => {
             className="flex items-center cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
-              navigate(`/profile/${userProfile.clerkId || ''}`);
+              navigate(`/users/${profile.clerkId || ''}`);
             }}
           >
             <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
               <img
-                src={userProfile.avatarUrl || 'デフォルトのアバター画像URL'}
+                src={profile.avatarUrl || 'デフォルトのアバター画像URL'}
                 alt={`profileImage`}
                 className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
               />
@@ -160,14 +160,14 @@ const Profile = () => {
             <div className="ml-2 md:ml-4">
               <h1>
                 <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
-                  {userProfile.username || 'Unknown User'}
+                  {profile.username || 'Unknown User'}
                 </span>
               </h1>
             </div>
           </div>
           <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
         </div>
-        {currentUser?.id === userProfile.clerkId && (
+        {currentUser?.id === profile.clerkId && (
           <div className="md:mr-16 lg:mr-32 relative">
             <div
               className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
@@ -260,11 +260,11 @@ const Profile = () => {
           <div>
             {[...userPosts].reverse().map((post) => (
               <React.Fragment key={post.id}>
-                <div onClick={() => navigate(`/post/${post.id}`)} className="cursor-pointer">
+                <div onClick={() => navigate(`/posts/${post.id}`)} className="cursor-pointer">
                   <div className="mt-5">{renderUserDetails(post, post.created_at, post.id)}</div>
                   <div className="mb-3 md:mb-5">
                     <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-52">
-                      {userProfile.username}
+                      {profile.username}
                       {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
                       {userMbtiType && mbtiType?.visibility === 'is_public' && `(${userMbtiType})`}
                       の好きな
@@ -294,7 +294,7 @@ const Profile = () => {
                         {post.mediaWorks && renderImages(post.mediaWorks)}
                       </div>
                     </div>
-                    {currentUser?.id === userProfile.clerkId && (
+                    {currentUser?.id === profile.clerkId && (
                       <div
                         className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:left-[700px] lg:left-[1270px] w-12 h-12 flex items-center justify-center"
                         onClick={(e) => {
@@ -376,7 +376,7 @@ const Profile = () => {
       // visibilityがis_publicの場合のみMBTIタイプを表示
       const mbtiTypeText =
         userMbtiType && mbtiType?.visibility === 'is_public' ? `(${userMbtiType})` : '';
-      artistText = `${userProfile.username}${mbtiTypeText}の好きな${mediaType}は${post.mediaWorks
+      artistText = `${profile.username}${mbtiTypeText}の好きな${mediaType}は${post.mediaWorks
         .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
         .join('')}です！`;
 
@@ -395,13 +395,13 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col w-full px-4 md:px-0">
-      {userProfile && (
+      {profile && (
         <>
           <div className="flex items-center justify-between w-full pt-8 md:pt-8 md:px-8">
             <div className="avatar">
               <div className="w-16 h-16 rounded-full overflow-hidden md:w-24 md:h-24">
                 <img
-                  src={userProfile?.avatarUrl}
+                  src={profile?.avatarUrl}
                   alt="User profile"
                   className="w-full h-full object-cover transition-all duration-300"
                 />
@@ -409,7 +409,7 @@ const Profile = () => {
             </div>
             <div className="ml-4 md:ml-8">
               <h1>
-                <span className="text-xl md:text-2xl">{userProfile.username}</span>{' '}
+                <span className="text-xl md:text-2xl">{profile.username}</span>{' '}
                 <span className="ml-2 md:ml-4">
                   {mbtiType?.visibility === 'is_public' && mbtiType.mbti_type}
                 </span>
@@ -485,7 +485,7 @@ const Profile = () => {
             })
               .then((res) => res.json())
               .then((data) => {
-                // 更新後のMBTIタイプとvisibilityを状態に反映
+                // 更新後のMBTIイプとvisibilityを状態に反映
                 setMbtiType({
                   mbti_type: data.mbti_type,
                   visibility: data.visibility,
@@ -549,4 +549,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

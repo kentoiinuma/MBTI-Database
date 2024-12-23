@@ -1,8 +1,14 @@
+# frozen_string_literal: true
+
 require 'net/http'
 require 'json'
 
-class Api::V1::AnilistController < ApplicationController
-  def search
+# Anilist APIへの接続を提供するサービス
+class AnilistService
+  GRAPHQL_ENDPOINT = 'https://graphql.anilist.co'
+
+  # 指定されたアニメタイトルでAnilistを検索し、結果を返す
+  def search(anime_title)
     query = <<~GRAPHQL
       query ($search: String) {
         Page(perPage: 10) {
@@ -19,23 +25,21 @@ class Api::V1::AnilistController < ApplicationController
       }
     GRAPHQL
 
-    variables = { search: params[:anime_title] }
+    variables = { search: anime_title }
 
-    uri = URI('https://graphql.anilist.co')
+    uri = URI(GRAPHQL_ENDPOINT)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Content-Type'] = 'application/json'
-    request.body = { query: query, variables: variables }.to_json
+    request.body = { query:, variables: }.to_json
 
     response = http.request(request)
 
-    if response.is_a?(Net::HTTPSuccess)
-      data = JSON.parse(response.body)
-      render json: data['data']['Page']['media']
-    else
-      render json: { error: 'Failed to fetch anime data' }, status: :unprocessable_entity
-    end
+    return unless response.is_a?(Net::HTTPSuccess)
+
+    data = JSON.parse(response.body)
+    data['data']['Page']['media']
   end
 end

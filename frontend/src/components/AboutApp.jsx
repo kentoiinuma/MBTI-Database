@@ -26,7 +26,7 @@ function AboutApp() {
             MBTIデータベースは、MBTIタイプに紐付けて好きな作品を共有するWebアプリです！
             <br />
             <span className="mt-1 inline-block">
-              投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます。
+              投稿された作品はグラフとしてデータベース化され、フィルタリングすることで気になるタイプの好きな作品を見ることができます😌
             </span>
           </p>
         </div>
@@ -118,7 +118,7 @@ function AboutApp() {
 
         <div className="flex justify-center my-12">
           <button
-            onClick={() => navigate('/home')}
+            onClick={() => navigate('/posts')}
             className="px-4 py-2 font-bold rounded-full focus:outline-none focus:ring-opacity-50 bg-[#2EA9DF] text-white hover:bg-[#2589B4] transition-colors duration-300"
           >
             ホームへ
