@@ -6,13 +6,13 @@ class UsersController < ApplicationController
 
   # 特定のユーザーの情報を取得する
   def show
-    render_user(@user)
+    render_user
   end
 
   # ユーザーネームを更新する
   def update
     if @user.update(user_params)
-      render_user(@user)
+      render_user
     else
       render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
     end
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     uploaded_image = Cloudinary::Uploader.upload(params[:avatar].tempfile.path)
     if uploaded_image['url']
       @user.update(avatar_url: uploaded_image['url'])
-      render_user(@user)
+      render_user
     else
       render json: { error: 'Failed to upload image' }, status: :unprocessable_entity
     end
@@ -36,14 +36,13 @@ class UsersController < ApplicationController
     return if @user
 
     render json: { error: 'User not found' }, status: :not_found
-    nil
   end
 
-  def render_user(user)
+  def render_user
     render json: {
-      username: user.username,
-      avatar_url: user.avatar_url,
-      clerk_id: user.clerk_id
+      username: @user.username,
+      avatar_url: @user.avatar_url,
+      clerk_id: @user.clerk_id
     }
   end
 

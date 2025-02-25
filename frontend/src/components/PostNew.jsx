@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useUser } from '@clerk/clerk-react';
 import SearchModal from './SearchModal';
 import { Image } from 'cloudinary-react';
 import { useNavigate } from 'react-router-dom';
 import { Snackbar, Alert, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { getApiUrl } from '../utils/apiUrl';
 
+// -------------------------
+// スタイリング（ToggleButton のカスタマイズ）
+// -------------------------
 const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
   backgroundColor: selected ? '#2EA9DF' : '#fff',
   borderColor: '#2EA9DF',
@@ -26,157 +30,234 @@ const StyledToggleButton = styled(ToggleButton)(({ selected }) => ({
   },
 }));
 
+// -------------------------
+// API 呼び出し用ユーティリティ関数
+// -------------------------
+
+// ユーザーのポスト一覧を取得する関数
+async function fetchUserPosts(userId) {
+  try {
+    const postsRes = await fetch(`${getApiUrl()}/users/${userId}/posts`);
+    if (!postsRes.ok) {
+      throw new Error('Failed to fetch user posts');
+    }
+    const postsData = await postsRes.json();
+    return postsData;
+  } catch (error) {
+    console.error(`[fetchUserPosts] ユーザーポストの取得に失敗しました: ${error.message}`);
+    return null;
+  }
+}
+
+// ポストを作成する関数
+async function createPost(clerkId, mediaType) {
+  try {
+    const postRes = await fetch(`${getApiUrl()}/posts`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        clerk_id: clerkId,
+        media_type: mediaType,
+      }),
+    });
+    if (!postRes.ok) {
+      throw new Error('Post creation failed');
+    }
+    const postData = await postRes.json();
+    return postData;
+  } catch (error) {
+    console.error(`[createPost] ポスト作成に失敗しました: ${error.message}`);
+    return null;
+  }
+}
+
+// メディアワークを作成する関数
+async function createMediaWorks(postId, selectedImages, mediaType) {
+  try {
+    for (const image of selectedImages) {
+      const mediaRes = await fetch(`${getApiUrl()}/posts/${postId}/media_works`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          post_id: postId,
+          title: image.title,
+          image: image.url,
+          media_type: mediaType,
+        }),
+      });
+      if (!mediaRes.ok) {
+        throw new Error('Media work creation failed');
+      }
+      // 必要に応じて、レスポンスのパースも行えます
+      // const mediaData = await mediaRes.json();
+    }
+  } catch (error) {
+    console.error(`[createMediaWorks] メディアワーク作成に失敗しました: ${error.message}`);
+    throw error;
+  }
+}
+
+async function generateOgp(postId) {
+  await fetch(`${getApiUrl()}/posts/${postId}/ogp`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({}),
+  });
+}
+
+// -------------------------
+// メインコンポーネント（PostNew）
+// -------------------------
 const PostNew = () => {
   const { user } = useUser();
+  const navigate = useNavigate();
+
+  // ステートの定義
   const [isModalOpen, setModalOpen] = useState(false);
   const [artist, setArtist] = useState(null);
   const [anime, setAnime] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedImages, setSelectedImages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const navigate = useNavigate();
-  const [customAlertVisible, setCustomAlertVisible] = useState(false);
-  const [artistNotFound, setArtistNotFound] = useState(false);
+  // 重複投稿時のアラート表示状態
+  const [duplicatePostAlert, setDuplicatePostAlert] = useState(false);
+  const [searchFailed, setSearchFailed] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [contentType, setContentType] = useState('anime');
 
-  let API_URL;
-  if (window.location.origin === 'http://localhost:3001') {
-    API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://www.mbti-database.com') {
-    API_URL = 'https://api.mbti-database.com';
-  } else {
-    API_URL = 'http://localhost:3000';
-  }
+  // -------------------------
+  // イベントハンドラ
+  // -------------------------
 
-  const handleSearch = async (event) => {
-    if (event.key === 'Enter') {
-      const trimmedValue = event.target.value.trim();
-      if (trimmedValue !== '') {
+  // 検索（Enterキー押下時）のハンドラ
+  const handleSearch = useCallback(
+    async (event) => {
+      if (event.key === 'Enter') {
+        const trimmedValue = event.target.value.trim();
+        if (!trimmedValue) return;
         setSearchQuery(trimmedValue);
-        let response;
-        if (contentType === 'music') {
-          response = await fetch(`${API_URL}/api/v1/spotify/search/${trimmedValue}`);
-        } else {
-          response = await fetch(`${API_URL}/api/v1/anilist/search/${trimmedValue}`);
-        }
 
-        if (response.ok) {
-          const data = await response.json();
-          if (contentType === 'music' && data.artist) {
-            setArtist(data.artist);
-            setModalOpen(true);
-            setArtistNotFound(false);
-          } else if (contentType === 'anime' && Array.isArray(data) && data.length > 0) {
-            setAnime(data[0]);
-            setModalOpen(true);
-            setArtistNotFound(false);
-          } else {
-            setArtistNotFound(true);
+        try {
+          const searchUrl =
+            contentType === 'music'
+              ? `${getApiUrl()}/spotify/search/${trimmedValue}`
+              : `${getApiUrl()}/anilist/search/${trimmedValue}`;
+          const searchRes = await fetch(searchUrl);
+          if (!searchRes.ok) {
+            throw new Error('Search request failed');
           }
-        } else {
-          setArtistNotFound(true);
+          const searchData = await searchRes.json();
+
+          if (contentType === 'music' && searchData.artist) {
+            setArtist(searchData.artist);
+            setSearchFailed(false);
+            setModalOpen(true);
+          } else if (
+            contentType === 'anime' &&
+            Array.isArray(searchData) &&
+            searchData.length > 0
+          ) {
+            setAnime(searchData[0]);
+            setSearchFailed(false);
+            setModalOpen(true);
+          } else {
+            setSearchFailed(true);
+          }
+        } catch (error) {
+          console.error(`[PostNew:handleSearch] 検索に失敗しました: ${error.message}`);
+          setSearchFailed(true);
         }
       }
-    }
-  };
+    },
+    [contentType]
+  );
 
+  // 画像選択時のハンドラ
   const handleImageSelect = (imageUrl, title) => {
-    if (!selectedImages.some((image) => image.title === title)) {
-      setSelectedImages((prevImages) => [...prevImages, { url: imageUrl, title }].slice(0, 4));
-    }
+    setSelectedImages((prevImages) => {
+      const alreadySelected = prevImages.some((img) => img.title === title);
+      if (alreadySelected) return prevImages;
+      // 最大4枚まで選択可能
+      return [...prevImages, { url: imageUrl, title }].slice(0, 4);
+    });
     setInputValue('');
     setModalOpen(false);
   };
 
-  const handlePost = async () => {
-    const postResponse = await fetch(`${API_URL}/api/v1/posts`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        clerk_id: user.id,
-        media_type: contentType === 'music' ? 5 : 0,
-      }),
-    });
+  // ポスト作成および OGP 生成のハンドラ
+  const handlePost = useCallback(
+    async (mediaType) => {
+      const postData = await createPost(user.id, mediaType);
+      if (!postData) return false;
 
-    if (postResponse.ok) {
-      const postData = await postResponse.json();
-      const postId = postData.id;
-
-      for (let i = 0; i < selectedImages.length; i++) {
-        const imagePair = selectedImages[i];
-        const mediaWorkResponse = await fetch(`${API_URL}/api/v1/media_works`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            post_id: postId,
-            title: imagePair.title,
-            image: imagePair.url,
-            media_type: contentType === 'music' ? 5 : 0,
-          }),
-        });
-        if (!mediaWorkResponse.ok) {
-          console.error('Media work creation failed');
-          break;
-        }
+      try {
+        await createMediaWorks(postData.id, selectedImages, mediaType);
+        await generateOgp(postData.id);
+      } catch (error) {
+        // 各関数内でエラーログを出力しているのでここではそのまま false を返す
+        return false;
       }
-      await fetch(`${API_URL}/api/v1/ogp/${postId}`, {
-        method: 'GET',
-      });
       return true;
-    } else {
-      console.error('Post creation failed');
-      return false;
-    }
-  };
+    },
+    [selectedImages, user.id]
+  );
 
-  const checkExistingPost = async () => {
-    const response = await fetch(
-      `${API_URL}/api/v1/check_existing_post?clerk_id=${user.id}&media_type=${contentType === 'music' ? 5 : 0}`
-    );
-    if (response.ok) {
-      const data = await response.json();
-      return data.exists;
-    }
-    return false;
-  };
+  // 同じメディアタイプのポストが既に存在するかをチェックするハンドラ
+  const checkExistingPost = useCallback(
+    async (mediaType) => {
+      const postsData = await fetchUserPosts(user.id);
+      if (!postsData) return false;
+      // 既に同じ media_type のポストが存在する場合は true を返す
+      return postsData.some((post) => post.media_type === mediaType);
+    },
+    [user.id]
+  );
 
-  const handlePostAndRedirect = async () => {
+  // ポスト作成後、リダイレクトするためのハンドラ
+  const handlePostAndRedirect = useCallback(async () => {
     if (selectedImages.length === 0) {
-      console.error('No images selected');
+      console.error(`[PostNew:handlePostAndRedirect] 画像が選択されていません`);
       return;
     }
     setIsLoading(true);
-    const existingPost = await checkExistingPost();
+
+    const mediaType = contentType === 'music' ? 5 : 0;
+    const existingPost = await checkExistingPost(mediaType);
     if (existingPost) {
-      setCustomAlertVisible(true);
+      setDuplicatePostAlert(true);
       setIsLoading(false);
       return;
     }
-    const postResult = await handlePost();
+
+    const postResult = await handlePost(mediaType);
     setIsLoading(false);
+
     if (postResult) {
-      console.log('Post success state set to true');
+      // ポスト作成成功時にリダイレクト
       navigate('/posts', { state: { postSuccess: true } });
     } else {
-      setCustomAlertVisible(true);
+      setDuplicatePostAlert(true);
     }
-  };
+  }, [selectedImages, contentType, checkExistingPost, handlePost, navigate]);
 
+  // コンテンツタイプ（アニメ／音楽）の切り替えハンドラ
   const handleContentTypeChange = (event, newContentType) => {
-    if (newContentType !== null) {
-      setContentType(newContentType);
-      setSelectedImages([]);
-      setInputValue('');
-    }
+    if (!newContentType) return;
+    setContentType(newContentType);
+    setSelectedImages([]);
+    setInputValue('');
   };
 
+  // 選択中の画像またはプレースホルダーを描画する関数
   const renderImages = () => {
     const containerClass = `image-container-${selectedImages.length}`;
+
     if (selectedImages.length === 0) {
       return (
         <div
@@ -184,22 +265,28 @@ const PostNew = () => {
         />
       );
     }
+
     return (
       <div className={containerClass}>
-        {selectedImages.map((imagePair, index) => (
+        {selectedImages.map((image, index) => (
           <Image
             key={index}
             cloudName="dputyeqso"
-            publicId={imagePair.url}
-            className={`
-              ${selectedImages.length === 1 ? 'w-[300px] h-[300px] md:w-[500px] md:h-[500px]' : 'w-[147.5px] h-[147.5px] md:w-[247.5px] md:h-[247.5px]'}
-            `}
+            publicId={image.url}
+            className={
+              selectedImages.length === 1
+                ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px] object-cover'
+                : 'w-[147.5px] h-[147.5px] md:w-[247.5px] md:h-[247.5px] object-cover'
+            }
           />
         ))}
       </div>
     );
   };
 
+  // -------------------------
+  // コンポーネントのレンダリング
+  // -------------------------
   return (
     <div className="flex flex-col items-center justify-center space-y-4 my-10">
       {isLoading ? (
@@ -210,31 +297,30 @@ const PostNew = () => {
         </div>
       ) : (
         <>
-          {artistNotFound && (
+          {/* エラーアラート（該当するアーティスト/アニメが見つからない場合） */}
+          {searchFailed && (
             <Snackbar
-              open={artistNotFound}
+              open={searchFailed}
               autoHideDuration={2500}
-              onClose={() => setArtistNotFound(false)}
+              onClose={() => setSearchFailed(false)}
             >
-              <Alert
-                onClose={() => setArtistNotFound(false)}
-                severity="error"
-                sx={{ width: '100%' }}
-              >
+              <Alert onClose={() => setSearchFailed(false)} severity="error" sx={{ width: '100%' }}>
                 {contentType === 'music'
                   ? '正しいアーティスト名を入力してください。'
                   : '正しいアニメ名を入力してください。'}
               </Alert>
             </Snackbar>
           )}
-          {customAlertVisible && (
+
+          {/* アラート表示（同一メディアタイプのポストが既に存在する場合） */}
+          {duplicatePostAlert && (
             <Snackbar
-              open={customAlertVisible}
+              open={duplicatePostAlert}
               autoHideDuration={2500}
-              onClose={() => setCustomAlertVisible(false)}
+              onClose={() => setDuplicatePostAlert(false)}
             >
               <Alert
-                onClose={() => setCustomAlertVisible(false)}
+                onClose={() => setDuplicatePostAlert(false)}
                 severity="error"
                 sx={{ width: '100%' }}
               >
@@ -244,6 +330,8 @@ const PostNew = () => {
               </Alert>
             </Snackbar>
           )}
+
+          {/* コンテンツタイプ切替ボタン */}
           <ToggleButtonGroup
             value={contentType}
             exclusive
@@ -257,6 +345,8 @@ const PostNew = () => {
               音楽
             </StyledToggleButton>
           </ToggleButtonGroup>
+
+          {/* 検索入力欄 */}
           <div className="flex items-center space-x-2">
             <div className="relative w-full">
               <svg
@@ -277,19 +367,25 @@ const PostNew = () => {
                 type="text"
                 placeholder={contentType === 'music' ? '好きな音楽アーティスト' : '好きなアニメ'}
                 className="input bg-off-white input-bordered input-info pl-12 pr-4 py-2 w-full"
-                onKeyPress={handleSearch}
+                onKeyDown={handleSearch}
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
               />
             </div>
           </div>
+
+          {/* ガイダンステキスト */}
           <div className="flex flex-col items-center space-y-1 text-center">
             <span className="px-12">
               1~4つの好きなアニメ・音楽アーティストのイメージを投稿してください。
             </span>
             <span className="px-12">※ アニメ、音楽アーティストの投稿はそれぞれ1回のみです。</span>
           </div>
+
+          {/* 選択中の画像またはプレースホルダー */}
           <div className="bg-black">{renderImages()}</div>
+
+          {/* 投稿ボタン */}
           <div className="flex justify-center">
             <button
               type="submit"
@@ -299,6 +395,8 @@ const PostNew = () => {
               ポストする
             </button>
           </div>
+
+          {/* 検索結果表示用モーダル */}
           <SearchModal
             isOpen={isModalOpen}
             searchQuery={searchQuery}

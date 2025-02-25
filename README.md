@@ -21,15 +21,15 @@ MBTIタイプごとの好みについて、インターネット上で語られ�
 ## 使用技術一覧
 | カテゴリ | 使用技術 | バージョン |
 |----------|----------|------------|
-| フロントエンド | React | 18.2.0 |
+| フロントエンド | React / React Router | 18.2.0 / 7.0.0 |
 | バックエンド | Ruby / Ruby on Rails (APIモード) | 3.2.2 / 7.0.8 |
 | CSSフレームワーク | Tailwind CSS / MUI | 3.3.6 / 5.15.5 |
 | API | Anilist API / Spotify Web API ||
 | 認証 | Clerk ||
 | 画像加工 | Cloudinary / imgkit ||
 | グラフ | react-chartjs-2 ||
-| インフラ | Heroku | 9.2.1 |
-| データベース | PostgreSQL ||
+| インフラ | Vercel (フロントエンド) / Render (バックエンド) ||
+| データベース | Supabase ||
 
 ## ER図
-[![Image from Gyazo](https://i.gyazo.com/7c7c0e13a781987107f8f823a364d1bc.png)](https://gyazo.com/7c7c0e13a781987107f8f823a364d1bc)
+[![Image from Gyazo](https://i.gyazo.com/c0357a39b9e15fe53b9d5da5c98f932b.png)](https://gyazo.com/c0357a39b9e15fe53b9d5da5c98f932b)

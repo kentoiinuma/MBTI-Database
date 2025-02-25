@@ -6,11 +6,11 @@ class MbtiController < ApplicationController
 
   # 新しいMBTIタイプを作成し、ユーザーに関連付ける
   def create
-    mbti = @user.create_mbti_type(mbti_params)
-    if mbti.persisted?
-      render json: { data: mbti }, status: :created
+    mbti_type = @user.create_mbti_type(mbti_params)
+    if mbti_type.persisted?
+      render json: { data: mbti_type }, status: :created
     else
-      render json: { errors: mbti.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: mbti_type.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -26,22 +26,21 @@ class MbtiController < ApplicationController
 
   # ユーザーのMBTIタイプを更新する
   def update
-    mbti = MbtiType.find_or_initialize_by(user_id: @user.id)
-    if mbti.update(mbti_params)
-      render json: { data: mbti }
+    mbti_type = MbtiType.find_or_initialize_by(user_id: @user.id)
+    if mbti_type.update(mbti_params)
+      render json: { data: mbti_type }
     else
-      render json: { errors: mbti.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: mbti_type.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
   private
 
   def set_user
-    @user = User.find_by(clerk_id: params[:clerk_id])
+    @user = User.find_by(clerk_id: params[:user_clerk_id])
     return if @user
 
     render json: { error: 'User not found' }, status: :not_found
-    nil
   end
 
   def mbti_params

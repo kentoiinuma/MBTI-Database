@@ -8,8 +8,7 @@ class PostsController < ApplicationController
   # 投稿を作成する
   def create
     if existing_post?(params[:media_type])
-      render json: { error: 'You can only post once for this media type' }, status: :unprocessable_entity
-      return
+      return render json: { error: 'You can only post once for this media type' }, status: :unprocessable_entity
     end
 
     post = @user.posts.create
@@ -52,7 +51,6 @@ class PostsController < ApplicationController
     return if @user
 
     render json: { error: 'User not found' }, status: :not_found
-    nil
   end
 
   def set_post
@@ -60,7 +58,6 @@ class PostsController < ApplicationController
     return if @post
 
     render json: { error: 'Post not found' }, status: :not_found
-    nil
   end
 
   # ユーザーが指定されたmedia_typeの投稿を既に持っているか確認する

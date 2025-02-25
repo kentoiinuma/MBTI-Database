@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# app/controllers/media_works_controller.rb
+# メディア作品に関連する情報を扱うコントローラー
 class MediaWorksController < ApplicationController
   before_action :set_post, only: :index
 
@@ -19,18 +19,14 @@ class MediaWorksController < ApplicationController
 
   # 特定の投稿のメディア作品を取得する
   def index
-    media_works = @post.media_works
-    render json: media_works
+    render json: @post.media_works
   end
 
   # MBTIタイプとメディアタイプに基づいた統計情報を取得する
   def statistics
-    mbti_types = extract_mbti_types
-    media_type = extract_media_type
-
     titles = MediaWork.joins(post: { user: :mbti_type })
-                      .where(mbti_types: { mbti_type: mbti_types })
-                      .where(media_type:)
+                      .where(mbti_types: { mbti_type: extract_mbti_types })
+                      .where(media_type: extract_media_type)
                       .group(:title)
                       .count
 
@@ -41,9 +37,7 @@ class MediaWorksController < ApplicationController
 
   def set_post
     @post = Post.find_by(id: params[:post_id])
-    return if @post
-
-    render json: { error: 'Post not found' }, status: :not_found
+    render json: { error: 'Post not found' }, status: :not_found unless @post
   end
 
   def media_work_params

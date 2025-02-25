@@ -1,83 +1,66 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Image } from 'cloudinary-react';
-import {
-  Snackbar,
-  Alert,
-  Menu,
-  MenuItem,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Button,
-} from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import XIcon from '@mui/icons-material/X';
 import { useUser } from '@clerk/clerk-react';
-import { styled } from '@mui/material/styles';
+import { getApiUrl } from '../utils/apiUrl';
+import PostHeader from './shared/PostHeader';
+import PostContent from './shared/PostContent';
+import MediaImages from './shared/MediaImages';
+import DeleteMenu from './shared/DeleteMenu';
+import ShareButton from './shared/ShareButton';
 
-let API_URL;
-if (window.location.origin === 'http://localhost:3001') {
-  API_URL = 'http://localhost:3000';
-} else if (window.location.origin === 'https://www.mbti-database.com') {
-  API_URL = 'https://api.mbti-database.com';
-} else {
-  API_URL = 'http://localhost:3000';
-}
-
-const StyledMoreVertIcon = styled(MoreVertIcon)({
-  fontSize: 35,
-});
-
-const StyledXIcon = styled(XIcon)({
-  fontSize: 40,
-});
-
+/**
+ * 投稿詳細表示コンポーネント (PostShow.jsx)
+ */
 const PostShow = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
+  const { user: currentUser } = useUser();
+
+  // 投稿データ、メディア、MBTI 情報、ローディング状態の管理
   const [post, setPost] = useState(null);
   const [mediaWorks, setMediaWorks] = useState([]);
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [mbti, setMbti] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  // メニュー／ダイアログ用の状態管理
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDialog, setOpenDialog] = useState(false);
-  const [deletePostId, setDeletePostId] = useState(null);
-  const open = Boolean(anchorEl);
-  const { user: currentUser } = useUser();
-  const [loading, setLoading] = useState(true);
-  const [mbtiType, setMbtiType] = useState(null); // mbtiTypeの状態を管理するuseStateを追加
 
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await fetch(`${API_URL}/api/v1/posts/${postId}`);
-        const data = await response.json();
-        console.log('API response:', data);
+        const postRes = await fetch(`${getApiUrl()}/posts/${postId}`);
+        const postData = await postRes.json();
         setPost({
-          ...data,
+          ...postData,
           user: {
-            ...data.user,
-            avatarUrl: data.user.avatar_url,
-            username: data.user.username,
-            clerkId: data.user.clerk_id,
+            ...postData.user,
+            avatarUrl: postData.user.avatar_url,
+            username: postData.user.username,
+            clerkId: postData.user.clerk_id,
           },
-          createdAt: data.created_at,
+          createdAt: postData.created_at,
         });
-        setMediaWorks(data.media_works);
-        setLoading(false);
+        setMediaWorks(postData.media_works);
 
-        // ユーザーのMBTIタイプを取得
-        const mbtiResponse = await fetch(`${API_URL}/api/v1/mbti/${data.user.clerk_id}`);
-        const mbtiData = await mbtiResponse.json();
-        if (mbtiData.mbti_type) {
-          setMbtiType(mbtiData); // mbtiTypeの状態を更新
+        try {
+          const mbtiRes = await fetch(`${getApiUrl()}/users/${postData.user.clerk_id}/mbti`);
+          const mbtiData = await mbtiRes.json();
+          if (mbtiData.mbti_type) {
+            setMbti(mbtiData);
+          }
+        } catch (error) {
+          console.error(
+            'PostShow.jsx: fetchPostData - MBTI情報の取得中にエラーが発生しました:',
+            error
+          );
         }
       } catch (error) {
-        console.error('Error fetching post:', error);
+        console.error(
+          'PostShow.jsx: fetchPostData - 投稿情報の取得中にエラーが発生しました:',
+          error
+        );
+      } finally {
         setLoading(false);
       }
     };
@@ -85,266 +68,92 @@ const PostShow = () => {
     fetchPostData();
   }, [postId]);
 
-  const handleClick = (event, postId) => {
-    setAnchorEl(event.currentTarget);
-    setDeletePostId(postId);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleOpenDialog = () => {
-    console.log('Opening dialog for post ID:', deletePostId);
-    setOpenDialog(true);
-  };
-
-  const handleCloseDialog = () => {
+  // メニュー／ダイアログ操作用関数
+  const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
+  const handleMenuClose = () => setAnchorEl(null);
+  const handleDialogOpen = () => setOpenDialog(true);
+  const handleDialogClose = () => {
     setOpenDialog(false);
-    handleClose();
+    handleMenuClose();
   };
 
-  const handleDeletePost = () => {
-    console.log('Deleting post with ID:', deletePostId);
-    if (deletePostId) {
-      fetch(`${API_URL}/api/v1/posts/${deletePostId}`, {
+  // 投稿削除処理
+  const handleDeletePost = async () => {
+    try {
+      const deleteRes = await fetch(`${getApiUrl()}/posts/${postId}`, {
         method: 'DELETE',
-      })
-        .then((response) => {
-          if (response.ok) {
-            setOpenDialog(false);
-            setOpenSnackbar(true);
-            setSnackbarMessage('ポストを削除ました！');
-            // ポスを/homeから/postsに更新
-            window.location.href = '/posts';
-          } else {
-            console.error('Failed to delete the post');
-          }
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+      });
+      if (!deleteRes.ok) {
+        console.error('PostShow.jsx: handleDeletePost - ポストの削除に失敗しました');
+        return;
+      }
+      setOpenDialog(false);
+      // 削除成功時は、navigate に state を渡して PostsIndex.jsx へ遷移
+      navigate('/posts', {
+        state: { deleteSuccess: true, snackbarMessage: 'ポストを削除しました！' },
+      });
+    } catch (error) {
+      console.error(
+        'PostShow.jsx: handleDeletePost - ポストの削除中にエラーが発生しました:',
+        error
+      );
     }
   };
 
-  const renderImages = (works) => {
-    const containerClass = `image-container-${works.length}`;
-
+  if (loading) {
     return (
-      <div className={containerClass}>
-        {works.map((work, index) => (
-          <Image
-            key={index}
-            cloudName="dputyeqso"
-            publicId={work.image}
-            className={`
-              ${works.length === 1 ? 'w-[250px] h-[250px] md:w-[500px] md:h-[500px]' : 'w-[122.5px] h-[122.5px] md:w-[247.5px] md:h-[247.5px]'}
-            `}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  const renderUserDetails = (postUser, createdAt) => {
-    const dateOptions = { month: 'long', day: 'numeric' };
-    const formattedDate = new Date(createdAt).toLocaleDateString('ja-JP', dateOptions);
-
-    return (
-      <div className="flex items-center justify-between md:pl-16 lg:pl-32">
-        <div className="flex items-center">
-          <div
-            className="flex items-center cursor-pointer"
-            onClick={(e) => {
-              e.stopPropagation();
-              // パスを/profileから/usersに更新
-              navigate(`/users/${postUser.clerkId}`);
-            }}
-          >
-            <div className="w-12 h-12 rounded-full overflow-hidden md:w-20 md:h-20">
-              <img
-                src={postUser.avatarUrl}
-                alt={`profileImage`}
-                className="w-full h-full object-cover transition-all duration-300 hover:brightness-90"
-              />
-            </div>
-            <div className="ml-2 md:ml-4">
-              <h1>
-                <span className="text-lg font-medium md:font-normal hover:underline cursor-pointer md:text-2xl">
-                  {postUser.username}
-                </span>
-              </h1>
-            </div>
-          </div>
-          <span className="ml-2 hover:underline cursor-pointer md:ml-4">{formattedDate}</span>
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-center">
+          <div className="loading loading-spinner loading-lg text-custom"></div>
         </div>
-        {currentUser?.id === postUser.clerkId && (
-          <div className="md:mr-16 lg:mr-32 relative">
-            <div
-              className="hover:bg-gray-200 p-2 rounded-full inline-block cursor-pointer"
-              onClick={(event) => handleClick(event, postId)}
-            >
-              <StyledMoreVertIcon />
-            </div>
-            <Menu
-              id="long-menu"
-              MenuListProps={{
-                'aria-labelledby': 'long-button',
-              }}
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              PaperProps={{
-                style: {
-                  maxHeight: 48 * 4.5,
-                  width: '20ch',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
-                },
-              }}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem onClick={() => handleOpenDialog()}>
-                <DeleteOutlineOutlinedIcon fontSize="small" style={{ marginRight: '8px' }} />
-                削除
-              </MenuItem>
-              <Dialog
-                open={openDialog}
-                onClose={handleCloseDialog}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-                BackdropProps={{ invisible: true }}
-                PaperProps={{
-                  style: {
-                    boxShadow:
-                      '0px 1px 3px -1px rgba(0,0,0,0.1), 0px 1px 1px 0px rgba(0,0,0,0.06), 0px 1px 1px -1px rgba(0,0,0,0.04)',
-                    borderRadius: '16px',
-                  },
-                }}
-              >
-                <DialogTitle id="alert-dialog-title">{'ポストの削除'}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id="alert-dialog-description">
-                    ポストを完全に削除しますか？
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button
-                    onClick={handleCloseDialog}
-                    sx={{
-                      borderRadius: '20px',
-                      ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
-                      },
-                    }}
-                  >
-                    キャンセル
-                  </Button>
-                  <Button
-                    onClick={handleDeletePost}
-                    autoFocus
-                    sx={{
-                      borderRadius: '20px',
-                      ':hover': {
-                        boxShadow: '0px 4px 20px rgba(173, 216, 230, 1)',
-                      },
-                    }}
-                  >
-                    削除
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </Menu>
-          </div>
-        )}
       </div>
     );
-  };
-
-  const shareToX = (post) => {
-    const ogPageUrl = `${API_URL}/api/v1/ogp_page/${post.id}`;
-    let artistText = '';
-
-    if (mediaWorks && mediaWorks[0]) {
-      const mediaType = mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト';
-      // visibilityがis_publicの場合のみMBTIタイプを表示
-      const mbtiTypeText = mbtiType?.visibility === 'is_public' ? `(${mbtiType?.mbti_type})` : ''; // mbtiType?.mbti_typeで表示
-      artistText = `${post.user.username}${mbtiTypeText}の好きな${mediaType}は${mediaWorks
-        .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
-        .join('')}です！`;
-    }
-
-    const hashtag = '#MBTIデータベース';
-    const shareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-      artistText + '\n\n' + hashtag + '\n'
-    )}&url=${encodeURIComponent(ogPageUrl)}`;
-    window.open(shareUrl, '_blank');
-  };
+  }
 
   return (
     <div className="px-4 md:px-0">
-      {loading ? (
-        <div className="flex items-center justify-center h-screen">
-          <div className="text-center">
-            <div className="loading loading-spinner loading-lg text-custom"></div>
+      {post?.user && (
+        <div className="mt-10">
+          <PostHeader
+            user={post.user}
+            createdAt={post.createdAt}
+            currentUserId={currentUser?.id}
+            onMenuClick={handleMenuOpen}
+            onUserClick={(clerkId) => navigate(`/users/${clerkId}`)}
+          />
+        </div>
+      )}
+
+      <div className="mb-3 md:mb-5">
+        <PostContent username={post.user.username} mbti={mbti} mediaWorks={mediaWorks} />
+      </div>
+
+      <div className="relative w-full mb-3 md:mb-5">
+        <div className="flex justify-center">
+          <div className="bg-black">
+            <MediaImages works={mediaWorks} />
           </div>
         </div>
-      ) : (
-        <>
-          <div className="mt-10">{post?.user && renderUserDetails(post.user, post.createdAt)}</div>
-          <div className="mb-3 md:mb-5">
-            <div className="text-base px-12 w-full text-center md:text-xl md:px-36 lg:px-40">
-              {post.user.username}
-              {/* visibilityがis_publicの場合のみMBTIタイプを表示 */}
-              {mbtiType?.visibility === 'is_public' && `(${mbtiType?.mbti_type})`}{' '}
-              {/* mbtiType?.mbti_typeで表示 */}
-              の好きな
-              {mediaWorks[0] ? (
-                <>{mediaWorks[0].media_type === 'anime' ? 'アニメ' : '音楽アーティスト'}</>
-              ) : (
-                ''
-              )}
-              は
-              {mediaWorks
-                .map((work, index, array) => `${work.title}${index < array.length - 1 ? '、' : ''}`)
-                .join('')}
-              です！
-            </div>
-          </div>
-          <div className="relative w-full mb-3 md:mb-5">
-            <div className="flex justify-center">
-              <div className="bg-black">{renderImages(mediaWorks)}</div>
-            </div>
-            {currentUser?.id === post.user.clerkId && (
-              <div
-                className="absolute bottom-0 right-0 rounded-full hover:bg-gray-200 cursor-pointer md:left-[700px] lg:left-[1270px] w-12 h-12 flex items-center justify-center" // 親要素のdivにサイズとflexboxを追加
-                onClick={(e) => {
-                  e.stopPropagation();
-                  shareToX(post);
-                }}
-              >
-                <StyledXIcon />
-              </div>
-            )}
-          </div>
-          <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
-          <Snackbar
-            open={openSnackbar}
-            autoHideDuration={2500}
-            onClose={() => setOpenSnackbar(false)}
-          >
-            <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
-              {snackbarMessage}
-            </Alert>
-          </Snackbar>
-        </>
-      )}
+        {currentUser?.id === post?.user.clerkId && (
+          <ShareButton
+            post={{ id: post.id, mediaWorks: mediaWorks }}
+            mbti={mbti}
+            username={post?.user.username}
+          />
+        )}
+      </div>
+
+      <hr className="border-t border-[#2EA9DF] w-screen -mx-4 md:-mx-0" />
+
+      {/* DeleteMenuコンポーネントを使用 */}
+      <DeleteMenu
+        anchorEl={anchorEl}
+        openDialog={openDialog}
+        onMenuClose={handleMenuClose}
+        onDialogOpen={handleDialogOpen}
+        onDialogClose={handleDialogClose}
+        onDelete={handleDeletePost}
+      />
     </div>
   );
 };

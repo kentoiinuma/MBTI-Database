@@ -4,8 +4,7 @@
 class AnilistController < ApplicationController
   # アニメを検索して結果を返す
   def search
-    service = AnilistService.new
-    media = service.search(params[:anime_title])
+    media = AnilistService.new.search(params[:anime_title])
 
     if media.present?
       render json: media

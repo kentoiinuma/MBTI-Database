@@ -4,9 +4,7 @@
 class SpotifyController < ApplicationController
   # アーティストを検索して結果を返す
   def search
-    artist_name = params[:artist_name]
-    spotify_service = SpotifyService.new
-    artist = spotify_service.search_artist(artist_name)
+    artist = SpotifyService.new.search_artist(params[:artist_name])
 
     if artist
       render json: { artist: }

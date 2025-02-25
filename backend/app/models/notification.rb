@@ -10,5 +10,5 @@ class Notification < ApplicationRecord
 
   enum notification_type: { like: 0, comment: 1 }
 
-  validates :notification_type, inclusion: { in: notification_types.keys }
+  validates :notification_type, presence: true, inclusion: { in: notification_types.keys }
 end
