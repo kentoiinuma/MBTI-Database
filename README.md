@@ -15,7 +15,7 @@ MBTIタイプごとの好みについて、インターネット上で語られ�
 ## メイン機能の使い方
 | MBTIタイプの登録 | 好きな作品の投稿とX共有 | データベースの閲覧 |
 |------------------|------------------------|-------------------|
-| [![Image from Gyazo](https://i.gyazo.com/e652d874443276e429eaf289504f3f58.png)](https://gyazo.com/e652d874443276e429eaf289504f3f58) | [![Image from Gyazo](https://i.gyazo.com/9258e5671cf51f19bf3654ee50b98d4e.jpg)](https://gyazo.com/9258e5671cf51f19bf3654ee50b98d4e) | [![Image from Gyazo](https://i.gyazo.com/e323440e74b83a257f6bd66bd6e51e1a.png)](https://gyazo.com/e323440e74b83a257f6bd66bd6e51e1a) |
+| [![Image from Gyazo](https://i.gyazo.com/e652d874443276e429eaf289504f3f58.png)](https://gyazo.com/e652d874443276e429eaf289504f3f58) | [![Image from Gyazo](https://i.gyazo.com/9258e5671cf51f19bf3654ee50b98d4e.jpg)](https://gyazo.com/9258e5671cf51f19bf3654ee50b98d4e) | [![Image from Gyazo](https://i.gyazo.com/b880d16b256df5a4c07c1bd89a78ea30.png)](https://gyazo.com/b880d16b256df5a4c07c1bd89a78ea30) |
 | サインアップ後、モーダルが出てくるので、MBTIタイプを登録してください。 | 1~4つの好きなアニメと音楽アーティストのイメージを投稿できます。<br>また、XにMBTIタイプと共に好きな作品を共有することにより、簡易的な自己紹介ができます。 | グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプの好きな作品を見ることができます。
 
 ## 使用技術一覧
