@@ -6,7 +6,6 @@ class MediaWork < ApplicationRecord
 
   enum media_type: { anime: 0, music: 5 }
 
-  validates :title, presence: true
-  validates :image, presence: true
+  validates :title, :image, presence: true
   validates :media_type, inclusion: { in: media_types.keys }
 end

@@ -1,77 +1,78 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types'; // PropTypesをインポート
-import { useUser, SignInButton, useClerk } from '@clerk/clerk-react'; // Clerkからユーザー関連のフックとコンポーネントをインポート
-import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom'; // ルーティング用のコンポーネントをインポート
-import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined'; // ヘルプアイコン
-import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined'; // ログアウトアイコン
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'; // アカウントアイコン
-import Menu from '@mui/material/Menu'; // メニューコンポーネント
-import MenuItem from '@mui/material/MenuItem'; // メニューアイテムコンポーネント
-import { useUserContext } from '../contexts/UserContext'; // UserContextをインポート
-import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined'; // 利用規約アイコン
-import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined'; // プライバシーポリシーアイコン
-import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined'; // お問い合わせアイコンを追加
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useUser, SignInButton, useClerk } from '@clerk/clerk-react';
+import { Link, useNavigate, NavLink, useLocation } from 'react-router-dom';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
+import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
+import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
+import PolicyOutlinedIcon from '@mui/icons-material/PolicyOutlined';
+import QuestionAnswerOutlinedIcon from '@mui/icons-material/QuestionAnswerOutlined';
+import { useUserContext } from '../contexts/UserContext';
+import { getApiUrl } from '../utils/apiUrl';
 
-// Headerコンポーネントの定義
-const Header = ({ onSignIn }) => {
-  const { isSignedIn, user } = useUser(); // ユーザーのサインイン状態と情報を取得
-  const navigate = useNavigate(); // ナビゲーションフック
-  const { signOut } = useClerk(); // サインアウト関数を取得
-  const [anchorEl, setAnchorEl] = useState(null); // メニューのアンカー要素の状態
-  const open = Boolean(anchorEl); // メニューが開いているかどうかの状態
-  const [profile, setProfile] = useState(null); // ユーザープロファイルの状態（userProfileからprofileに変更）
-  const { isProfileUpdated, setIsProfileUpdated } = useUserContext(); // UserContextから状態を取得（userUpdatedからisProfileUpdatedへ変更）
-  const location = useLocation(); // useLocationフックを使用して現在のlocationを取得
+/**
+ * ヘッダーコンポーネント
+ * アプリケーションの上部に固定表示され、ナビゲーションやユーザー情報を提供
+ */
+const Header = () => {
+  // ユーザー認証関連のステートと関数
+  const { isSignedIn, user } = useUser();
+  const { signOut } = useClerk();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const isMenuOpen = Boolean(anchorEl);
+  const [profile, setProfile] = useState(null);
+  const { isProfileUpdated, setIsProfileUpdated } = useUserContext();
 
-  // APIのURLを設定
-  let API_URL;
-  if (window.location.origin === 'http://localhost:3001') {
-    API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://www.mbti-database.com') {
-    API_URL = 'https://api.mbti-database.com';
-  } else {
-    // デフォルトのURL
-    API_URL = 'http://localhost:3000';
-  }
+  /**
+   * ユーザープロフィール情報をAPIから取得する関数
+   */
+  const fetchUserProfile = useCallback(
+    async (clerkId) => {
+      try {
+        const profileRes = await fetch(`${getApiUrl()}/users/${clerkId}`);
+        const profileData = await profileRes.json();
+        setProfile({
+          username: profileData.username,
+          avatarUrl: profileData.avatar_url,
+        });
+        setIsProfileUpdated(false);
+      } catch (error) {
+        console.error('ユーザープロフィールの取得中にエラーが発生しました:', error);
+      }
+    },
+    [setIsProfileUpdated]
+  );
 
+  // ユーザー情報が変更されたときにプロフィールを再取得
   useEffect(() => {
     const clerkId = user?.id;
-    if (clerkId) {
-      if (isProfileUpdated || profile === null) {
-        fetch(`${API_URL}/api/v1/users/${clerkId}`)
-          .then((response) => response.json())
-          .then((data) => {
-            setProfile({
-              username: data.username,
-              avatarUrl: data.avatar_url,
-            });
-            setIsProfileUpdated(false); // フェッチ後に状態をリセット
-          })
-          .catch((error) => {
-            console.error('Error fetching profile:', error);
-          });
-      }
+    if (clerkId && (isProfileUpdated || profile === null)) {
+      fetchUserProfile(clerkId);
     }
-  }, [API_URL, user, isProfileUpdated]);
+  }, [user, isProfileUpdated, profile, fetchUserProfile]);
 
   // サインアウト処理
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     await signOut();
     navigate('/');
-  };
+  }, [signOut, navigate]);
 
-  // メニューを開く処理
-  const handleClick = (event) => {
+  // メニュー操作の処理
+  const handleMenuOpen = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  // メニューを閉じる処理
-  const handleClose = () => {
+  const handleMenuClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const getTitle = () => {
-    return (
+  // タイトルとロゴのレンダリング（パフォーマンス最適化のためmemo化）
+  const renderTitle = useMemo(
+    () => (
       <div className="flex items-center">
         <h1 className="text-xl font-bold flex items-center">
           <img
@@ -91,10 +92,10 @@ const Header = ({ onSignIn }) => {
           MBTIタイプに紐づけて好きを共有するアプリ
         </p>
       </div>
-    );
-  };
+    ),
+    []
+  );
 
-  // ヘッダーコンポーネントのレンダリング
   return (
     <>
       <header
@@ -102,114 +103,116 @@ const Header = ({ onSignIn }) => {
           location.pathname !== '/posts' ? 'border-b' : ''
         }`}
       >
-        {getTitle()}
+        {renderTitle}
+
+        {/* ログイン状態によって表示を切り替え */}
         {isSignedIn ? (
-          <>
-            <div className="flex items-center gap-4">
-              {/* ユーザーアバター */}
-              <div>
-                <button
-                  aria-controls="basic-menu"
-                  aria-haspopup="true"
-                  aria-expanded={open ? 'true' : undefined}
-                  onClick={handleClick}
+          <div className="flex items-center gap-4">
+            {/* ユーザーアバターとドロップダウンメニュー */}
+            <div>
+              <button
+                aria-controls="basic-menu"
+                aria-haspopup="true"
+                aria-expanded={isMenuOpen ? 'true' : undefined}
+                onClick={handleMenuOpen}
+              >
+                <img
+                  src={profile?.avatarUrl}
+                  alt="User avatar"
+                  className="h-11 w-11 object-cover rounded-full hover:brightness-90"
+                />
+              </button>
+
+              {/* ドロップダウンメニュー内の各項目 */}
+              <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={isMenuOpen}
+                onClose={handleMenuClose}
+                MenuListProps={{
+                  'aria-labelledby': 'basic-button',
+                }}
+                PaperProps={{
+                  className: 'shadow-md',
+                }}
+              >
+                {/* プロフィールへのリンク */}
+                <MenuItem
+                  onClick={handleMenuClose}
+                  component={Link}
+                  to="/users"
+                  className="flex items-center"
                 >
-                  <img
-                    src={profile?.avatarUrl}
-                    alt="User avatar"
-                    className="h-11 w-11 object-cover rounded-full hover:brightness-90"
-                  />
-                </button>
-                {/* ユーザーメニュー */}
-                <Menu
-                  id="basic-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                  }}
-                  PaperProps={{
-                    className: 'shadow-md',
-                  }}
+                  <AccountCircleOutlinedIcon className="text-xl mr-2" />
+                  {profile ? profile.username : 'Loading...'}
+                </MenuItem>
+
+                {/* 各種リンク（使い方、問い合わせ、規約など） */}
+                <MenuItem
+                  onClick={handleMenuClose}
+                  component={Link}
+                  to="/"
+                  className="flex items-center"
                 >
-                  {/* プロフィールメニューアイテム */}
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/users"
-                    className="flex items-center"
-                  >
-                    <AccountCircleOutlinedIcon className="text-xl mr-2" />
-                    {profile ? profile.username : 'Loading...'}
-                  </MenuItem>
-                  {/* アプリ情報メニューアイテム */}
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/"
-                    className="flex items-center"
-                  >
-                    <HelpOutlineOutlinedIcon className="text-xl mr-2" />
-                    使い方
-                  </MenuItem>
-                  {/* お問合わせメニューアイテム */}
-                  <MenuItem
-                    onClick={handleClose}
-                    component={'a'} // Linkからaに変更
-                    href="https://docs.google.com/forms/d/e/1FAIpQLSeuIOHxpmTYuldKbl9mbiAGMy6DI4bvoT7_SfeO18jCNqPIhA/viewform?usp=sf_link"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center"
-                  >
-                    <QuestionAnswerOutlinedIcon className="text-xl mr-2" />
-                    お問い合わせ
-                  </MenuItem>
-                  {/* 利用規約メニューアイテム */}
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/terms"
-                    className="flex items-center"
-                  >
-                    <GavelOutlinedIcon className="text-xl mr-2" />
-                    利用規約
-                  </MenuItem>
-                  {/* プライバシーポリシーメニューアイテム */}
-                  <MenuItem
-                    onClick={handleClose}
-                    component={Link}
-                    to="/privacy"
-                    className="flex items-center"
-                  >
-                    <PolicyOutlinedIcon className="text-xl mr-2" />
-                    プライバシーポリシー
-                  </MenuItem>
-                  {/* サインアウトメニューアイテム */}
-                  <MenuItem
-                    onClick={() => {
-                      handleSignOut();
-                      handleClose();
-                    }}
-                  >
-                    <LogoutOutlinedIcon className="text-xl mr-2" />
-                    サインアウト
-                  </MenuItem>
-                </Menu>
-              </div>
+                  <HelpOutlineOutlinedIcon className="text-xl mr-2" />
+                  使い方
+                </MenuItem>
+                <MenuItem
+                  onClick={handleMenuClose}
+                  component="a"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSeuIOHxpmTYuldKbl9mbiAGMy6DI4bvoT7_SfeO18jCNqPIhA/viewform?usp=sf_link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <QuestionAnswerOutlinedIcon className="text-xl mr-2" />
+                  お問い合わせ
+                </MenuItem>
+                <MenuItem
+                  onClick={handleMenuClose}
+                  component={Link}
+                  to="/terms"
+                  className="flex items-center"
+                >
+                  <GavelOutlinedIcon className="text-xl mr-2" />
+                  利用規約
+                </MenuItem>
+                <MenuItem
+                  onClick={handleMenuClose}
+                  component={Link}
+                  to="/privacy"
+                  className="flex items-center"
+                >
+                  <PolicyOutlinedIcon className="text-xl mr-2" />
+                  プライバシーポリシー
+                </MenuItem>
+
+                {/* サインアウトボタン */}
+                <MenuItem
+                  onClick={() => {
+                    handleSignOut();
+                    handleMenuClose();
+                  }}
+                  className="flex items-center"
+                >
+                  <LogoutOutlinedIcon className="text-xl mr-2" />
+                  サインアウト
+                </MenuItem>
+              </Menu>
             </div>
-          </>
+          </div>
         ) : (
+          // 未ログイン時の表示
           <div className="ml-auto flex flex-col md:flex-row items-center">
-            <Link to="/" className={`text-xl text-[#2EA9DF] md:mr-2 flex items-center`}>
+            <Link to="/" className="text-xl text-[#2EA9DF] md:mr-2 flex items-center">
               <HelpOutlineOutlinedIcon />
               使い方
             </Link>
             <SignInButton>
               <span
-                className={`text-xl text-[#2EA9DF] ${
+                className={`text-xl text-[#2EA9DF] flex items-center ${
                   location.pathname === '/signin' ? 'sidebar-link active' : 'sidebar-link'
-                } flex items-center`}
+                }`}
               >
                 ログイン
               </span>
@@ -217,13 +220,11 @@ const Header = ({ onSignIn }) => {
           </div>
         )}
       </header>
-      <div className="h-12"></div> {/* ヘッダーの高さ分のスペーサー */}
+
+      {/* ヘッダーの高さ分のスペース確保 */}
+      <div className="h-12" />
     </>
   );
-};
-
-Header.propTypes = {
-  onSignIn: PropTypes.func, // onSignInの型チェックを追加
 };
 
 export default Header;

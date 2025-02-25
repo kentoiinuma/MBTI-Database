@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       post :upload_avatar
       get :posts, to: 'posts#user_posts'
     end
-    resource :mbti, only: %i[show create update]
+    resource :mbti, only: %i[show create update], controller: 'mbti'
   end
 
   # 投稿関連
@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resources :media_works, only: %i[index create]
 
     member do
-      get :ogp, to: 'ogp#show'
+      post :ogp, to: 'ogp#create', defaults: { format: :json }
       get :ogp_page, to: 'ogp#page'
     end
   end

@@ -5,24 +5,20 @@ class RegistrationsController < ApplicationController
   # ユーザーを新規登録する
   def create
     clerk_id = params[:clerk_id]
+    # clerk_id が渡されていない場合は早期リターン
+    return log_and_render_error('clerk_id is empty', 'clerk_id is empty') if clerk_id.blank?
 
-    if clerk_id.present?
-      user = find_or_initialize_user(clerk_id)
-      save_user(user)
-    else
-      log_and_render_error('clerk_id is empty', 'clerk_id is empty')
-    end
+    user = find_or_initialize_user(clerk_id)
+    save_user(user)
   end
 
   private
 
   # Clerkからユーザーデータを取得し、設定する
   def find_or_initialize_user(clerk_id)
-    clerk = Clerk::SDK.new
-    clerk_user = clerk.users.find(clerk_id)
+    clerk_user = Clerk::SDK.new.users.find(clerk_id)
 
     user = User.find_or_initialize_by(clerk_id:)
-
     user.username = clerk_user['username']
 
     uploaded_image = Cloudinary::Uploader.upload(clerk_user['profile_image_url'])

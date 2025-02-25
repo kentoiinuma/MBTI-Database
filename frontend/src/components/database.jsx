@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -13,10 +13,62 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
+import { getApiUrl } from '../utils/apiUrl';
 
-// Chart.jsの設定を登録
+// Chart.js の設定登録
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
+// ■ 定数定義 ■
+const MBTI_TYPES = [
+  'ESTP',
+  'ESFP',
+  'ISTP',
+  'ISFP',
+  'ESTJ',
+  'ESFJ',
+  'ISTJ',
+  'ISFJ',
+  'ENTP',
+  'ENFP',
+  'INTP',
+  'INFP',
+  'ENTJ',
+  'ENFJ',
+  'INTJ',
+  'INFJ',
+];
+
+const DEFAULT_INDICATORS = { EI: '', SN: '', TF: '', JP: '' };
+
+const FUNCTION_TO_TYPES = {
+  Se: ['ESFP', 'ESTP', 'ISFP', 'ISTP'],
+  Si: ['ESFJ', 'ESTJ', 'ISFJ', 'ISTJ'],
+  Ne: ['ENFP', 'ENTP', 'INFP', 'INTP'],
+  Ni: ['ENFJ', 'ENTJ', 'INFJ', 'INTJ'],
+  Fe: ['ESFJ', 'ISFJ', 'ENFJ', 'INFJ'],
+  Fi: ['ESFP', 'ISFP', 'ENFP', 'INFP'],
+  Te: ['ESTJ', 'ISTJ', 'ENTJ', 'INTJ'],
+  Ti: ['ESTP', 'ISTP', 'ENTP', 'INTP'],
+};
+
+const PERCEPTION_FUNCTIONS = ['Se', 'Si', 'Ne', 'Ni'];
+const JUDGMENT_FUNCTIONS = ['Te', 'Ti', 'Fe', 'Fi'];
+const CONTENT_TYPES = ['アニメ', '音楽'];
+
+const initialChartData = {
+  labels: [],
+  datasets: [
+    {
+      label: 'アニメ',
+      data: [],
+      backgroundColor: 'rgba(54, 162, 235, 0.5)',
+      borderColor: '#2EA9DF',
+      borderWidth: 1,
+    },
+  ],
+};
+
+// ■ MUI テーマ設定 ■
 const theme = createTheme({
   components: {
     MuiButton: {
@@ -29,13 +81,13 @@ const theme = createTheme({
   },
 });
 
-// スタイル付きのButtonコンポーネントを作成
+// ■ Styled Button コンポーネント ■
 const StyledButton = styled(Button)(({ theme, selected }) => ({
   backgroundColor: selected ? '#2EA9DF' : '#fff',
   borderColor: '#2EA9DF',
   color: selected ? '#fff' : '#2EA9DF',
   '&:hover': {
-    backgroundColor: selected ? '#2387c1' : '#f0f0f0', // 非選択時のホバー色を薄いグレーに変更
+    backgroundColor: selected ? '#2387c1' : '#f0f0f0',
     borderColor: '#2EA9DF',
     color: selected ? '#fff' : '#2EA9DF',
   },
@@ -51,162 +103,21 @@ const StyledButton = styled(Button)(({ theme, selected }) => ({
 }));
 
 function Database() {
-  // グラフのデータを管理するステート
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: [
-      {
-        label: 'アニメ',
-        data: [],
-        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-        borderColor: '#2EA9DF',
-        borderWidth: 1,
-      },
-    ],
-  });
-
-  // APIのURLを環境に応じて設定
-  let API_URL;
-  if (window.location.origin === 'http://localhost:3001') {
-    API_URL = 'http://localhost:3000';
-  } else if (window.location.origin === 'https://www.mbti-database.com') {
-    API_URL = 'https://api.mbti-database.com';
-  } else {
-    // デフォルトのURL
-    API_URL = 'http://localhost:3000';
-  }
-
-  // 心理機能の選択状態を管理するステート
+  // ■ ステート定義 ■
+  const [chartData, setChartData] = useState(initialChartData);
   const [selectedFunctions, setSelectedFunctions] = useState([]);
-
-  // MBTIタイプの選択状態を管理するステート
-  const [selectedTypes, setSelectedTypes] = useState([
-    'ESTP',
-    'ESFP',
-    'ISTP',
-    'ISFP',
-    'ESTJ',
-    'ESFJ',
-    'ISTJ',
-    'ISFJ',
-    'ENTP',
-    'ENFP',
-    'INTP',
-    'INFP',
-    'ENTJ',
-    'ENFJ',
-    'INTJ',
-    'INFJ',
-  ]);
-
-  // コンテンツタイプを管理するステート
+  const [selectedTypes, setSelectedTypes] = useState(MBTI_TYPES);
   const [contentType, setContentType] = useState('アニメ');
+  const [selectedIndicators, setSelectedIndicators] = useState(DEFAULT_INDICATORS);
+  const [chartHeight, setChartHeight] = useState(400);
+  const [loading, setLoading] = useState(true);
 
-  // 指標の選択状態を理するステート
-  const [selectedIndicators, setSelectedIndicators] = useState({
-    EI: '',
-    SN: '',
-    TF: '',
-    JP: '',
-  });
+  // API URL を useMemo でキャッシュ
+  const API_URL = useMemo(() => getApiUrl(), []);
 
-  // 心理機能とMBTIタイプの対応を定義
-  const functionToTypes = {
-    Se: ['ESFP', 'ESTP', 'ISFP', 'ISTP'],
-    Si: ['ESFJ', 'ESTJ', 'ISFJ', 'ISTJ'],
-    Ne: ['ENFP', 'ENTP', 'INFP', 'INTP'],
-    Ni: ['ENFJ', 'ENTJ', 'INFJ', 'INTJ'],
-    Fe: ['ESFJ', 'ISFJ', 'ENFJ', 'INFJ'],
-    Fi: ['ESFP', 'ISFP', 'ENFP', 'INFP'],
-    Te: ['ESTJ', 'ISTJ', 'ENTJ', 'INTJ'],
-    Ti: ['ESTP', 'ISTP', 'ENTP', 'INTP'],
-  };
-
-  // 心理機能の選択状態を切り替える関数
-  const toggleFunction = (func) => {
-    setSelectedFunctions((prev) => {
-      let newSelectedFunctions;
-      if (prev.includes(func)) {
-        newSelectedFunctions = prev.filter((f) => f !== func);
-      } else {
-        newSelectedFunctions = [...prev, func];
-      }
-
-      // 選択された心理機能に基づいてMBTIタイプを更新
-      const newSelectedTypes =
-        newSelectedFunctions.length > 0
-          ? [...new Set(newSelectedFunctions.flatMap((f) => functionToTypes[f]))]
-          : [];
-      setSelectedTypes(newSelectedTypes);
-
-      return newSelectedFunctions;
-    });
-    setSelectedIndicators({
-      EI: '',
-      SN: '',
-      TF: '',
-      JP: '',
-    });
-  };
-
-  // MBTIタイプの選択状態を切り替える関数
-  const toggleType = (type) => {
-    if (selectedFunctions.length > 0 || Object.values(selectedIndicators).some((v) => v !== '')) {
-      // 心理機能または指標が選択されている場合
-      setSelectedTypes([type]);
-      setSelectedFunctions([]);
-      setSelectedIndicators({
-        EI: '',
-        SN: '',
-        TF: '',
-        JP: '',
-      });
-    } else {
-      // 心理機能も指標も選択されていない場合
-      setSelectedTypes((prev) => {
-        if (prev.includes(type)) {
-          return prev.filter((t) => t !== type);
-        } else {
-          return [...prev, type];
-        }
-      });
-    }
-  };
-
-  // 指標ボタンのクリックハンドラ
-  const handleIndicatorClick = (group, indicator) => {
-    setSelectedIndicators((prev) => {
-      const newIndicators = { ...prev };
-      if (prev[group] === indicator) {
-        newIndicators[group] = '';
-      } else {
-        newIndicators[group] = indicator;
-      }
-      updateMBTITypes(newIndicators);
-      return newIndicators;
-    });
-    setSelectedFunctions([]); // 心理機能選択を解除
-  };
-
+  // ■ MBTI タイプ更新用関数 ■
   const updateMBTITypes = (indicators) => {
-    const filteredTypes = [
-      'ESTP',
-      'ESFP',
-      'ISTP',
-      'ISFP',
-      'ESTJ',
-      'ESFJ',
-      'ISTJ',
-      'ISFJ',
-      'ENTP',
-      'ENFP',
-      'INTP',
-      'INFP',
-      'ENTJ',
-      'ENFJ',
-      'INTJ',
-      'INFJ',
-    ].filter((type) => {
+    const filteredTypes = MBTI_TYPES.filter((type) => {
       return (
         (!indicators.EI || type.includes(indicators.EI)) &&
         (!indicators.SN || type.includes(indicators.SN)) &&
@@ -217,41 +128,104 @@ function Database() {
     setSelectedTypes(filteredTypes);
   };
 
-  // データをフェッチしてグラフを更新する副作用
+  // ■ 心理機能トグル処理 ■
+  const toggleFunction = (func) => {
+    setSelectedFunctions((prev) => {
+      const newSelectedFunctions = prev.includes(func)
+        ? prev.filter((f) => f !== func)
+        : [...prev, func];
+      // 心理機能選択に基づいて MBTI タイプを更新
+      const newSelectedTypes =
+        newSelectedFunctions.length > 0
+          ? Array.from(new Set(newSelectedFunctions.flatMap((f) => FUNCTION_TO_TYPES[f])))
+          : MBTI_TYPES;
+      setSelectedTypes(newSelectedTypes);
+      return newSelectedFunctions;
+    });
+    // 指標選択はリセット
+    setSelectedIndicators(DEFAULT_INDICATORS);
+  };
+
+  // MBTI タイプトグル処理
+  const toggleType = (type) => {
+    if (selectedFunctions.length > 0 || Object.values(selectedIndicators).some((v) => v !== '')) {
+      // 心理機能または指標が選択されている場合は、そのタイプのみ選択
+      setSelectedTypes([type]);
+      setSelectedFunctions([]);
+      setSelectedIndicators(DEFAULT_INDICATORS);
+    } else if (selectedTypes.length === MBTI_TYPES.length) {
+      // 初期状態（全MBTIタイプが選択されている状態）なら、クリックされたタイプだけを選択する
+      setSelectedTypes([type]);
+    } else {
+      // それ以外の場合はトグル（選択済みなら外す、未選択なら追加する）
+      setSelectedTypes((prev) =>
+        prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+      );
+    }
+  };
+
+  // ■ 指標ボタンのクリックハンドラ ■
+  const handleIndicatorClick = (group, indicator) => {
+    setSelectedIndicators((prev) => {
+      const newIndicators = { ...prev, [group]: prev[group] === indicator ? '' : indicator };
+      updateMBTITypes(newIndicators);
+      return newIndicators;
+    });
+    // 心理機能選択は解除
+    setSelectedFunctions([]);
+  };
+
+  // ■ データフェッチ＆チャート更新の副作用 ■
   useEffect(() => {
     const fetchData = async () => {
       const typesToUse = selectedTypes.length > 0 ? selectedTypes : [];
-
-      // クエリパラメータを設定
+      setLoading(true);
       const queryParams = new URLSearchParams({
         mbti_types: typesToUse,
         media_type: contentType === 'アニメ' ? 'anime' : 'music',
       });
-
       try {
-        // データをフェッチしてグラフを更新
-        const response = await fetch(`${API_URL}/api/v1/media_works/statistics?${queryParams}`);
-        const data = await response.json();
-        const sortedData = Object.entries(data).sort((a, b) => b[1] - a[1]);
+        const statisticsRes = await fetch(`${API_URL}/media_works/statistics?${queryParams}`);
+        const statisticsData = await statisticsRes.json();
+        const sortedData = Object.entries(statisticsData).sort(
+          ([, aValue], [, bValue]) => bValue - aValue
+        );
         setChartData((prevChartData) => ({
-          labels: sortedData.map((item) => item[0]),
+          labels: sortedData.map(([key]) => key),
           datasets: [
             {
               ...prevChartData.datasets[0],
               label: contentType,
-              data: sortedData.map((item) => item[1]),
+              data: sortedData.map(([, value]) => value),
             },
           ],
         }));
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Database.jsx / fetchData: API 呼び出し中にエラーが発生しました:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchData();
   }, [selectedTypes, selectedFunctions, contentType, API_URL]);
 
-  // グラフのオプション設定
+  // ■ チャート高さの計算を useCallback でメモ化 ■
+  const calculateChartHeight = useCallback(() => {
+    const baseHeight = 400; // 基本高さ（px）
+    const additionalHeightPerData = 30; // 1作品あたりの追加高さ（px）
+    return baseHeight + chartData.labels.length * additionalHeightPerData;
+  }, [chartData.labels.length]);
+
+  // chartData 更新時に高さ再計算
+  useEffect(() => {
+    setChartHeight(calculateChartHeight());
+  }, [calculateChartHeight]);
+
+  // ※ responsiveHeight 関数をシンプルに、chartHeight をそのまま返す
+  const responsiveHeight = () => chartHeight;
+
+  // ■ Chart.js オプション設定 ■
   const options = {
     indexAxis: 'y',
     maintainAspectRatio: false,
@@ -264,39 +238,13 @@ function Database() {
     },
   };
 
-  // 心理機能の配列を2つのグループに分ける
-  const perceptionFunctions = ['Se', 'Si', 'Ne', 'Ni'];
-  const judgmentFunctions = ['Te', 'Ti', 'Fe', 'Fi'];
-
-  // グラフの高さを計算する関数
-  const calculateChartHeight = () => {
-    const baseHeight = 400; // 基本の高さ（ピクセル）
-    const additionalHeightPerData = 30; // データ点1つあたりの追加高さ（ピクセル）
-    const calculatedHeight = baseHeight + chartData.labels.length * additionalHeightPerData;
-    return calculatedHeight;
-  };
-
-  // グラフの高さをステートとして管理
-  const [chartHeight, setChartHeight] = useState(calculateChartHeight());
-
-  // データが変更されたときに高さを再計算
-  useEffect(() => {
-    setChartHeight(calculateChartHeight());
-  }, [chartData.labels.length]);
-
-  // レスポンシブ対応のためにウィンドウサイズに応じた最大高さを設定
-  const responsiveHeight = () => {
-    const maxHeight = window.innerHeight * 0.8; // 画面高さの80%を最大とする
-    return Math.min(chartHeight, maxHeight);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <div className="w-full max-w-full px-4 mx-auto md:max-w-7xl">
-        {/* コンテンツタイプ選択ボタン */}
+        {/* コンテンツタイプ選択 */}
         <div className="flex justify-center mt-4 mb-4 md:mt-5 md:mb-5">
           <ButtonGroup>
-            {['アニメ', '音楽'].map((type) => (
+            {CONTENT_TYPES.map((type) => (
               <StyledButton
                 key={type}
                 onClick={() => setContentType(type)}
@@ -312,7 +260,8 @@ function Database() {
         {/* 説明テキスト */}
         <div className="text-center mx-0 mt-4 mb-4 md:mx-16 md:mt-5 md:mb-5">
           <p>
-            グラフで表されたデータベースをフィルタリングして、気になる4つの指標・心理機能・MBTIタイプの好きな作品を見てみましょう！
+            グラフで表されたデータベースをフィルタリングして、気になるMBTIタイプ・
+            心理機能・4つの指標の好きな作品を見てみましょう🙌
           </p>
         </div>
 
@@ -337,7 +286,7 @@ function Database() {
         {/* 心理機能選択ボタン */}
         <div className="flex flex-wrap justify-center mt-4 md:mt-6">
           <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
-            {perceptionFunctions.map((func) => (
+            {PERCEPTION_FUNCTIONS.map((func) => (
               <StyledButton
                 key={func}
                 onClick={() => toggleFunction(func)}
@@ -349,7 +298,7 @@ function Database() {
             ))}
           </ButtonGroup>
           <ButtonGroup className="mb-2 mx-1 md:mb-4 md:mx-2">
-            {judgmentFunctions.map((func) => (
+            {JUDGMENT_FUNCTIONS.map((func) => (
               <StyledButton
                 key={func}
                 onClick={() => toggleFunction(func)}
@@ -362,13 +311,13 @@ function Database() {
           </ButtonGroup>
         </div>
 
-        {/* MBTIタイプ選択ボタン */}
+        {/* MBTI タイプ選択ボタン */}
         <div className="flex flex-wrap justify-center mt-4 gap-2 md:mt-6 md:gap-4">
           {[
-            ['ESTP', 'ESFP', 'ISTP', 'ISFP'],
-            ['ESTJ', 'ESFJ', 'ISTJ', 'ISFJ'],
-            ['ENTP', 'ENFP', 'INTP', 'INFP'],
-            ['ENTJ', 'ENFJ', 'INTJ', 'INFJ'],
+            MBTI_TYPES.slice(0, 4),
+            MBTI_TYPES.slice(4, 8),
+            MBTI_TYPES.slice(8, 12),
+            MBTI_TYPES.slice(12, 16),
           ].map((group, index) => (
             <ButtonGroup key={index} className="mb-2">
               {group.map((type) => (
@@ -385,9 +334,18 @@ function Database() {
           ))}
         </div>
 
-        {/* グラフ表示 */}
-        <div className="my-6 w-full" style={{ height: `${responsiveHeight()}px` }}>
-          <Bar options={options} data={chartData} />
+        {/* グラフ表示エリア */}
+        <div className="my-6 w-full" style={{ height: responsiveHeight() }}>
+          {loading ? (
+            // spinner を中央に配置するために flex コンテナを使用
+            <div className="flex items-center justify-center h-full">
+              <div className="loading loading-spinner loading-lg text-custom"></div>
+            </div>
+          ) : (
+            <div style={{ overflowY: 'auto', height: '100%' }}>
+              <Bar options={options} data={chartData} />
+            </div>
+          )}
         </div>
       </div>
     </ThemeProvider>

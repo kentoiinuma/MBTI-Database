@@ -1,5 +1,3 @@
-// アプリ全体のルートレイアウトを定義
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { useUser } from '@clerk/clerk-react';
@@ -13,53 +11,63 @@ import PrivacyPolicy from './PrivacyPolicy';
 import AboutApp from './AboutApp';
 import PostShow from './PostShow';
 import { useUserContext } from '../contexts/UserContext';
-
-function getAPIUrl() {
-  // 環境に応じてAPIエンドポイントを切り替え
-  const { origin } = window.location;
-  if (origin === 'http://localhost:3001') return 'http://localhost:3000';
-  if (origin === 'https://www.mbti-database.com') return 'https://api.mbti-database.com';
-}
+import { getApiUrl } from '../utils/apiUrl';
 
 function RootLayout() {
+  // 状態管理
   const [showMBTIModal, setShowMBTIModal] = useState(false);
+
+  // Clerk やカスタムコンテキスト関連
   const { isSignedIn, user, loading } = useUser();
   const { setIsProfileUpdated } = useUserContext();
+
   const navigate = useNavigate();
-  const API_URL = getAPIUrl();
 
-  // 新規ユーザーの場合はMBTIモーダルを表示
+  /**
+   * 新規ユーザーの場合のサインイン処理
+   */
   const handleSignIn = useCallback(async () => {
-    const response = await fetch(`${API_URL}/api/v1/registrations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ clerk_id: user.id }),
-    });
-    const data = await response.json();
+    if (!user?.id) return;
 
-    if (data.is_new_user) {
-      setShowMBTIModal(true);
-      setIsProfileUpdated(true);
+    try {
+      const registrationRes = await fetch(`${getApiUrl()}/registrations`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clerk_id: user.id }),
+      });
+
+      const registrationData = await registrationRes.json();
+
+      if (registrationData.is_new_user) {
+        setShowMBTIModal(true);
+        setIsProfileUpdated(true);
+      }
+    } catch (error) {
+      console.error(`[RootLayout] サインイン時の登録に失敗しました: ${error.message}`, error);
     }
-  }, [user, API_URL, setIsProfileUpdated]);
+  }, [user, setIsProfileUpdated]);
 
-  // MBTIモーダルを閉じる
+  /**
+   * MBTIモーダルを閉じる
+   */
   const handleCloseModal = useCallback(() => {
     setShowMBTIModal(false);
   }, []);
 
-  // ログイン済みの場合にサインイン処理を実行
+  /**
+   * ログイン済みの場合はサインイン処理を実行
+   */
   useEffect(() => {
     if (!loading && isSignedIn && user) {
       handleSignIn();
     }
-  }, [isSignedIn, user, loading, handleSignIn]);
+  }, [loading, isSignedIn, user, handleSignIn]);
 
   return (
     <div className="flex h-screen text-gray-800 bg-off-white">
-      <div className="flex flex-col flex-1 relative">
-        {/* ヘッダーコンポーネント */}
-        <Header onSignIn={handleSignIn} />
+      <div className="relative flex flex-col flex-1">
+        <Header />
+
         <main className="flex-1 overflow-auto">
           {/* ルーティング設定 */}
           <Routes>
@@ -74,13 +82,21 @@ function RootLayout() {
           </Routes>
 
           {/* MBTI入力モーダル */}
-          {showMBTIModal && <MBTIModal onClose={handleCloseModal} onUpdate={() => {}} />}
+          {showMBTIModal && (
+            <MBTIModal
+              onClose={handleCloseModal}
+              onUpdate={() => {}}
+              initialMBTI=""
+              initialVisibility="is_public"
+            />
+          )}
         </main>
 
         {/* 新規投稿ボタン */}
         {isSignedIn && (
           <button
-            className="fixed bottom-6 right-6 p-2 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] transition-colors duration-300 shadow-lg md:bottom-8 md:right-8 md:p-3"
+            className="fixed bottom-6 right-6 p-2 rounded-full bg-[#2EA9DF] text-white hover:bg-[#2596be] 
+                       transition-colors duration-300 shadow-lg md:bottom-8 md:right-8 md:p-3"
             onClick={() => navigate('/posts/new')}
           >
             {/* プラスアイコン */}
@@ -88,7 +104,7 @@ function RootLayout() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              strokeWidth={2.0}
+              strokeWidth={2}
               stroke="currentColor"
               className="w-11 h-11 md:w-12 md:h-12"
             >
